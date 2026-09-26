@@ -209,6 +209,22 @@
   - ServiceWorker 快取版本升級至 `trustcv-cache-v1.1.5`。
 - **踩坑 / 失敗模式**:
   - 避免傳統透過 URL 污染或死鎖單一預設語系，透過純客戶端 `navigator.language` 達成海外與本土無感分流。
+---
+
+### [2026-09-27] [UNREFINED] [frontend/pwa-silent-reload] PWA 智慧純背景靜默自動更新與填表防丟失守衛落地
+- **類型**: `FEAT_IMPLEMENTATION`
+- **代碼錨點**: `js/app.js`, `sw.js`
+- **核心事實 / 決策理由**:
+  - 解決 PWA 安裝至手機桌面後常駐背景引發之「版本斷更、舊快取卡死」痛點。
+  - 實作無感純背景靜默更新管線：
+    1. 15 分鐘週期性探測 (`reg.update()`)。
+    2. 切回 App 焦點 (`visibilitychange === 'visible'`) 立即觸發版本探測。
+    3. 監聽 `controllerchange` 事件：當新版本接管時，若使用者正在填表（`isApplyModalOpen` 或焦點在 `input/textarea`），自動延遲刷新直至表單關閉或切換頁籤，100% 杜絕用戶填寫中途被強制重載洗掉數據。
+    4. 閒置時自動無感重載套用最新版本。
+  - ServiceWorker 快取版本升級至 `trustcv-cache-v1.1.6`。
+- **踩坑 / 失敗模式**:
+  - 粗暴的 `window.location.reload()` 會在使用者輸入履歷時清空表單，透過 `store.subscribe` 狀態守衛達成延遲自癒。
 - **防禦手段 / 測試背書**:
-  - 本地單元邏輯驗證通過；`keeper.py audit` 通過 100% 結構審計。
+  - 本地模擬 `controllerchange` 狀態守衛測試通過；`keeper.py audit` 通過 100% 結構審計。
+
 

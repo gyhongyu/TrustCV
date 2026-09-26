@@ -19,11 +19,49 @@ class App {
   }
 
   init() {
-    // 註冊 Service Worker
+    // 註冊 Service Worker 並建立智慧靜默自動更新閉環
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
-      navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('[PWA] Service Worker registered', reg.scope))
-        .catch(err => console.warn('[PWA] SW register failed', err));
+      navigator.serviceWorker.register('./sw.js').then((reg) => {
+        console.log('[PWA] Service Worker registered', reg.scope);
+
+        // 1. 每隔 15 分鐘主動探測伺服器是否有新版本
+        setInterval(() => {
+          reg.update().catch(() => {});
+        }, 15 * 60 * 1000);
+
+        // 2. 當 PWA 從背景切回前景 (App 回到焦點) 時，立即探測新版本
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') {
+            reg.update().catch(() => {});
+          }
+        });
+      }).catch(err => console.warn('[PWA] SW register failed', err));
+
+      // 3. 監聽 Service Worker 控制權切換 (新版已接管客戶端)
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        
+        // 防破壞守衛：檢查使用者是否正在填表（彈窗開啟或表單正在輸入中）
+        const isFillingForm = store.getState().isApplyModalOpen || 
+                              (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName));
+
+        if (isFillingForm) {
+          console.log('[PWA] New version ready, deferred auto-reload until user finishes form');
+          // 當彈窗關閉或切換頁籤時再靜默重載
+          const unsubscribe = store.subscribe(() => {
+            if (!store.getState().isApplyModalOpen && !refreshing) {
+              refreshing = true;
+              unsubscribe();
+              window.location.reload();
+            }
+          });
+        } else {
+          // 閒置狀態直接靜默無感切換至新版本
+          refreshing = true;
+          window.location.reload();
+        }
+      });
     }
 
     // 初始化主題樣式 (避免重載時明亮模式樣式遺失)
