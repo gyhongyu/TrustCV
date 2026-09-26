@@ -1,9 +1,140 @@
 [
   {
-    "job_id": "JD-MOCK-001",
-    "title_en": "Senior Embedded Firmware Engineer",
-    "title_zh_tw": "資深嵌入式韌體工程師",
-    "title_zh_cn": "资深嵌入式固件工程师",
-    "status": "ACTIVE"
+    "jd_reference_id": "TW-AUT-202610-01",
+    "status": "ACTIVE_SOURCING",
+    "metadata": {
+      "schema_version": "1.0.0",
+      "source_partner": "INVIC_GLOBAL",
+      "received_timestamp_utc": "2026-10-10T08:00:00Z",
+      "target_hire_date": "2026-12-01"
+    },
+    "confidential_client_profile": {
+      "company_legal_name": "台灣半導體自動化設備股份有限公司",
+      "brand_name_english": "Taiwan Semiconductor Automation Corp.",
+      "tax_id_unified": "12345678",
+      "stock_ticker": "6669",
+      "factory_address_full": "新竹科學園區研發六路8號",
+      "hr_contact_person": {
+        "name": "陳經理",
+        "email": "hr.recruit@invic.com.tw",
+        "phone": "+886-3-5770000"
+      },
+      "is_unmasked_to_candidate": false
+    },
+    "public_sanitized_profile": {
+      "industry_tier_narrative": "台灣前三大半導體晶圓傳送與自動化設備龍頭上市集團",
+      "geographic_cluster": "新竹科學園區與台中高科技聚落",
+      "target_region_city": "Hsinchu"
+    },
+    "job_specifications": {
+      "role_category": "AUT",
+      "job_title_sanitized": "資深 PLC 電控自動化工程師 (半導體設備)",
+      "openings_count": 2,
+      "minimum_experience_years": 3,
+      "minimum_degree_level": "BACHELORS",
+      "primary_technical_skills": [
+        "Siemens S7-1500 (TIA Portal)",
+        "SCADA",
+        "Servo Tuning (伺服馬達驅動定位)",
+        "EtherCAT 通訊協定"
+      ],
+      "secondary_skills": [
+        "AutoCAD Electrical",
+        "HMI Programming",
+        "產線調試 (Commissioning)"
+      ],
+      "language_requirements": {
+        "english_proficiency_minimum": "GRADE_B_OPERATIONAL",
+        "chinese_proficiency_required": false
+      },
+      "contract_tenure_years": 3
+    },
+    "compensation_and_benefits": {
+      "monthly_base_salary_twd_min": 75000,
+      "monthly_base_salary_twd_max": 95000,
+      "monthly_base_salary_inr_estimated_min": 195000,
+      "monthly_base_salary_inr_estimated_max": 247000,
+      "statutory_insurance_covered": true,
+      "accommodation_support": {
+        "type": "COMPANY_DORMITORY_SUBSIDIZED",
+        "allowance_monthly_twd": 5000
+      },
+      "airfare_support": "ROUND_TRIP_PROVIDED"
+    },
+    "deidentification_audit": {
+      "auditor_type": "AI_AGENT",
+      "auditor_identifier": "JD_Deidentification_Agent_v1",
+      "sanitized_timestamp_utc": "2026-10-10T09:15:00Z",
+      "levenshtein_similarity_to_raw": 0
+    }
+  },
+  {
+    "jd_reference_id": "TW-ELE-202610-02",
+    "status": "ACTIVE_SOURCING",
+    "metadata": {
+      "schema_version": "1.0.0",
+      "source_partner": "INVIC_GLOBAL",
+      "received_timestamp_utc": "2026-10-11T02:30:00Z",
+      "target_hire_date": "2026-12-15"
+    },
+    "confidential_client_profile": {
+      "company_legal_name": "宏達電力電子工業股份有限公司",
+      "brand_name_english": "Grand Power Electronics Corp.",
+      "tax_id_unified": "87654321",
+      "stock_ticker": "2308",
+      "factory_address_full": "台中市西屯區工業區一路20號",
+      "hr_contact_person": {
+        "name": "李專員",
+        "email": "talent@invic.com.tw",
+        "phone": "+886-4-23590000"
+      },
+      "is_unmasked_to_candidate": false
+    },
+    "public_sanitized_profile": {
+      "industry_tier_narrative": "台灣知名工業電源與光伏變流器上市大廠",
+      "geographic_cluster": "台中精密機械園區聚落",
+      "target_region_city": "Taichung"
+    },
+    "job_specifications": {
+      "role_category": "ELE",
+      "job_title_sanitized": "大功率電力電子硬體研發工程師",
+      "openings_count": 1,
+      "minimum_experience_years": 4,
+      "minimum_degree_level": "BACHELORS",
+      "primary_technical_skills": [
+        "Power Electronics",
+        "Inverter Design (變流器/逆變器設計)",
+        "PCB Layout",
+        "Thermal Simulation (熱流模擬)"
+      ],
+      "secondary_skills": [
+        "MATLAB/Simulink",
+        "EMC Debugging",
+        "DSP Controller"
+      ],
+      "language_requirements": {
+        "english_proficiency_minimum": "GRADE_B_OPERATIONAL",
+        "chinese_proficiency_required": false
+      },
+      "contract_tenure_years": 2
+    },
+    "compensation_and_benefits": {
+      "monthly_base_salary_twd_min": 80000,
+      "monthly_base_salary_twd_max": 110000,
+      "monthly_base_salary_inr_estimated_min": 208000,
+      "monthly_base_salary_inr_estimated_max": 286000,
+      "statutory_insurance_covered": true,
+      "accommodation_support": {
+        "type": "MONTHLY_HOUSING_ALLOWANCE",
+        "allowance_monthly_twd": 8000
+      },
+      "airfare_support": "ROUND_TRIP_PROVIDED"
+    },
+    "deidentification_audit": {
+      "auditor_type": "HUMAN_OPERATOR",
+      "auditor_identifier": "Michael_SOP_Officer",
+      "sanitized_timestamp_utc": "2026-10-11T03:00:00Z",
+      "levenshtein_similarity_to_raw": 0
+    }
   }
 ]

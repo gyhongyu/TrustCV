@@ -1,7 +1,115 @@
 [
   {
-    "candidate_id": "CAND-MOCK-001",
-    "name_en": "Alex Chen",
-    "status": "01_SUBMITTED"
+    "dossier_id": "TEA-2026-IND-0088",
+    "metadata": {
+      "schema_version": "1.0.0",
+      "source_system": "cv.teaforia.in",
+      "delivery_timestamp_utc": "2026-10-12T09:30:00Z",
+      "partner_recipient": "INVIC_GLOBAL",
+      "verification_level": "LEVEL_2_DUAL_VERIFIED",
+      "digital_fingerprint_sha256": "8f4b2c1e9a78d05c6e832145b4c129e7a88432b12398cd6543217ef09876abcd"
+    },
+    "candidate_profile": {
+      "full_name": "Rajesh Kumar Sharma",
+      "date_of_birth": "1996-05-18",
+      "gender": "MALE",
+      "contact_masked": {
+        "email_proxy": "rajesh.s0088@candidate.teaforia.in",
+        "phone_masked": "+91-9876****12",
+        "current_location_city": "Bengaluru",
+        "current_location_state": "Karnataka"
+      },
+      "identity_documents": {
+        "passport_number_masked": "Z58****9",
+        "passport_expiry_date": "2029-12-31",
+        "passport_valid_months_remaining": 38,
+        "passport_verified": true,
+        "pan_card_matched_with_tax": true
+      },
+      "target_job_spec": {
+        "target_role_category": "AUTOMATION_PLC_SPECIALIST",
+        "jd_reference_id": "TW-AUT-202610-01",
+        "willing_to_relocate_taiwan": true,
+        "expected_ctc_twd_monthly": 60000,
+        "notice_period_days": 30
+      }
+    },
+    "verified_credentials": {
+      "education_records": [
+        {
+          "degree_level": "BACHELORS",
+          "degree_name": "Bachelor of Engineering in Mechatronics",
+          "institution_name": "Visvesvaraya Technological University",
+          "passing_year": 2018,
+          "is_institution_accredited": true,
+          "document_type": "ORIGINAL_DEGREE_CERTIFICATE",
+          "verification_status": "VERIFIED_VALID"
+        }
+      ],
+      "employment_records": [
+        {
+          "company_name": "Uno Minda Components Ltd.",
+          "company_cin": "L74899DL1992PLC050333",
+          "company_mca_status_active": true,
+          "job_title_claimed": "Senior Automation Engineer",
+          "job_title_verified": "Senior Automation Engineer",
+          "start_date": "2021-04",
+          "end_date": "2024-06",
+          "relieving_letter_verified": true,
+          "service_certificate_verified": true,
+          "tax_or_salary_verified": true,
+          "salary_audit_evidence": {
+            "form16_traces_verified": true,
+            "employer_tan": "BLRU12345E",
+            "epfo_uan_passbook_verified": true,
+            "payslip_last_drawn_inr_monthly": 58500
+          }
+        },
+        {
+          "company_name": "Suprajit Engineering Limited",
+          "company_cin": "L29199KA1985PLC006934",
+          "company_mca_status_active": true,
+          "job_title_claimed": "PLC Maintenance Engineer",
+          "job_title_verified": "PLC Maintenance Engineer",
+          "start_date": "2018-07",
+          "end_date": "2021-03",
+          "relieving_letter_verified": true,
+          "service_certificate_verified": true,
+          "tax_or_salary_verified": true,
+          "salary_audit_evidence": {
+            "form16_traces_verified": true,
+            "employer_tan": "BLRS98765A",
+            "epfo_uan_passbook_verified": true,
+            "payslip_last_drawn_inr_monthly": 36000
+          }
+        }
+      ],
+      "career_timeline_integrity": {
+        "total_experience_years_claimed": 5.8,
+        "total_experience_years_verified": 5.8,
+        "dual_employment_detected": false,
+        "unexplained_gap_detected": false,
+        "gap_explanation_summary": "換職期間空窗 45 天，已備妥錄用通知書與離職信核實"
+      }
+    },
+    "human_audit_assessment": {
+      "auditor_name": "Mrs. Michael (Teaforia Lead Auditor)",
+      "audit_completed_date": "2026-10-11",
+      "identity_facial_match_passed": true,
+      "english_communication_level": "GRADE_B_OPERATIONAL",
+      "technical_competence_self_expression": "西門子 S7-1500 與 TIA Portal 階梯圖排除非常熟練，伺服軸定位與 EtherCAT 調試實操紮實。",
+      "taiwan_relocation_readiness": {
+        "family_consent_secured": true,
+        "willing_to_commit_minimum_years": 3
+      },
+      "interviewer_executive_summary": "具備 5 年以上扎實工廠 PLC 自動化經驗，稅單與離職證明 100% 齊全，家庭全力支持外派台灣，評定為綠標最優先推薦。"
+    },
+    "risk_scoring": {
+      "background_integrity_score": 92.5,
+      "overall_status_band": "GREEN_VERIFIED_READY",
+      "audit_flags": [
+        "FLAG_DOC_CLEAN"
+      ]
+    }
   }
 ]

@@ -1,1 +1,70 @@
-<!-- Project TrustCV PWA Entry -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Project TrustCV | 跨國工程人才驗證推薦平台</title>
+  
+  <!-- SEO & Meta -->
+  <meta name="description" content="Project TrustCV (Credence): 台灣企業高階機電、自動化與半導體設備外籍工程人才雙重核實推薦平台。客觀原件排查、真人視訊初審、180天排他防繞道保護。">
+  <meta name="theme-color" content="#080C0E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TrustCV">
+  
+  <!-- Favicon & PWA Icons -->
+  <link rel="icon" type="image/svg+xml" href="./assets/svg/PC 瀏覽器標籤頁專用圖標代碼.svg">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.json">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              obsidian: '#080C0E',
+              dark: '#0B1117',
+              card: '#121A24',
+              surface: '#182433',
+              border: '#1E293B',
+              borderLight: '#334155',
+              mint: '#3DF5A7',
+              mintGlow: '#40F5A3',
+              emerald: '#10B981',
+              emeraldDeep: '#059669',
+              forest: '#143B32',
+              forestDeep: '#2A725E',
+              accent: '#38BDF8'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen selection:bg-brand-emerald selection:text-white transition-colors duration-200">
+  <!-- PWA SPA Root Container: 全寬響應式自適應容器 (打破 max-w-md 限制) -->
+  <div id="app-root" class="min-h-screen flex flex-col w-full"></div>
+
+  <!-- Entry Script (ES Modules) -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

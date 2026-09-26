@@ -1,5 +1,31 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "TrustCV",
-  "short_name": "TrustCV"
+  "name": "Project TrustCV | 跨國工程人才驗證平台",
+  "short_name": "TrustCV",
+  "description": "跨國工程人才赴台就業客觀審計與去識別化推薦 PWA",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080C0E",
+  "theme_color": "#080C0E",
+  "icons": [
+    {
+      "src": "./assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
 }

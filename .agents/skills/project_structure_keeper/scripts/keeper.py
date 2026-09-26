@@ -16,9 +16,9 @@ def sync_topology():
 def audit_hygiene():
     """只讀掃描：只報警未登記檔案，絕對不擅自刪除或移動，交由人類或固化審查處理"""
     proj_root = Path(__file__).resolve().parents[4]
-    known_roots = {".agent_profiles", ".agents", ".git", "specs", "assets", "docs", "gas", "worker", "scripts", "css", "js", "tests"}
-    known_files = {"index.html", "manifest.json", "sw.js", "README.md", "HANDOFF.md", "AGENTS.md", "CLAUDE.md",
-                   ".clinerules", ".cursorrules", ".windsurfrules", ".gitignore", "切換為生產模式.bat", "切換為開發模式.bat"}
+    known_roots = {".agent_profiles", ".agents", ".git", "specs", "assets", "docs", "gas", "worker", "scripts", "css", "js", "tests", "tools"}
+    known_files = {"index.html", "manifest.json", "sw.js", "README.md", "HANDOFF.md", "IMPLEMENTATION_GUIDE.md", "AGENTS.md", "CLAUDE.md",
+                   ".clinerules", ".cursorrules", ".windsurfrules", ".gitignore", "切換為生產模式.bat", "切換為開發模式.bat", "favicon.ico", "啟動本地預覽.bat", "CNAME"}
     
     print(f"🔍 專案目錄守門巡檢 (Read-Only Audit): {proj_root}")
     unregistered = []

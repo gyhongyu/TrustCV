@@ -1,0 +1,147 @@
+# 🚀 Project TrustCV (Project Credence) 階段實施導航手冊
+> 📌 **檔案定位**：專案根目錄唯一實施順序指引，專供進場之 AI 代理人閱讀。
+> ⚠️ **執行鐵律**：本手冊已按「業務規格法典（`specs/`）➔ 視覺原型（`assets/`）➔ 資料合約 ➔ 實體編碼」完成嚴密相依性編排。**後續接手之 AI 代理人必須嚴格按階段與順序執行，嚴禁跳步或逆向開發！**
+
+---
+
+## 🧭 實施總綱與相依路線圖 (Dependency Pipeline)
+
+```text
+[階段 0: 視覺資產固化] ➔ [階段 1: 規格契約校準] ➔ [階段 2: PWA 前端落地] ➔ [階段 3: GAS 網關落地] ➔ [階段 4: Worker 服務] ➔ [階段 5: 聯調整體驗收]
+      (SVG 轉圖標)           (對齊 JSON Schema)       (4屏原型組件化)          (Sheets/Drive CRUD)      (LLM 履歷萃取)         (端到端驗證)
+```
+
+---
+
+## 📌 階段 0：視覺資產與 PWA 規格固化 (Asset Preparation)
+> **目的**：將 `assets/` 視覺資產轉為 PWA 標準圖標，消除靜態資源阻礙。
+
+- [x] **任務 0.1：PWA 圖標與 Favicon 轉檔**
+  - **依據依賴**：[`assets/BRAND_GUIDE.md`](file:///assets/BRAND_GUIDE.md)、[`assets/svg/`](file:///assets/svg/)
+  - **產出檔案**：`assets/icons/icon-192x192.png`、`assets/icons/icon-512x512.png`、`assets/icons/apple-touch-icon.png` (180x180)、`favicon.ico`
+  - **驗收標準**：iOS Safari 與 Android Chrome 能正常載入 PWA 圖標（SVG 在 iOS Safari `apple-touch-icon` 不支援，必須有 PNG）。已生成 16x16, 32x32, 180x180, 192x192, 512x512 與 root favicon.ico。
+
+---
+
+## 📌 階段 1：規格契約與 Mock 資料真值校準 (Data Contracts & Mock Baseline)
+> **目的**：以 `specs/03_data_schemas/` 為單一真理（SSOT），嚴禁私造資料欄位。
+
+- [x] **任務 1.1：Mock 種子資料對齊 Schema**
+  - **依據依賴**：
+    - [`specs/03_data_schemas/jd_provisioning.schema.json`](file:///specs/03_data_schemas/jd_provisioning.schema.json)
+    - [`specs/03_data_schemas/verified_candidate.schema.json`](file:///specs/03_data_schemas/verified_candidate.schema.json)
+  - **修改目標**：[`specs/mock_data/jobs_seed.json`](file:///specs/mock_data/jobs_seed.json)、[`specs/mock_data/candidates_seed.json`](file:///specs/mock_data/candidates_seed.json)
+  - **驗收標準**：種子資料包含 `TW-AUT-` 職缺編號、`TEA-2026-IND-` 候選人編號、`LEVEL_2_DUAL_VERIFIED` 標章，欄位 100% 通過 Schema 驗證。已通過 `tools/validate_mock_schema.py` 驗證。
+
+- [x] **任務 1.2：前端靜態 Mock 資料橋接器**
+  - **產出目標**：[`js/mock/mockData.js`](file:///js/mock/mockData.js)
+  - **驗收標準**：將校準後的種子資料封裝為可供前端離線預覽的資料模組（支援 `MOCK_JOBS`, `MOCK_CANDIDATES`, `MOCK_PIPELINE_STATUS`）。
+
+---
+
+## 📌 階段 2：PWA 前端介面與組件化實現 (Frontend Implementation)
+> **目的**：將 [`assets/prototypes/trustcv_pwa_ui.html`](file:///assets/prototypes/trustcv_pwa_ui.html) 拆解並組件化，支援離線與三語切換。
+
+- [x] **任務 2.1：核心配置與離線快取治理**
+  - **產出目標**：[`manifest.json`](file:///manifest.json)、[`sw.js`](file:///sw.js)、[`css/style.css`](file:///css/style.css)
+  - **驗收標準**：符合 PWA 安裝標準，CSS 遵循品牌色規範（曜石黑 `#080C0E`、薄荷綠 `#3DF5A7`、翡翠綠 `#10B981`）。
+
+- [x] **任務 2.2：三語字典與響應式 Store 實作**
+  - **產出目標**：[`js/i18n.js`](file:///js/i18n.js)、[`js/store.js`](file:///js/store.js)
+  - **驗收標準**：支援 `en` / `zh-TW` / `zh-CN` 即時熱切換（**全域嚴禁印地語**）。
+
+- [x] **任務 2.3：四屏核心視圖組件化**
+  - **依據原型**：[`assets/prototypes/trustcv_pwa_ui.html`](file:///assets/prototypes/trustcv_pwa_ui.html)
+  - **產出目標**：
+    1. [`js/components/header.js`](file:///js/components/header.js)（品牌標誌、三語與深淺模式切換）
+    2. [`js/components/jobList.js`](file:///js/components/jobList.js)（職缺卡片、搜尋分類、雙語對照）
+    3. [`js/components/jobDetail.js`](file:///js/components/jobDetail.js)（三門檻雇主遮罩、180天防繞道保護、待遇詳情）
+    4. [`js/components/applyForm.js`](file:///js/components/applyForm.js)（即開即投彈窗、二進位檔案隔離提示）
+    5. [`js/components/statusTracker.js`](file:///js/components/statusTracker.js)（六階段管線進度條與核驗 Dossier 推薦檔案包）
+  - **驗收標準**：組件自內聚、無重量框架依賴、UI 視覺與原型 100% 吻合。
+
+- [x] **任務 2.4：前端入口與客戶端路由組裝**
+  - **產出目標**：[`index.html`](file:///index.html)、[`js/app.js`](file:///js/app.js)、[`js/api.js`](file:///js/api.js)
+  - **驗收標準**：瀏覽器打開 `index.html` 能在 Mock 模式下流暢操作完整求職、直投與履歷查看流程。
+
+- [x] **🚨 任務 2.5：前端高優先修復（PC 寬螢幕自適應 ＋ 深淺主題視覺分離）**
+  - **問題痛點**：目前 `index.html` 外層死鎖 `max-w-md`（448px），在 PC 大螢幕兩側留出巨大黑邊；且深色與淺色主題未分離專屬 Logo 與文字顏色，亮底直接套深色卡片導致對比翻車。
+  - **修復重點**：
+    1. **PC 與 Mobile 雙模響應式**：手機維持單欄流動，PC 大螢幕 (`md:` / `lg:`) 展開為現代 Dashboard 寬版雙欄或自適應版面（左側篩選與狀態、右側職缺流與詳情）。已完成自適應響應式佈局。
+    2. **主題專屬 Logo 與色彩完全解耦**：
+       - 暗黑模式：採用 Obsidian `#080C0E` 底板 ＋ 亮白文字 ＋ 墨綠底翡翠綠三階標。
+       - 清爽亮色：嚴格對齊 `BRAND_GUIDE.md`，卡片改用白瓷 `#FFFFFF`、底色 `#F8FAFC`、文字 `#0F172A`，並引入專屬白底微型標（`fill="#FFFFFF"` 外框與翠綠線條），徹底根除亮底套深色黑色塊之突兀視覺。已完成深淺主題視覺完全解耦。
+
+---
+
+## 📌 階段 3：Google Apps Script (GAS) 雲端網關實現 (Backend Implementation)
+> **目的**：建立以 Google Sheets 作為關聯庫、Google Drive 作為安全保險庫的無伺服器後端。
+
+- [ ] **任務 3.1：GAS 設定與關聯資料表結構定義**
+  - **依據依賴**：[`specs/03_data_schemas/`](file:///specs/03_data_schemas/)
+  - **產出目標**：[`gas/Config.js`](file:///gas/Config.js)、[`gas/Database.js`](file:///gas/Database.js)
+  - **資料表清單**：`Users_Auth`、`Job_Requisitions`、`Candidate_Profiles`、`Applications`、`Audit_Logs`。
+  - **驗收標準**：欄位定義與 JSON Schema 保持一致，支援 UUID 自動生核。
+
+- [ ] **任務 3.2：Google Drive 二進位檔案隔離服務**
+  - **產出目標**：[`gas/DriveService.js`](file:///gas/DriveService.js)
+  - **業務邏輯**：依據 `Candidate_UUID` 動態建立隔離資料夾，接收 Base64 檔案上傳（**鐵律：二進位檔案嚴禁 commit 進 Git**）。
+
+- [ ] **任務 3.3：職缺與申請流程業務邏輯**
+  - **產出目標**：[`gas/JobService.js`](file:///gas/JobService.js)
+  - **業務邏輯**：防重複投遞校驗、RFC 5322 時間戳紀錄、180 天排他權初始狀態註冊。
+
+- [ ] **任務 3.4：RESTful Web App 路由接口**
+  - **產出目標**：[`gas/Code.js`](file:///gas/Code.js)
+  - **提供接口**：`GET ?action=getJobs`、`GET ?action=getCandidate`、`POST action=apply`、`POST action=updateAudit`。
+  - **驗收標準**：支援 CORS、輸出標準 JSON 結構、全域異常捕捉。
+
+---
+
+## 📌 階段 4：Python 打工仔 Worker 與上游同步 (Worker Services)
+> **目的**：實現履歷結構化提取、兩岸術語對齊與 invic 職缺入庫。
+
+- [ ] **任務 4.1：Worker 設定與 OpenRouter 模型池配置**
+  - **產出目標**：[`worker/config.py`](file:///worker/config.py)
+  - **驗收標準**：環境變數管理，支援 Gemini / OpenRouter Free 模型冷卻自癒機制。
+
+- [ ] **任務 4.2：非結構化履歷結構化提取器**
+  - **產出目標**：[`worker/resume_parser.py`](file:///worker/resume_parser.py)
+  - **驗收標準**：解析 TXT/PDF 文本，100% 輸出符合 `verified_candidate.schema.json` 結構之 JSON。**全域禁用 LaTeX**。
+
+- [ ] **任務 4.3：雙軌在地化術語與去識別化引擎**
+  - **依據範本**：[`specs/04_templates/TEMPLATE_deidentified_jd.md`](file:///specs/04_templates/TEMPLATE_deidentified_jd.md)
+  - **產出目標**：[`worker/dossier_translator.py`](file:///worker/dossier_translator.py)
+  - **業務邏輯**：英文 ➔ 台灣繁體中文（例：項目 ➔ 專案、打印 ➔ 列印、軟體 ➔ 軟體）對照，敏感個人資訊脫敏。
+
+- [ ] **任務 4.4：上游職缺脫敏與同步管線**
+  - **依據規格**：[`specs/01_pipeline_specs/stages/STAGE_01_jd_provisioning.md`](file:///specs/01_pipeline_specs/stages/STAGE_01_jd_provisioning.md)
+  - **產出目標**：[`worker/sync_upstream_jobs.py`](file:///worker/sync_upstream_jobs.py)
+  - **驗收標準**：上游原始 JD ➔ 去識別化 ➔ 自動生成 `TW-AUT-` 編號 ➔ 寫入資料庫。
+
+---
+
+## 📌 階段 5：端到端整合聯調與驗收 (E2E Integration & Verification)
+> **目的**：串聯 PWA、GAS 與 Worker，執行完整業務流轉驗收。
+
+- [ ] **任務 5.1：前端與 GAS 真實 API 串接開關**
+  - **修改目標**：[`js/api.js`](file:///js/api.js)
+  - **驗收標準**：配置 `USE_MOCK = false` 時能正確與 GAS Web App 進行通訊，失敗時自動退回 Mock。
+
+- [ ] **任務 5.2：端到端六階段業務流轉測試**
+  - **驗證清單**：
+    1. 上傳履歷 ➔ Drive 生成 UUID 目錄 ➔ Sheets 建立申請單
+    2. 後台核驗通過 ➔ 生成 `GREEN_VERIFIED_READY` 綠標與時間戳
+    3. PWA 能夠以三語正確調閱去識別化 Dossier
+  - **驗收標準**：完全無報錯，資料符合 `specs/` 規範。
+
+---
+
+## ⛔ 後續 AI 代理人必備紅線守則 (Hard Rules)
+1. 嚴禁在未完成階段 1（Schema 校準）之前跳去寫階段 3 的 GAS 代碼。
+2. 嚴禁在未授權下執行 `git push`。
+3. 嚴禁在終端拼接長字串寫檔案（必須用檔案工具）。
+4. 任何時候有檔案新增或結構重大變更，執行：
+   ```bash
+   py .agents/skills/project_structure_keeper/scripts/keeper.py sync
+   ```

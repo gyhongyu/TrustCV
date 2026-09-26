@@ -28,7 +28,7 @@
 ## 3. 不可違背之架構不變量 (Hard Invariants)
 1. **靜態極致 (Static Pure)**: 前端為純靜態 PWA，嚴禁引入需要 Node.js 伺服端渲染的重量級後端；以 GitHub Pages 託管。
 2. **零搶鎖與雲端資產唯一網關**: Google Sheets/Drive 僅透過專屬 GAS Web App 進行讀寫與檔案上傳，嚴禁直連憑證洩漏在前端。
-3. **雙語標準與方言隔離**: 僅支援 English (`en`)、繁體中文 (`zh-TW`) 與簡體中文 (`zh-CN`)，嚴格禁止印地語等非標語言；底層資料採 `data_en` 與 `data_zh` 雙軌並行。
+3. **雙語標準與嚴格分流**: 僅支援 English (`en`) 與中文繁體 (`zh-TW`)，徹底移除簡體中文 (`zh-CN`) 與印地語；文字與展示資料嚴禁中英混雜，依語言完全獨立分軌展示。
 4. **全域禁止 LaTeX**: 履歷與系統輸出嚴格禁用 LaTeX 格式，統一以語意 HTML / Markdown / JSON 呈現。
 5. **DMC 文檔治理**: 研發日誌 `ACTIVE_LOG.md` 僅追加不修改；重大架構異動沉澱至 `docs/adr/`。
 6. **未授權禁止 Git 推送**: 嚴禁 AI 代理人自主發起 `git push`。
@@ -41,8 +41,8 @@
 - `docs/`: DMC 研發知識庫 (`STATE.md`, `ACTIVE_LOG.md`, `TOPOLOGY.md`)
 - `.agents/skills/`: 專案常駐守護技能 (`project_structure_keeper/`)
 - `.agent_profiles/`: 多模式規則庫 (`production/`, `development/`)
-- `index.html`: PWA 核心單頁應用入口 (即開即投、工作瀏覽、履歷投遞)
-- `manifest.json` & `sw.js`: PWA 離線快取與安裝設定
+- `index.html`: Web 核心單頁應用入口 (即開即投、工作瀏覽、履歷投遞)
+- `manifest.json` & `sw.js`: 離線快取設定 (v1.1.1)
 - `gas/`: Google Apps Script 後端代碼 (Gateway, Drive/Sheets 串接)
 - `worker/`: 打工仔 LLM 與上游職缺自動化同步
 
@@ -53,8 +53,13 @@
 - [x] 多模式規則架構部署 (預設開發模式)
 - [x] 全域拓撲規整 (specs/、assets/ 歸位與鏈接校正)
 - [x] 專案專屬守護技能部署 (`.agents/skills/project_structure_keeper`)
-- [x] 前端 PWA、GAS 後端、Worker 與 Mock 測試資料骨架落地 (0KB 佔位完成)
-- [ ] PWA 前端原型與 UI 實現 (Tailwind CDN + Responsive + Multi-lang + 4屏組件)
-- [ ] GAS 後端 Gateway 與 Google Sheets/Drive 自動化結構落地
-- [ ] OpenRouter 打工仔 LLM 履歷萃取/在地化翻譯串接
+- [x] 階段 0：視覺資產規格固化 (PNG/Favicon/ICO) 完成
+- [x] 階段 1：規格契約與 Mock 資料真值校準 (Schema 100% 驗訖) 完成
+- [x] 階段 2：前端骨架與本地預覽啟動器 (`啟動本地預覽.bat`) 落地
+- [x] 階段 2.5：PC 寬螢幕自適應 (max-w-7xl 雙欄) ＋ 深淺主題 Logo/字體配色徹底分離
+- [x] 前端細節修訂：移除 Header PWA 微標籤、移除簡中版 (鎖定 EN / 中文)、示範文案中英純淨分流無混雜
+- [ ] ⏳ 待使用者前端視覺檢閱確認滿意後，解鎖階段 3 (GAS 後端)
+- [ ] 階段 3：GAS 後端 Gateway 與 Google Sheets/Drive 自動化結構落地
+- [ ] 階段 4：OpenRouter 打工仔 LLM 履歷萃取/在地化翻譯串接
+- [ ] 階段 5：端到端整合聯調驗收
 
