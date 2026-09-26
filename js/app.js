@@ -75,6 +75,9 @@ class App {
     // 啟動 2 秒開場加載畫面動畫 (無論手機/電腦或是否安裝 PWA 皆展示)
     this.startSplashScreen();
 
+    // 啟動全平台 PWA 安裝管理與 iOS 雙語探測
+    this.initPwaInstallManager();
+
     // 初次渲染
     this.render();
   }
@@ -141,8 +144,155 @@ class App {
       toggleTheme: () => {
         const current = store.getState().theme;
         store.setTheme(current === 'dark' ? 'light' : 'dark');
-      }
+      },
+      // PWA 跨平台主動安裝處理
+      promptInstall: () => this.handleInstallPrompt(),
+      closeIosPrompt: () => this.closeIosPromptModal()
     };
+  }
+
+  // PWA 安裝管理器：全平台跨設備支援 (PC / Mac / Android / iOS)
+  initPwaInstallManager() {
+    this.deferredInstallPrompt = null;
+    this.isIosPromptOpen = false;
+
+    // 1. 監聽標準 Chrome / Edge / Android PWA 安裝事件
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredInstallPrompt = e;
+      this.updateInstallButtonVisibility(true);
+      console.log('[PWA] beforeinstallprompt captured and ready');
+    });
+
+    // 2. 監聽已安裝完成事件
+    window.addEventListener('appinstalled', () => {
+      this.deferredInstallPrompt = null;
+      this.updateInstallButtonVisibility(false);
+      console.log('[PWA] App successfully installed');
+      store.showToast(i18n.getLanguage() === 'en' ? 'TrustCV Installed Successfully!' : 'TrustCV 安裝成功！');
+    });
+
+    // 3. 初始狀態探測：若已處於獨立 App 視窗模式 (Standalone)，自動永久隱藏
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                         window.navigator.standalone === true;
+    if (isStandalone) {
+      this.updateInstallButtonVisibility(false);
+      return;
+    }
+
+    // 4. iOS Safari 專屬探測：若為 iOS 且非 Standalone，保持按鈕可用以提供雙語引導
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIos && !isStandalone) {
+      this.updateInstallButtonVisibility(true);
+    }
+  }
+
+  updateInstallButtonVisibility(show) {
+    const btn = document.getElementById('pwa-install-btn');
+    if (!btn) return;
+    if (show) {
+      btn.classList.remove('hidden');
+      btn.classList.add('inline-flex');
+    } else {
+      btn.classList.add('hidden');
+      btn.classList.remove('inline-flex');
+    }
+  }
+
+  handleInstallPrompt() {
+    // 情境 A: 支援標準 beforeinstallprompt (Android, Chrome/Edge on Windows/Mac)
+    if (this.deferredInstallPrompt) {
+      this.deferredInstallPrompt.prompt();
+      this.deferredInstallPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('[PWA] User accepted install prompt');
+        } else {
+          console.log('[PWA] User dismissed install prompt');
+        }
+        this.deferredInstallPrompt = null;
+      });
+      return;
+    }
+
+    // 情境 B: iOS Safari (不支援 beforeinstallprompt，彈出雙語純淨圖文指引浮窗)
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIos) {
+      this.isIosPromptOpen = true;
+      this.render();
+      return;
+    }
+
+    // 情境 C: PC 瀏覽器且原生 prompt 暫時未捕獲 (如已被手動安裝或處於特定視窗)
+    store.showToast(i18n.getLanguage() === 'en' 
+      ? 'Please use browser menu [Install TrustCV] or address bar icon' 
+      : '請點擊瀏覽器網址列右側圖示或選單中的「安裝 TrustCV」');
+  }
+
+  closeIosPromptModal() {
+    this.isIosPromptOpen = false;
+    this.render();
+  }
+
+  renderIosPromptModal() {
+    if (!this.isIosPromptOpen) return '';
+    const { theme } = store.getState();
+    const isLight = theme === 'light';
+
+    return `
+      <!-- iOS 安裝教學純淨雙語浮窗 (防破格、嚴格自適應語系) -->
+      <div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeIosPrompt()">
+        <div class="w-full max-w-sm rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 shadow-2xl border border-slate-100' : 'bg-[#0E1518] text-white shadow-2xl border border-slate-800'} space-y-5" onclick="event.stopPropagation()">
+          
+          <!-- 頂部標題與關閉按鈕 -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center p-1.5 ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-[#080C0E] border border-slate-800'}">
+                <svg viewBox="280 50 260 415" class="w-full h-full" fill="none">
+                  <path fill="#22b573" d="M 375,458 L 283,366 L 315,334 L 375,394 L 501,268 L 533,300 Z M 502,306.6 L 494.4,299 L 483.6,299 L 476,306.6 L 476,317.4 L 483.6,325 L 494.4,325 L 502,317.4 Z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold leading-tight">${i18n.t('ios_install_title')}</h3>
+                <span class="text-[10px] text-emerald-500 font-semibold uppercase tracking-wider">${i18n.t('by_teaforia')}</span>
+              </div>
+            </div>
+            <button onclick="window.TrustCV.closeIosPrompt()" class="p-1.5 rounded-full ${isLight ? 'text-slate-400 hover:bg-slate-100 hover:text-slate-700' : 'text-slate-500 hover:bg-slate-800 hover:text-white'} transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <p class="text-xs ${isLight ? 'text-slate-600' : 'text-slate-400'} leading-relaxed">
+            ${i18n.t('ios_install_desc')}
+          </p>
+
+          <!-- 步驟一與步驟二引導清單 -->
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 p-3 rounded-2xl ${isLight ? 'bg-slate-50 border border-slate-100' : 'bg-slate-900/60 border border-slate-800/80'}">
+              <div class="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              </div>
+              <div class="text-xs font-medium leading-snug">
+                ${i18n.t('ios_step_1')}
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 p-3 rounded-2xl ${isLight ? 'bg-slate-50 border border-slate-100' : 'bg-slate-900/60 border border-slate-800/80'}">
+              <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              </div>
+              <div class="text-xs font-medium leading-snug">
+                ${i18n.t('ios_step_2')}
+              </div>
+            </div>
+          </div>
+
+          <!-- 確認按鈕 -->
+          <button onclick="window.TrustCV.closeIosPrompt()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs tracking-wide shadow-md transition-all">
+            ${i18n.t('ios_got_it')}
+          </button>
+        </div>
+      </div>
+    `;
   }
 
   renderBottomNav() {
@@ -241,8 +391,16 @@ class App {
         </main>
         ${this.renderBottomNav()}
         ${renderApplyModal()}
+        ${this.renderIosPromptModal()}
       </div>
     `;
+
+    // 每次重新渲染後，同步更新安裝按鈕的可見度狀態
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (!isStandalone && (this.deferredInstallPrompt || isIos)) {
+      this.updateInstallButtonVisibility(true);
+    }
   }
 }
 

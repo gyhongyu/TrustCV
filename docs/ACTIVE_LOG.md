@@ -253,4 +253,24 @@
   - 避免將 SplashScreen 邏輯與龐大業務 JS 死鎖，解耦為獨立原生層可保證 100% 不死鎖。
 - **防禦手段 / 測試背書**:
   - 本地各語系切換與各端點驗證通過；`keeper.py audit` 通過 100% 結構審計。
+---
+
+### [2026-09-27] [UNREFINED] [frontend/pwa-crossplatform-install] 跨平台 PWA 主動安裝按鈕與 iOS 純淨自適應雙語引導浮窗
+- **類型**: `FEAT_IMPLEMENTATION`
+- **代碼錨點**: `js/app.js`, `js/components/header.js`, `js/i18n.js`, `sw.js`
+- **核心事實 / 決策理由**:
+  - **解決 Chrome 原生防騷擾壓抑機制**：行動端 Chrome 在用戶關閉或拒絕一次安裝提示後，會有長達 24~72 小時的冷卻抑制期。透過在頂部 Navbar 實作常駐主動安裝按鈕 (`pwa-install-btn`)，監聽 `beforeinstallprompt` 捕獲事件，賦予用戶隨時點擊主動安裝的能力。
+  - **全平台跨設備支援 (PC / Mac / Android / iOS)**：
+    - Chrome / Edge (Android, PC, Mac)：調用 `deferredPrompt.prompt()` 觸發原生安裝。
+    - iOS Safari：由於 WebKit 不支援 `beforeinstallprompt`，自動切換至 iOS 專屬雙語引導浮窗，指引使用者「分享 ➔ 加入主畫面」。
+    - Standalone 模式（已安裝為 App）：自動偵測 `display-mode: standalone` 與 `navigator.standalone`，永久自動隱藏按鈕避免冗餘。
+    - AppInstalled 監聽：監聽 `appinstalled` 事件自動隱藏按鈕並發出自適應語系成功 Toast。
+  - **100% 雙語純淨不破格**：iOS 引導彈窗的標題、描述、步驟 1、步驟 2 與按鈕均由 `i18n.js`（`ios_install_title`, `ios_install_desc`, `ios_step_1`, `ios_step_2`, `ios_got_it`）動態渲染，英中嚴格分離，徹底根除中英混雜與破格。
+  - ServiceWorker 快取版本升級至 `trustcv-cache-v1.1.9`。
+- **踩坑 / 失敗模式**:
+  - iOS Safari 缺乏事件機制易引發按鈕無效假死，透過 UserAgent 探測並搭配自製指引浮窗達成無縫體驗。
+- **防禦手段 / 測試背書**:
+  - `keeper.py audit` 通過 100% 結構審計。
+
+
 

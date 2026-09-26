@@ -85,8 +85,14 @@ export function renderHeader() {
           }).join('')}
         </nav>
 
-        <!-- 右側工具欄：語言切換 (僅英文 EN / 中文) + 主題切換 -->
-        <div class="flex items-center gap-2.5">
+        <!-- 右側工具欄：安裝按鈕 + 語言切換 (僅英文 EN / 中文) + 主題切換 -->
+        <div class="flex items-center gap-2">
+          <!-- PWA 安裝按鈕 (已安裝時自動隱藏) -->
+          <button id="pwa-install-btn" onclick="window.TrustCV.promptInstall()" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all ${isLight ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100 shadow-sm' : 'bg-emerald-950/80 text-brand-mint border border-emerald-700 hover:bg-emerald-900 shadow-sm'}">
+            <svg class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>${i18n.t('install_btn')}</span>
+          </button>
+
           <!-- 語言切換膠囊 (無簡中) -->
           <div class="flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${isLight ? 'bg-slate-100 border border-slate-200' : 'bg-slate-900 border border-slate-800'}">
             <span class="cursor-pointer px-1.5 transition-colors ${currentLang === 'en' ? (isLight ? 'text-emerald-700 font-bold' : 'text-brand-mint font-bold') : (isLight ? 'text-slate-500 hover:text-slate-800' : 'text-slate-400 hover:text-slate-200')}" onclick="window.TrustCV.setLang('en')">EN</span>

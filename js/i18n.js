@@ -75,7 +75,13 @@ export const I18N_DICTIONARY = {
     status_completed: "COMPLETED",
     status_in_progress: "IN_PROGRESS",
     status_pending: "PENDING",
-    vault_node_status: "Cloud Vault Node: Drive-Partition-Ready"
+    vault_node_status: "Cloud Vault Node: Drive-Partition-Ready",
+    install_btn: "Install App",
+    ios_install_title: "Install TrustCV on iPhone",
+    ios_install_desc: "Add this app to your Home Screen for a full-screen, native experience with offline access.",
+    ios_step_1: "Tap the Share button at the bottom of Safari",
+    ios_step_2: "Scroll down and select \"Add to Home Screen\"",
+    ios_got_it: "Got it"
   },
   "zh-TW": {
     app_title: "Project TrustCV | 跨國工程人才驗證平台",
@@ -147,7 +153,13 @@ export const I18N_DICTIONARY = {
     status_completed: "已完成",
     status_in_progress: "審理中",
     status_pending: "待處理",
-    vault_node_status: "雲端保險庫節點：硬體隔離就緒"
+    vault_node_status: "雲端保險庫節點：硬體隔離就緒",
+    install_btn: "安裝應用",
+    ios_install_title: "在 iPhone 上安裝 TrustCV",
+    ios_install_desc: "將此應用新增至主畫面，即可享有全螢幕 Native App 體驗與極速離線支援。",
+    ios_step_1: "點擊 Safari 底部工具列的「分享」圖示",
+    ios_step_2: "往下滑動並選擇「加入主畫面」",
+    ios_got_it: "我知道了"
   }
 };
 
