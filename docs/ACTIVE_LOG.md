@@ -271,6 +271,26 @@
   - iOS Safari 缺乏事件機制易引發按鈕無效假死，透過 UserAgent 探測並搭配自製指引浮窗達成無縫體驗。
 - **防禦手段 / 測試背書**:
   - `keeper.py audit` 通過 100% 結構審計。
+---
 
-
-
+### [2026-09-27] [UNREFINED] [frontend/header-compact-and-pwa-bottom-sheet] 導航欄極致瘦身、單鍵語言切換、一次性底部安裝浮卡與台灣在地化履歷 Meta 定版
+- **類型**: `REFACTOR_ENHANCE`
+- **代碼錨點**: `index.html`, `js/components/header.js`, `js/app.js`, `js/i18n.js`, `sw.js`
+- **核心事實 / 決策理由**:
+  - **解決手機導航欄擁擠破格硬傷**：
+    - 中文版原本副標題「勝拓國際 ✕ TEAFORIA 聯合背書」字數過長擠壓右側，全面收斂為與英文版一致之簡約高雅 `BY TEAFORIA`，節省 50% 品牌寬度。
+    - 將原本雙選項語言膠囊（`EN | 中文`）重構為**單鍵切換 Toggle（`🌐 EN` / `🌐 中文`）**，點擊直接切換，單鍵節省 40px 黃金空間。
+    - 安裝按鈕植入 `whitespace-nowrap shrink-0` 樣式防禦，打死不折行，徹底終結「安裝應用」被擠壓成直排畸形之慘狀。
+  - **PWA 安裝「雙軌並存」架構**：
+    - **頂部常駐按鈕**：小巧精緻、不折行，用戶隨時可反悔點擊安裝。
+    - **底部毛玻璃浮卡 (Bottom Sheet Banner)**：懸浮於底部導航欄上方 12px，進站主動展示；點擊叉叉即刻寫入 `localStorage`，**本設備此生永久不再彈出打擾**；安裝後或處於 Standalone 模式自動隱藏。
+  - **台灣繁中在地化「履歷」Meta 定版**：
+    - 全面剔除對岸「簡歷」用語，更換為正統台灣人資用語「履歷」。
+    - 標題定版：`TrustCV | 海外就業 | 免費履歷管理`。
+    - 說明定版：`免費海外工作機會推薦，免費多平台履歷管理服務，免費履歷健診`。
+    - 英文版嚴格對齊：`TrustCV | Global Careers | Free Resume Management`。
+  - ServiceWorker 快取版本升級至 `trustcv-cache-v1.2.0`。
+- **踩坑 / 失敗模式**:
+  - 避免底部彈窗擋住下方 Tab 點擊，精準定位在 `bottom-16`；並透過 localStorage 進行本機永久防騷擾記憶。
+- **防禦手段 / 測試背書**:
+  - `keeper.py audit` 通過 100% 結構審計。

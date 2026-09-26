@@ -85,23 +85,22 @@ export function renderHeader() {
           }).join('')}
         </nav>
 
-        <!-- 右側工具欄：安裝按鈕 + 語言切換 (僅英文 EN / 中文) + 主題切換 -->
-        <div class="flex items-center gap-2">
-          <!-- PWA 安裝按鈕 (已安裝時自動隱藏) -->
-          <button id="pwa-install-btn" onclick="window.TrustCV.promptInstall()" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all ${isLight ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100 shadow-sm' : 'bg-emerald-950/80 text-brand-mint border border-emerald-700 hover:bg-emerald-900 shadow-sm'}">
-            <svg class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            <span>${i18n.t('install_btn')}</span>
+        <!-- 右側工具欄：安裝按鈕 + 單鍵語言切換 + 主題切換 (緊湊排版，永不折行破格) -->
+        <div class="flex items-center gap-1.5 md:gap-2 shrink-0">
+          <!-- PWA 安裝按鈕 (已安裝時自動隱藏，強制單行防破格) -->
+          <button id="pwa-install-btn" onclick="window.TrustCV.promptInstall()" class="hidden items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all whitespace-nowrap shrink-0 ${isLight ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100 shadow-sm' : 'bg-emerald-950/80 text-brand-mint border border-emerald-700 hover:bg-emerald-900 shadow-sm'}">
+            <svg class="w-3.5 h-3.5 fill-none stroke-current shrink-0" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span class="whitespace-nowrap">${i18n.t('install_btn')}</span>
           </button>
 
-          <!-- 語言切換膠囊 (無簡中) -->
-          <div class="flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${isLight ? 'bg-slate-100 border border-slate-200' : 'bg-slate-900 border border-slate-800'}">
-            <span class="cursor-pointer px-1.5 transition-colors ${currentLang === 'en' ? (isLight ? 'text-emerald-700 font-bold' : 'text-brand-mint font-bold') : (isLight ? 'text-slate-500 hover:text-slate-800' : 'text-slate-400 hover:text-slate-200')}" onclick="window.TrustCV.setLang('en')">EN</span>
-            <span class="${isLight ? 'text-slate-300' : 'text-slate-600'}">|</span>
-            <span class="cursor-pointer px-1.5 transition-colors ${currentLang === 'zh-TW' ? (isLight ? 'text-emerald-700 font-bold' : 'text-brand-mint font-bold') : (isLight ? 'text-slate-500 hover:text-slate-800' : 'text-slate-400 hover:text-slate-200')}" onclick="window.TrustCV.setLang('zh-TW')">中文</span>
-          </div>
+          <!-- 單鍵語言切換 Toggle (省下 40px 空間，當前英顯示中文，當前中顯示 EN) -->
+          <button onclick="window.TrustCV.setLang('${currentLang === 'en' ? 'zh-TW' : 'en'}')" class="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-tight transition-all shrink-0 whitespace-nowrap ${isLight ? 'bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200' : 'bg-slate-900 border border-slate-800 text-slate-200 hover:text-white hover:bg-slate-800'}">
+            <span class="text-[10px] opacity-70">🌐</span>
+            <span>${currentLang === 'en' ? '中文' : 'EN'}</span>
+          </button>
 
           <!-- 深淺主題切換按鈕 -->
-          <button onclick="window.TrustCV.toggleTheme()" class="p-2 rounded-xl transition-all ${isLight ? 'bg-slate-100 border border-slate-200 text-amber-600 hover:bg-slate-200' : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white'}" title="${isLight ? '切換為深色模式' : '切換為明亮模式'}">
+          <button onclick="window.TrustCV.toggleTheme()" class="p-1.5 md:p-2 rounded-xl transition-all shrink-0 ${isLight ? 'bg-slate-100 border border-slate-200 text-amber-600 hover:bg-slate-200' : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white'}" title="${isLight ? '切換為深色模式' : '切換為明亮模式'}">
             ${isLight 
               ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
               : '<svg class="w-4 h-4 fill-current text-slate-300" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'}

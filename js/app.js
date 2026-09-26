@@ -147,8 +147,72 @@ class App {
       },
       // PWA 跨平台主動安裝處理
       promptInstall: () => this.handleInstallPrompt(),
-      closeIosPrompt: () => this.closeIosPromptModal()
+      closeIosPrompt: () => this.closeIosPromptModal(),
+      dismissInstallBanner: () => this.dismissInstallBanner()
     };
+  }
+
+  // 使用者手動關閉底部浮卡：永久記憶於 localStorage，本設備絕不二次打擾
+  dismissInstallBanner() {
+    try {
+      localStorage.setItem('trustcv_install_banner_dismissed', 'true');
+    } catch (e) {}
+    this.isInstallBannerDismissed = true;
+    this.render();
+  }
+
+  renderBottomInstallBanner() {
+    // 1. 若處於獨立 App 模式 (Standalone)，不顯示
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone) return '';
+
+    // 2. 若使用者之前已點擊叉叉關閉過，永久不顯示
+    if (this.isInstallBannerDismissed) return '';
+    try {
+      if (localStorage.getItem('trustcv_install_banner_dismissed') === 'true') {
+        this.isInstallBannerDismissed = true;
+        return '';
+      }
+    } catch (e) {}
+
+    // 3. 若當前沒有可安裝狀態（既非 iOS 且未捕獲 prompt），暫不顯示
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (!this.deferredInstallPrompt && !isIos) return '';
+
+    const { theme } = store.getState();
+    const isLight = theme === 'light';
+
+    return `
+      <!-- 一次性精緻底部毛玻璃安裝浮卡 (懸浮於底部導航欄上方 12px，永不遮擋 Tab) -->
+      <div id="pwa-bottom-banner" class="fixed bottom-16 left-3 right-3 md:left-auto md:right-6 md:w-96 z-30 animate-fade-in">
+        <div class="rounded-2xl p-3.5 shadow-2xl backdrop-blur-xl flex items-center justify-between gap-3 border ${isLight ? 'bg-white/95 border-emerald-200/80 text-slate-800 shadow-emerald-950/10' : 'bg-[#0E1518]/95 border-emerald-800/60 text-white shadow-black/40'}">
+          
+          <!-- 左側圖示與雙語文案 -->
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isLight ? 'bg-emerald-50 border border-emerald-200' : 'bg-[#080C0E] border border-emerald-900'}">
+              <svg viewBox="280 50 260 415" class="w-5 h-5" fill="none">
+                <path fill="#22b573" d="M 375,458 L 283,366 L 315,334 L 375,394 L 501,268 L 533,300 Z M 502,306.6 L 494.4,299 L 483.6,299 L 476,306.6 L 476,317.4 L 483.6,325 L 494.4,325 L 502,317.4 Z"/>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <div class="text-xs font-bold truncate leading-tight">${i18n.t('install_banner_title')}</div>
+              <div class="text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'} truncate leading-tight mt-0.5">${i18n.t('install_banner_desc')}</div>
+            </div>
+          </div>
+
+          <!-- 右側立即安裝按鈕與關閉叉叉 -->
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="window.TrustCV.promptInstall()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-[11px] shadow-sm transition-all whitespace-nowrap">
+              ${i18n.t('install_banner_cta')}
+            </button>
+            <button onclick="window.TrustCV.dismissInstallBanner()" class="p-1 rounded-full ${isLight ? 'text-slate-400 hover:bg-slate-100 hover:text-slate-700' : 'text-slate-500 hover:bg-slate-800 hover:text-white'} transition-colors" title="不再提示">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    `;
   }
 
   // PWA 安裝管理器：全平台跨設備支援 (PC / Mac / Android / iOS)
@@ -375,11 +439,11 @@ class App {
         mainContent = renderJobList();
     }
 
-    // 動態自適應更新頁面標題與語系標籤 (避免安裝提示或瀏覽器分頁中英混雜)
+    // 動態自適應更新頁面標題與語系標籤 (支援台灣在地化「履歷」與國際英文版)
     const isEn = i18n.getLanguage() === 'en';
     document.title = isEn 
-      ? 'Project TrustCV | Verified Cross-Border Engineering Talent Platform'
-      : 'Project TrustCV | 跨國工程人才驗證推薦平台';
+      ? 'TrustCV | Global Careers | Free Resume Management'
+      : 'TrustCV | 海外就業 | 免費履歷管理';
     document.documentElement.lang = isEn ? 'en' : 'zh-TW';
 
     this.appRoot.innerHTML = `
@@ -390,6 +454,7 @@ class App {
           ${mainContent}
         </main>
         ${this.renderBottomNav()}
+        ${this.renderBottomInstallBanner()}
         ${renderApplyModal()}
         ${this.renderIosPromptModal()}
       </div>
