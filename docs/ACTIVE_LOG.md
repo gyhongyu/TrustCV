@@ -182,7 +182,21 @@
   - ServiceWorker 快取版本升級至 `trustcv-cache-v1.1.4`。
 - **踩坑 / 失敗模式**:
   - 舊版勾標為隨意拉線的簡陋線條（缺乏厚度與沖孔細節）；改為官方真實向量後，三層不同色階與沖孔透雕完全展現。
+---
+
+### [2026-09-27] [UNREFINED] [ops/deployment] GitHub Pages 正式發布與 Cloudflare 域名/SSL 端到端閉環
+- **類型**: `DEPLOYMENT`
+- **代碼錨點**: `CNAME`, `docs/STATE.md`, `https://github.com/gyhongyu/TrustCV`, `https://cv.teaforia.in`
+- **核心事實 / 決策理由**:
+  - 獲得使用者明確授權同意部署指令，建立根目錄 `CNAME`（`cv.teaforia.in`）並加入目錄守門白名單。
+  - 透過 GitHub REST API 建立公開遠端倉庫 `gyhongyu/TrustCV`，並自動同步登記至 Google Sheet 官方台帳《我的Github倉庫明細》。
+  - 本地 Git 提交最新前端 MVP 代碼與修復後之圖標資產，推送至 `master` 分支。
+  - 調用 `cloudflare_domain_manager` 執行端到端部署閉環：建立 `cv.teaforia.in` CNAME 灰雲解析、啟用 GitHub Pages 自訂域名、輪詢完成 Let's Encrypt SSL 憑證簽發（Approved）、開啟強制 HTTPS（Enforce HTTPS: True）。
+  - 線上實機端點 `https://cv.teaforia.in` 返回 HTTP 200 正常運行。
+- **踩坑 / 失敗模式**:
+  - 新建倉庫呼叫 GitHub Pages API 前需先建立 source branch，透過標準兩段式請求順利啟動並啟用自訂域名與憑證。
 - **防禦手段 / 測試背書**:
-  - `keeper.py audit` 通過 100% 結構審計。
+  - 線上 `https://cv.teaforia.in` HTTP 200 驗證通過；`keeper.py audit` 通過 100% 專案結構守門審核。
+
 
 

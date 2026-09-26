@@ -58,7 +58,9 @@
 - [x] 階段 2：前端骨架與本地預覽啟動器 (`啟動本地預覽.bat`) 落地
 - [x] 階段 2.5：PC 寬螢幕自適應 (max-w-7xl 雙欄) ＋ 深淺主題 Logo/字體配色徹底分離
 - [x] 前端細節修訂：移除 Header PWA 微標籤、移除簡中版 (鎖定 EN / 中文)、示範文案中英純淨分流無混雜
-- [ ] ⏳ 待使用者前端視覺檢閱確認滿意後，解鎖階段 3 (GAS 後端)
+- [x] 標籤頁圖標與 Header 官方勾標向量修復完成 (Chromium 渲染 ＋ 原生 SVG 支援)
+- [x] GitHub 遠端倉庫建立 (`gyhongyu/TrustCV`) ＋ Google Sheet 倉庫台帳雙向登記
+- [x] GitHub Pages 正式發布 ＋ Cloudflare CNAME 與 Let's Encrypt SSL 憑證強制 HTTPS 閉環 (`https://cv.teaforia.in`)
 - [ ] 階段 3：GAS 後端 Gateway 與 Google Sheets/Drive 自動化結構落地
 - [ ] 階段 4：OpenRouter 打工仔 LLM 履歷萃取/在地化翻譯串接
 - [ ] 階段 5：端到端整合聯調驗收
