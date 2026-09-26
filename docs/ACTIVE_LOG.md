@@ -224,7 +224,20 @@
   - ServiceWorker 快取版本升級至 `trustcv-cache-v1.1.6`。
 - **踩坑 / 失敗模式**:
   - 粗暴的 `window.location.reload()` 會在使用者輸入履歷時清空表單，透過 `store.subscribe` 狀態守衛達成延遲自癒。
+---
+
+### [2026-09-27] [UNREFINED] [frontend/splash-og-i18n] 2秒開場啟動加載畫面、社群分享卡片 (OG) 與安裝提示純淨化
+- **類型**: `FEAT_IMPLEMENTATION`
+- **代碼錨點**: `index.html`, `css/style.css`, `js/app.js`, `manifest.json`, `sw.js`, `tools/convert_icons.py`, `assets/icons/og-image.png`
+- **核心事實 / 決策理由**:
+  - **2 秒開場啟動畫面 (Splash Screen)**：不論手機/電腦版或是否安裝 PWA，進站皆流暢展示 `APP開啟加載畫面.svg` 官方深邃光暈動畫與動態進度條（45% -> 85% -> 100%），2 秒滿後優雅淡出移除，給予使用者濃厚的安全核驗儀式感。
+  - **WhatsApp / LINE 社群分享預覽圖 (OpenGraph)**：透過 Chromium 將 `APP開啟加載畫面.svg` 渲染為 1200x630 官方標準分享卡片 `assets/icons/og-image.png`，並在 `index.html` 注入 `og:image`、`og:title`、`twitter:card`，徹底解決分享連結缺乏預覽圖與品牌圖騰之痛點。
+  - **安裝提示純淨化**：將 `manifest.json` 應用名稱收斂為國際化品牌名 `TrustCV`，消除安裝橫幅中英混雜標題；並由 `app.js` 依當前語系動態適配 `document.title` 與 `document.documentElement.lang`。
+  - ServiceWorker 快取版本升級至 `trustcv-cache-v1.1.7`。
+- **踩坑 / 失敗模式**:
+  - WhatsApp/LINE 對於 SVG 的 og:image 抓取支援度差，強制透過 Chromium 預渲染為 1200x630 PNG 確保 100% 跨平台抓取成功。
 - **防禦手段 / 測試背書**:
-  - 本地模擬 `controllerchange` 狀態守衛測試通過；`keeper.py audit` 通過 100% 結構審計。
+  - 本地驗證 Splash Screen 2 秒動畫與淡出順暢；`keeper.py audit` 通過 100% 結構審計。
+
 
 

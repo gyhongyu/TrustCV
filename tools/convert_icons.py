@@ -63,6 +63,11 @@ def main():
         fav_png_16 = os.path.join(icons_dir, "favicon-16x16.png")
         render_svg_to_png_browser(page, svg_favicon_path, fav_png_16, 16, 16)
 
+        # 5. OpenGraph & Social Share Preview Image (1200x630 for WhatsApp / LINE / Facebook / Twitter)
+        svg_splash_path = os.path.join(base_dir, "assets", "svg", "APP開啟加載畫面.svg")
+        og_image_path = os.path.join(icons_dir, "og-image.png")
+        render_svg_to_png_browser(page, svg_splash_path, og_image_path, 1200, 630)
+
         browser.close()
         
     # Use Pillow to pack into .ico (including 16, 32, 48/64)

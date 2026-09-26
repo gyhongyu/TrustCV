@@ -12,6 +12,22 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="TrustCV">
   
+  <!-- OpenGraph & Social Preview (WhatsApp / LINE / Telegram / Facebook / Twitter) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://cv.teaforia.in/">
+  <meta property="og:title" content="Project TrustCV | 跨國工程人才驗證推薦平台">
+  <meta property="og:description" content="台灣企業高階機電、自動化與半導體設備外籍工程人才雙重核實推薦平台。客觀原件排查、真人視訊初審、180天排他防繞道保護。">
+  <meta property="og:image" content="https://cv.teaforia.in/assets/icons/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="Project TrustCV">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://cv.teaforia.in/">
+  <meta name="twitter:title" content="Project TrustCV | 跨國工程人才驗證推薦平台">
+  <meta name="twitter:description" content="台灣企業高階機電、自動化與半導體設備外籍工程人才雙重核實推薦平台。客觀原件排查、真人視訊初審、180天排他防繞道保護。">
+  <meta name="twitter:image" content="https://cv.teaforia.in/assets/icons/og-image.png">
+  
   <!-- Favicon & PWA Icons -->
   <link rel="icon" type="image/svg+xml" href="./assets/svg/PC 瀏覽器標籤頁專用圖標代碼.svg">
   <link rel="icon" type="image/x-icon" href="./favicon.ico">
@@ -61,6 +77,31 @@
   <link rel="stylesheet" href="./css/style.css">
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen selection:bg-brand-emerald selection:text-white transition-colors duration-200">
+  <!-- 2 秒開場啟動加載畫面 (Splash Screen: 支援手機/電腦版，未安裝 PWA 亦流暢展示) -->
+  <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#080C0E] select-none">
+    <!-- 背景暗流光暈 -->
+    <div class="absolute w-72 h-72 md:w-96 md:h-96 rounded-full bg-brand-emerald/15 blur-3xl pointer-events-none animate-pulse-glow"></div>
+    
+    <!-- 官方定版加載畫面 SVG (APP開啟加載畫面.svg) -->
+    <div class="w-48 h-48 md:w-64 md:h-64 relative z-10 flex items-center justify-center filter drop-shadow-2xl">
+      <img src="./assets/svg/APP開啟加載畫面.svg" alt="TrustCV Loading" class="w-full h-full object-contain">
+    </div>
+
+    <!-- 加載進度條與安全連線指示 -->
+    <div class="w-full max-w-[240px] md:max-w-[280px] mt-8 z-10 flex flex-col items-center px-4">
+      <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden border border-slate-800">
+        <div id="splash-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-brand-mint w-0 rounded-full transition-all duration-300"></div>
+      </div>
+      <div class="flex items-center gap-2 mt-3 text-xs font-mono text-emerald-400">
+        <svg class="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+        <span id="splash-status-text">Establishing Secure Vault...</span>
+      </div>
+    </div>
+  </div>
+
   <!-- PWA SPA Root Container: 全寬響應式自適應容器 (打破 max-w-md 限制) -->
   <div id="app-root" class="min-h-screen flex flex-col w-full"></div>
 

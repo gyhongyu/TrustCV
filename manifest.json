@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "Project TrustCV | 跨國工程人才驗證平台",
+  "name": "TrustCV",
   "short_name": "TrustCV",
-  "description": "跨國工程人才赴台就業客觀審計與去識別化推薦 PWA",
+  "description": "Cross-Border Engineering Talent Dossier & Verification Platform",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

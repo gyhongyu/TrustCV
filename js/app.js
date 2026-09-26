@@ -72,8 +72,37 @@ class App {
     store.subscribe(() => this.render());
     i18n.subscribe(() => this.render());
 
+    // 啟動 2 秒開場加載畫面動畫 (無論手機/電腦或是否安裝 PWA 皆展示)
+    this.startSplashScreen();
+
     // 初次渲染
     this.render();
+  }
+
+  startSplashScreen() {
+    const splash = document.getElementById('splash-screen');
+    const bar = document.getElementById('splash-progress-bar');
+    const status = document.getElementById('splash-status-text');
+    if (!splash) return;
+
+    // 動態進度條動畫：0ms -> 600ms (40%) -> 1400ms (85%) -> 1900ms (100%)
+    if (bar) {
+      setTimeout(() => { bar.style.width = '45%'; }, 150);
+      setTimeout(() => { 
+        bar.style.width = '85%'; 
+        if (status) status.textContent = i18n.getLanguage() === 'en' ? 'Verifying Credence Node...' : '驗證可信節點中...';
+      }, 900);
+      setTimeout(() => { 
+        bar.style.width = '100%'; 
+        if (status) status.textContent = i18n.getLanguage() === 'en' ? 'Vault Ready.' : '保險庫就緒。';
+      }, 1600);
+    }
+
+    // 滿 2 秒 (2000ms) 優雅淡出消失
+    setTimeout(() => {
+      splash.classList.add('splash-hidden');
+      setTimeout(() => { splash.remove(); }, 600);
+    }, 2000);
   }
 
   initGlobalHandlers() {
@@ -195,6 +224,13 @@ class App {
       default:
         mainContent = renderJobList();
     }
+
+    // 動態自適應更新頁面標題與語系標籤 (避免安裝提示或瀏覽器分頁中英混雜)
+    const isEn = i18n.getLanguage() === 'en';
+    document.title = isEn 
+      ? 'Project TrustCV | Verified Cross-Border Engineering Talent Platform'
+      : 'Project TrustCV | 跨國工程人才驗證推薦平台';
+    document.documentElement.lang = isEn ? 'en' : 'zh-TW';
 
     this.appRoot.innerHTML = `
       <div class="min-h-screen w-full ${isLight ? 'bg-[#F8FAFC] text-slate-900' : 'bg-brand-obsidian text-slate-100'} flex flex-col transition-colors duration-200 relative">

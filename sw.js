@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trustcv-cache-v1.1.6';
+const CACHE_NAME = 'trustcv-cache-v1.1.7';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -19,8 +19,10 @@ const ASSETS_TO_CACHE = [
   './assets/icons/apple-touch-icon.png',
   './assets/icons/favicon-32x32.png',
   './assets/icons/favicon-16x16.png',
+  './assets/icons/og-image.png',
   './assets/svg/PC 瀏覽器標籤頁專用圖標代碼.svg',
   './assets/svg/手機安裝後icon.svg',
+  './assets/svg/APP開啟加載畫面.svg',
   './favicon.ico'
 ];
 
