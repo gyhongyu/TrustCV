@@ -238,6 +238,19 @@
   - WhatsApp/LINE 對於 SVG 的 og:image 抓取支援度差，強制透過 Chromium 預渲染為 1200x630 PNG 確保 100% 跨平台抓取成功。
 - **防禦手段 / 測試背書**:
   - 本地驗證 Splash Screen 2 秒動畫與淡出順暢；`keeper.py audit` 通過 100% 結構審計。
+---
 
-
+### [2026-09-27] [UNREFINED] [frontend/mobile-splash-localization-fix] 手機開場卡屏根治、狀態徽章純雙語化、保險庫雙語化與長郵箱防破格
+- **類型**: `BUG_FIX`
+- **代碼錨點**: `index.html`, `js/app.js`, `js/i18n.js`, `js/components/statusTracker.js`, `sw.js`
+- **核心事實 / 決策理由**:
+  - **手機開場卡屏根治**：深入排查手機弱網或 ServiceWorker 快取撕裂時，`DOMContentLoaded` 監聽器與模組加載時序阻塞導致 Splash Screen 永久停留之 Bug。將 Splash Screen 改造為 100% 純原生內聯樣式（零外部 Tailwind 依賴），並在 HTML 底部植入純原生 JS 兜底計時器，2 秒滿後強制無條件淡出銷毀；同時 `app.js` 採用 `document.readyState` 容錯自檢啟動。
+  - **狀態樹標籤純雙語化**：解決左側中文右側英文 `COMPLETED/IN_PROGRESS` 之混雜突兀感，改由 `i18n.t('status_completed')` 動態對齊（中文顯示「已完成/審理中」，英文顯示「COMPLETED/IN_PROGRESS」）。
+  - **安全保險庫多語系對齊**：移除 `app.js` 中寫死之中文，改由 `vault_title`、`vault_desc`、`vault_node_status` 多語系字典驅動。
+  - **履歷評分與長郵箱防破格**：英文模式下「分」修正為 `Pts`；候選人長代理郵箱 (`email_proxy`) 加上 `break-all` 防破格樣式，徹底杜絕撐爆手機卡片。
+  - ServiceWorker 快取版本升級至 `trustcv-cache-v1.1.8`。
+- **踩坑 / 失敗模式**:
+  - 避免將 SplashScreen 邏輯與龐大業務 JS 死鎖，解耦為獨立原生層可保證 100% 不死鎖。
+- **防禦手段 / 測試背書**:
+  - 本地各語系切換與各端點驗證通過；`keeper.py audit` 通過 100% 結構審計。
 

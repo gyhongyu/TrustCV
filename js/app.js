@@ -211,12 +211,12 @@ class App {
               <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
             <div class="space-y-1.5">
-              <h3 class="text-base md:text-lg font-bold ${isLight ? 'text-slate-900' : 'text-white'}">Google Drive 檔案保險庫隔離區</h3>
-              <p class="text-xs md:text-sm text-slate-400 leading-relaxed">候選人原始履歷、所得稅 Form 16 與學歷原件全數儲存於 Google Drive 隔離區，受 180 天排他權嚴密保護，絕不污染代碼庫。</p>
+              <h3 class="text-base md:text-lg font-bold ${isLight ? 'text-slate-900' : 'text-white'}">${i18n.t('vault_title')}</h3>
+              <p class="text-xs md:text-sm ${isLight ? 'text-slate-600' : 'text-slate-400'} leading-relaxed">${i18n.t('vault_desc')}</p>
             </div>
             <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono ${isLight ? 'bg-slate-100 text-slate-600 border border-slate-200' : 'bg-slate-900 text-slate-400 border border-slate-800'}">
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Cloud Vault Node: Drive-Partition-Ready</span>
+              <span>${i18n.t('vault_node_status')}</span>
             </div>
           </div>
         `;
@@ -246,7 +246,17 @@ class App {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const app = new App();
-  app.init();
-});
+function bootstrapApp() {
+  try {
+    const app = new App();
+    app.init();
+  } catch (err) {
+    console.error('[TrustCV] Bootstrapping error:', err);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootstrapApp);
+} else {
+  bootstrapApp();
+}

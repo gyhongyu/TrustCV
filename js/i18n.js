@@ -70,7 +70,12 @@ export const I18N_DICTIONARY = {
     cancel: "Cancel",
     vault_title: "Google Drive Secure Vault",
     vault_desc: "Candidate original resumes, Form 16 tax records, and educational credentials are fully isolated in Google Drive, protected by 180-day non-circumvention terms.",
-    pipeline_sub: "Aligned with RFC 5322 Ingestion Node Active"
+    pipeline_sub: "Aligned with RFC 5322 Ingestion Node Active",
+    score_unit: "Pts",
+    status_completed: "COMPLETED",
+    status_in_progress: "IN_PROGRESS",
+    status_pending: "PENDING",
+    vault_node_status: "Cloud Vault Node: Drive-Partition-Ready"
   },
   "zh-TW": {
     app_title: "Project TrustCV | 跨國工程人才驗證平台",
@@ -137,7 +142,12 @@ export const I18N_DICTIONARY = {
     cancel: "取消",
     vault_title: "Google Drive 檔案保險庫隔離區",
     vault_desc: "候選人原始履歷、所得稅 Form 16 與學歷原件全數儲存於 Google Drive 隔離區，受 180 天排他權嚴密保護，絕不污染代碼庫。",
-    pipeline_sub: "對齊六階段存證交付狀態機"
+    pipeline_sub: "對齊六階段存證交付狀態機",
+    score_unit: "分",
+    status_completed: "已完成",
+    status_in_progress: "審理中",
+    status_pending: "待處理",
+    vault_node_status: "雲端保險庫節點：硬體隔離就緒"
   }
 };
 

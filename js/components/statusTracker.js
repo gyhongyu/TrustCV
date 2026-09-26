@@ -28,12 +28,17 @@ export function renderStatusTracker() {
             let badgeClass = isLight ? 'bg-slate-100 text-slate-500 border-slate-200' : 'bg-slate-800 text-slate-400 border-slate-700';
             let dotClass = isLight ? 'bg-slate-200 text-slate-600' : 'bg-slate-700 text-slate-300';
             
+            let statusLabel = stage.status;
             if (stage.status === 'COMPLETED') {
               badgeClass = isLight ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-emerald-950 text-brand-mint border-emerald-800';
               dotClass = isLight ? 'bg-emerald-600 text-white shadow-sm ring-4 ring-emerald-100' : 'bg-brand-mint text-slate-950 ring-4 ring-brand-emerald/20';
+              statusLabel = i18n.t('status_completed');
             } else if (stage.status === 'IN_PROGRESS') {
               badgeClass = isLight ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-amber-950 text-amber-400 border-amber-800';
               dotClass = isLight ? 'bg-amber-500 text-white ring-4 ring-amber-100 animate-pulse' : 'bg-amber-400 text-slate-950 ring-4 ring-amber-400/20 animate-ping';
+              statusLabel = i18n.t('status_in_progress');
+            } else {
+              statusLabel = i18n.t('status_pending');
             }
 
             return `
@@ -45,7 +50,7 @@ export function renderStatusTracker() {
                   <div class="flex justify-between items-center">
                     <h4 class="text-xs md:text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}">${stageDisplayName}</h4>
                     <span class="text-[10px] font-mono px-2 py-0.5 rounded border font-semibold ${badgeClass}">
-                      ${stage.status}
+                      ${statusLabel}
                     </span>
                   </div>
                   <p class="text-[10.5px] font-mono ${isLight ? 'text-slate-500' : 'text-slate-400'}">${stage.code}</p>
@@ -95,7 +100,7 @@ export function renderDossierHub() {
                 <span class="w-3 h-3 rounded-full ${isLight ? 'bg-emerald-500' : 'bg-brand-mint'}"></span>
                 <span>TEAFORIA VERIFIED BADGE</span>
               </span>
-              <span class="text-xs md:text-sm font-bold font-mono ${isLight ? 'text-emerald-700' : 'text-brand-mint'}">${candidate.risk_scoring.background_integrity_score} / 100 分</span>
+              <span class="text-xs md:text-sm font-bold font-mono ${isLight ? 'text-emerald-700' : 'text-brand-mint'}">${candidate.risk_scoring.background_integrity_score} / 100 ${i18n.t('score_unit')}</span>
             </div>
             <div class="grid grid-cols-2 gap-2.5 text-xs pt-1">
               <div class="flex items-center gap-1.5 ${isLight ? 'text-slate-700' : 'text-slate-200'}">
@@ -125,9 +130,9 @@ export function renderDossierHub() {
                 <span class="block text-[9.5px] ${isLight ? 'text-slate-500' : 'text-slate-400'}">${i18n.t('full_name')}</span>
                 <span class="font-semibold ${isLight ? 'text-slate-900' : 'text-white'}">${prof.full_name}</span>
               </div>
-              <div>
+              <div class="min-w-0">
                 <span class="block text-[9.5px] ${isLight ? 'text-slate-500' : 'text-slate-400'}">${i18n.t('proxy_email')}</span>
-                <span class="font-mono font-medium ${isLight ? 'text-emerald-700' : 'text-brand-mint'}">${prof.contact_masked.email_proxy}</span>
+                <span class="font-mono font-medium block break-all text-[11px] leading-tight ${isLight ? 'text-emerald-700' : 'text-brand-mint'}">${prof.contact_masked.email_proxy}</span>
               </div>
               <div>
                 <span class="block text-[9.5px] ${isLight ? 'text-slate-500' : 'text-slate-400'}">${i18n.t('total_exp')}</span>
