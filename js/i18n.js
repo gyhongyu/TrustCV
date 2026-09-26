@@ -142,10 +142,32 @@ export const I18N_DICTIONARY = {
 };
 
 export class I18nService {
-  constructor(defaultLang = 'zh-TW') {
-    const saved = typeof localStorage !== 'undefined' ? localStorage.getItem('trustcv_lang') : null;
-    this.currentLang = (saved === 'en' || saved === 'zh-TW') ? saved : defaultLang;
+  constructor() {
+    this.currentLang = this.detectInitialLanguage();
     this.listeners = [];
+  }
+
+  detectInitialLanguage() {
+    // 優先權 1: 使用者手動儲存之偏好
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('trustcv_lang');
+      if (saved === 'en' || saved === 'zh-TW') {
+        return saved;
+      }
+    }
+
+    // 優先權 2: 依使用者瀏覽器/系統環境語言自適應切換
+    if (typeof navigator !== 'undefined') {
+      const browserLang = (navigator.language || (navigator.languages && navigator.languages[0]) || '').toLowerCase();
+      // 中文語系環境自動適配為台灣繁中
+      if (browserLang.startsWith('zh')) {
+        return 'zh-TW';
+      }
+      // 非中文環境（英文、印度各邦、歐美海外環境）一律自適應為英文
+      return 'en';
+    }
+
+    return 'zh-TW';
   }
 
   setLanguage(lang) {

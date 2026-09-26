@@ -197,6 +197,18 @@
   - 新建倉庫呼叫 GitHub Pages API 前需先建立 source branch，透過標準兩段式請求順利啟動並啟用自訂域名與憑證。
 - **防禦手段 / 測試背書**:
   - 線上 `https://cv.teaforia.in` HTTP 200 驗證通過；`keeper.py audit` 通過 100% 專案結構守門審核。
+---
 
-
+### [2026-09-27] [UNREFINED] [frontend/adaptive-i18n] 瀏覽器環境語言自適應切換引擎落地
+- **類型**: `FEAT_IMPLEMENTATION`
+- **代碼錨點**: `js/i18n.js`, `sw.js`
+- **核心事實 / 決策理由**:
+  - 依照使用者指示落實兩層式語言自適應切換機制：
+    1. 優先權 1：若 `localStorage` 有使用者主動切換記錄（`trustcv_lang`），維持使用者意圖優先。
+    2. 優先權 2：新造訪者透過 `navigator.language` 自動探測系統語系：開頭為 `zh` 者自動切換為台灣繁中（`zh-TW`），其餘所有非中文環境（英文、印度、歐美海外工程師）一律自適應切換為純淨英文（`en`）。
+  - ServiceWorker 快取版本升級至 `trustcv-cache-v1.1.5`。
+- **踩坑 / 失敗模式**:
+  - 避免傳統透過 URL 污染或死鎖單一預設語系，透過純客戶端 `navigator.language` 達成海外與本土無感分流。
+- **防禦手段 / 測試背書**:
+  - 本地單元邏輯驗證通過；`keeper.py audit` 通過 100% 結構審計。
 
