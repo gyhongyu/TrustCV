@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- 深邃背景漸層 (iOS/Android 桌面實色安全底) -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080C0E"/>
+      <stop offset="100%" stop-color="#020406"/>
+    </linearGradient>
+
+    <!-- 檔案卡片沉穩深灰底色 -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141E28"/>
+      <stop offset="100%" stop-color="#0B1117"/>
+    </linearGradient>
+
+    <!-- 檔案外框微光金屬翡翠綠 -->
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" stop-opacity="0.95"/>
+      <stop offset="40%" stop-color="#10B981" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#1E293B" stop-opacity="0.8"/>
+    </linearGradient>
+
+    <!-- 'CV' 幾何字標漸層 -->
+    <linearGradient id="cGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
+    </linearGradient>
+    <linearGradient id="vGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3DF5A7"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <!-- 三階核驗勾標官方漸層 -->
+    <linearGradient id="g-top" x1="0%" y1="100%" x2="80%" y2="0%">
+      <stop offset="0%" stop-color="#143b32"/>
+      <stop offset="100%" stop-color="#2a725e"/>
+    </linearGradient>
+    <linearGradient id="g-mid" x1="0%" y1="100%" x2="80%" y2="0%">
+      <stop offset="0%" stop-color="#1a6652"/>
+      <stop offset="100%" stop-color="#34b285"/>
+    </linearGradient>
+    <linearGradient id="g-bot" x1="0%" y1="100%" x2="80%" y2="0%">
+      <stop offset="0%" stop-color="#22b573"/>
+      <stop offset="100%" stop-color="#40f5a3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 1. PWA 底板 (512x512 方圓角) -->
+  <rect width="512" height="512" rx="116" fill="url(#bgGrad)"/>
+
+  <!-- 2. 人才檔案庫 (Dossier Document) 容器 -->
+  <g id="dossier-card">
+    <!-- 帶右上折角的檔案主體 -->
+    <path d="
+      M 112, 42
+      L 348, 42
+      L 434, 128
+      L 434, 436
+      C 434, 454 418, 470 398, 470
+      L 112, 470
+      C 92, 470 76, 454 76, 436
+      L 76, 78
+      C 76, 60 92, 42 112, 42
+      Z
+    " fill="url(#cardGrad)" stroke="url(#rimGrad)" stroke-width="4.5"/>
+
+    <!-- 右上折角三角形 -->
+    <path d="M 348, 42 L 348, 128 L 434, 128 Z" fill="#080C0E"/>
+    <path d="M 348, 42 L 348, 128 L 434, 128" fill="none" stroke="#34D399" stroke-width="3.5" stroke-linejoin="round" opacity="0.85"/>
+
+    <!-- 3. 左上方專屬設計「CV」幾何向量字標 (無字體依賴，跨平台精準渲染) -->
+    <g id="cv-monogram" transform="translate(112, 68)">
+      <!-- 字母 'C'：高對比純白極簡圓弧切角 -->
+      <path d="
+        M 66, 10
+        C 28, 10 0, 38 0, 74
+        C 0, 110 28, 138 66, 138
+        L 80, 138
+        L 80, 106
+        L 66, 106
+        C 46, 106 32, 92 32, 74
+        C 32, 56 46, 42 66, 42
+        L 80, 42
+        L 80, 10
+        Z
+      " fill="url(#cGrad)"/>
+
+      <!-- 字母 'V'：動態幾何斜切楔形，角度呼應下方核驗標 -->
+      <path d="
+        M 92, 10
+        L 120, 10
+        L 146, 96
+        L 172, 10
+        L 200, 10
+        L 162, 138
+        L 130, 138
+        Z
+      " fill="url(#vGrad)"/>
+
+      <!-- 核驗通過亮點 -->
+      <circle cx="212" cy="24" r="7" fill="#40F5A3"/>
+    </g>
+
+    <!-- 4. 三階防偽核驗勾標群組 (含八角沖孔透雕) -->
+    <g transform="translate(-16, 142) scale(0.67)">
+      <!-- 第一階：學歷初審 (深墨綠) -->
+      <path fill="url(#g-top)" fill-rule="evenodd" d="
+        M 375,246 L 283,154 L 315,122 L 375,182 L 501,56 L 533,88 Z
+        M 502,94.6 L 494.4,87 L 483.6,87 L 476,94.6 L 476,105.4 L 483.6,113 L 494.4,113 L 502,105.4 Z
+      "/>
+      <!-- 第二階：稅單與公積金 (翡翠綠) -->
+      <path fill="url(#g-mid)" fill-rule="evenodd" d="
+        M 375,352 L 283,260 L 315,228 L 375,288 L 501,162 L 533,194 Z
+        M 502,200.6 L 494.4,193 L 483.6,193 L 476,200.6 L 476,211.4 L 483.6,219 L 494.4,219 L 502,211.4 Z
+      "/>
+      <!-- 第三階：真人防替考綠標 (亮薄荷綠) -->
+      <path fill="url(#g-bot)" fill-rule="evenodd" d="
+        M 375,458 L 283,366 L 315,334 L 375,394 L 501,268 L 533,300 Z
+        M 502,306.6 L 494.4,299 L 483.6,299 L 476,306.6 L 476,317.4 L 483.6,325 L 494.4,325 L 502,317.4 Z
+      "/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project TrustCV - Mobile PWA 4-Screen UI Preview</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts Inter & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              obsidian: '#080C0E',
+              dark: '#0B1117',
+              card: '#121A24',
+              surface: '#182433',
+              border: '#1E293B',
+              borderLight: '#334155',
+              mint: '#3DF5A7',
+              mintGlow: '#40F5A3',
+              emerald: '#10B981',
+              emeraldDeep: '#059669',
+              forest: '#143B32',
+              forestDeep: '#2A725E',
+              accent: '#38BDF8'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Montserrat', 'Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* 隱藏滾動條但保持滾動能力 */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* iPhone 擬真邊框與外殼 */
+    .iphone-frame {
+      width: 360px;
+      height: 740px;
+      border-radius: 48px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 10px #1e293b, 0 0 0 12px #0f172a, 0 0 25px rgba(16, 185, 129, 0.15);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background-color: #080C0E;
+    }
+
+    /* 頂部動態島 (Dynamic Island) */
+    .dynamic-island {
+      width: 108px;
+      height: 28px;
+      background: #000000;
+      border-radius: 20px;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.9);
+    }
+
+    /* 底部手勢操作條 (Home Indicator) */
+    .home-indicator {
+      width: 128px;
+      height: 4.5px;
+      background-color: #ffffff;
+      opacity: 0.6;
+      border-radius: 9999px;
+      margin: 8px auto 6px auto;
+    }
+
+    /* 呼吸微光動畫 */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.35; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.05); }
+    }
+    .animate-pulse-glow {
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    /* 掃描線動畫 */
+    @keyframes scanMove {
+      0% { top: 0%; opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { top: 100%; opacity: 0; }
+    }
+    .animate-scan {
+      animation: scanMove 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    /* ================================================= */
+    /* ☀️ 明亮模式全域樣式覆蓋 (Light Mode Overrides)     */
+    /* ================================================= */
+    .iphone-frame, .iphone-frame * {
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    /* 明亮版手機外殼與底色 */
+    .light-mode .iphone-frame {
+      background-color: #F8FAFC !important;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.2), 0 0 0 10px #e2e8f0, 0 0 0 12px #cbd5e1, 0 0 30px rgba(16, 185, 129, 0.2) !important;
+    }
+    .light-mode .home-indicator {
+      background-color: #0F172A !important;
+      opacity: 0.35 !important;
+    }
+
+    /* 頂部系統狀態列 */
+    .light-mode .iphone-status-text {
+      color: #0F172A !important;
+    }
+    .light-mode .iphone-battery-border {
+      border-color: #334155 !important;
+    }
+    .light-mode .iphone-battery-fill {
+      background-color: #334155 !important;
+    }
+
+    /* 導航列與深色底板替換為白瓷質感 */
+    .light-mode .bg-brand-obsidian,
+    .light-mode .bg-brand-obsidian\/95 {
+      background-color: rgba(255, 255, 255, 0.98) !important;
+    }
+    .light-mode .bg-brand-card,
+    .light-mode .bg-brand-card\/80 {
+      background-color: #FFFFFF !important;
+      box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.05) !important;
+    }
+    .light-mode .border-brand-border,
+    .light-mode .border-brand-borderLight,
+    .light-mode .border-slate-800,
+    .light-mode .border-slate-800\/80,
+    .light-mode .border-slate-700 {
+      border-color: #E2E8F0 !important;
+    }
+
+    /* 文字色彩對比校正 */
+    .light-mode .text-white,
+    .light-mode .text-slate-100 {
+      color: #0F172A !important;
+    }
+    .light-mode .text-slate-200 {
+      color: #1E293B !important;
+    }
+    .light-mode .text-slate-300 {
+      color: #334155 !important;
+    }
+    .light-mode .text-slate-400 {
+      color: #64748B !important;
+    }
+
+    /* 灰色塊面轉為清爽白灰底 */
+    .light-mode .bg-slate-900,
+    .light-mode .bg-slate-900\/90,
+    .light-mode .bg-slate-900\/80,
+    .light-mode .bg-slate-900\/70,
+    .light-mode .bg-slate-900\/60 {
+      background-color: #F1F5F9 !important;
+    }
+    .light-mode .bg-slate-800,
+    .light-mode .bg-slate-800\/80 {
+      background-color: #E2E8F0 !important;
+      color: #334155 !important;
+    }
+
+    /* 篩選晶片與輸入框 */
+    .light-mode input {
+      background-color: #F1F5F9 !important;
+      color: #0F172A !important;
+      border-color: #CBD5E1 !important;
+    }
+    .light-mode input::placeholder {
+      color: #94A3B8 !important;
+    }
+    .light-mode .filter-chip-inactive {
+      background-color: #F1F5F9 !important;
+      color: #475569 !important;
+      border-color: #E2E8F0 !important;
+    }
+
+    /* 綠標徽章與高亮狀態 */
+    .light-mode .bg-brand-forest\/40,
+    .light-mode .bg-brand-forest\/50,
+    .light-mode .bg-emerald-950,
+    .light-mode .bg-emerald-950\/70 {
+      background-color: #ECFDF5 !important;
+      border-color: #A7F3D0 !important;
+    }
+    .light-mode .text-brand-mint {
+      color: #059669 !important;
+    }
+    .light-mode .text-emerald-400,
+    .light-mode .text-emerald-400\/90 {
+      color: #047857 !important;
+    }
+
+    /* 啟動畫面標誌卡片在明亮模式下自動切換為高質感白底 */
+    .light-mode #screen-1 svg rect[fill="#080c0e"] {
+      fill: #FFFFFF !important;
+      stroke: #E2E8F0 !important;
+      stroke-width: 8px !important;
+    }
+    .light-mode .splash-title-trust {
+      color: #0F172A !important;
+    }
+    .light-mode .splash-progress-track {
+      background-color: #E2E8F0 !important;
+    }
+
+    /* JD 詳情與三門檻解密卡片 */
+    .light-mode .bg-sky-950\/60 {
+      background-color: #F0F9FF !important;
+      border-color: #BAE6FD !important;
+    }
+    .light-mode .text-accent {
+      color: #0284C7 !important;
+    }
+
+    /* CV 編輯頁 LLM 智慧橫幅 */
+    .light-mode .llm-banner-box {
+      background: linear-gradient(135deg, #ECFDF5 0%, #F0FDFA 100%) !important;
+      border-color: #A7F3D0 !important;
+    }
+    .light-mode .llm-banner-btn {
+      background-color: #FFFFFF !important;
+      border-color: #6EE7B7 !important;
+      color: #047857 !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen selection:bg-brand-emerald selection:text-white">
+
+  <!-- 頂部工作台導航工具列 -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50 px-6 py-3.5">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div class="flex items-center gap-3.5">
+        <div class="w-9 h-9 rounded-xl bg-brand-obsidian border border-brand-borderLight flex items-center justify-center p-1.5 shadow-md shadow-emerald-950/40">
+          <svg viewBox="0 0 64 64" class="w-full h-full">
+            <rect width="64" height="64" rx="14" fill="#080C0E"/>
+            <path d="M 19,3 C 8.5,3 1,10.5 1,20.5 C 1,30.5 8.5,38 19,38 L 23.5,38 L 23.5,29 L 19,29 C 13.5,29 9.5,25 9.5,20.5 C 9.5,16 13.5,12 19,12 L 23.5,12 L 23.5,3 Z" fill="#FFFFFF"/>
+            <path d="M 26.5,3 L 34.5,3 L 42,28 L 49.5,3 L 57.5,3 L 46.5,38 L 37.5,38 Z" fill="#40F5A3"/>
+            <circle cx="53" cy="7" r="2.8" fill="#40F5A3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
+              <span>Project TrustCV</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-brand-emerald/20 text-brand-mint font-mono font-medium border border-brand-emerald/30">PWA Mobile Spec v1.0</span>
+            </h1>
+          </div>
+          <p class="text-xs text-slate-400">行動端多端適配 UI 視覺架構定版 (iOS / Android 100dvh 自適應 • 支援動態深淺雙模切換)</p>
+        </div>
+      </div>
+
+      <!-- 快捷視圖切換器 + 深淺主題即時切換 -->
+      <div class="flex items-center gap-2 self-start md:self-auto overflow-x-auto pb-1 md:pb-0">
+        <button onclick="scrollToScreen('screen-1')" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors border border-slate-700">
+          ① 加載啟動
+        </button>
+        <button onclick="scrollToScreen('screen-2')" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors border border-slate-700">
+          ② 首頁職缺流
+        </button>
+        <button onclick="scrollToScreen('screen-3')" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors border border-slate-700">
+          ③ JR/JD 詳情頁
+        </button>
+        <button onclick="scrollToScreen('screen-4')" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors border border-slate-700">
+          ④ 編輯個人 CV
+        </button>
+        <span class="w-px h-5 bg-slate-700 mx-1"></span>
+
+        <!-- 暗黑 / 明亮 主題即時切換開關 (Theme Switcher Capsule) -->
+        <div class="flex items-center bg-slate-950/80 p-1 rounded-xl border border-slate-700/80 shadow-inner">
+          <button id="theme-btn-dark" onclick="switchTheme('dark')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-emerald text-slate-950 shadow-sm transition-all" title="切換為暗黑科技模式">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <span>深色暗黑</span>
+          </button>
+          <button id="theme-btn-light" onclick="switchTheme('light')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all" title="切換為清爽明亮模式">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <span>清爽明亮</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主預覽區：4 支手機並排 (水平流動或響應式網格) -->
+  <main class="max-w-[1580px] mx-auto px-4 py-8">
+    <div class="text-center mb-8">
+      <span class="text-xs font-semibold tracking-widest text-brand-mint uppercase bg-brand-forest/40 border border-brand-emerald/30 px-3 py-1 rounded-full">
+        Interactive Mobile Architecture
+      </span>
+      <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2 tracking-tight">PWA 行動端完整產品體驗閉環</h2>
+      <p class="text-sm text-slate-400 max-w-2xl mx-auto mt-1">從開啟 App 瞬間的防偽安全感、脫敏職缺探索、一鍵直投到 LLM 台灣繁中履歷智慧重組</p>
+    </div>
+
+    <!-- 四台手機展示矩陣 (橫向滾動或大螢幕 4 列並排) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
+
+      <!-- ========================================== -->
+      <!-- SCREEN 1: 加載中 / 啟動畫面 (Splash Screen) -->
+      <!-- ========================================== -->
+      <div id="screen-1" class="flex flex-col items-center">
+        <div class="mb-3 text-center">
+          <span class="text-xs font-mono font-bold text-slate-400 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-md">
+            VIEW 01 / SPLASH
+          </span>
+          <h3 class="text-sm font-semibold text-white mt-1">App 啟動與安全連線</h3>
+        </div>
+
+        <div class="iphone-frame">
+          <!-- 動態島 -->
+          <div class="dynamic-island">
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-brand-emerald/80 animate-ping"></span>
+          </div>
+
+          <!-- 頂部系統狀態欄 -->
+          <div class="pt-3 px-7 flex justify-between items-center text-[11px] font-semibold text-slate-400 z-40 select-none">
+            <span>09:41</span>
+            <div class="flex items-center gap-1.5">
+              <span>5G</span>
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+              <div class="w-5 h-2.5 border border-slate-400 rounded-sm p-0.5 flex items-center">
+                <div class="h-full w-full bg-slate-400 rounded-2xs"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 啟動螢幕主體內容 -->
+          <div class="flex-1 flex flex-col items-center justify-center p-6 relative">
+            <!-- 背景暗流光暈 -->
+            <div class="absolute w-56 h-56 rounded-full bg-brand-emerald/10 blur-3xl pointer-events-none animate-pulse-glow"></div>
+
+            <!-- 標誌本體 (800x800 定版 SVG 縮小) -->
+            <div class="w-36 h-36 relative z-10 flex items-center justify-center">
+              <svg viewBox="0 0 800 800" class="w-full h-full filter drop-shadow-2xl">
+                <defs>
+                  <linearGradient id="s1-top" x1="0%" y1="100%" x2="80%" y2="0%">
+                    <stop offset="0%" stop-color="#143b32"/><stop offset="100%" stop-color="#2a725e"/>
+                  </linearGradient>
+                  <linearGradient id="s1-mid" x1="0%" y1="100%" x2="80%" y2="0%">
+                    <stop offset="0%" stop-color="#1a6652"/><stop offset="100%" stop-color="#34b285"/>
+                  </linearGradient>
+                  <linearGradient id="s1-bot" x1="0%" y1="100%" x2="80%" y2="0%">
+                    <stop offset="0%" stop-color="#22b573"/><stop offset="100%" stop-color="#40f5a3"/>
+                  </linearGradient>
+                </defs>
+                <rect width="800" height="800" rx="140" fill="#080c0e"/>
+                <!-- 三階核驗勾標 + 八角透雕沖孔 -->
+                <g>
+                  <!-- 頂層 -->
+                  <path fill="url(#s1-top)" fill-rule="evenodd" d="M 375,246 L 283,154 L 315,122 L 375,182 L 501,56 L 533,88 Z M 502,94.6 L 494.4,87 L 483.6,87 L 476,94.6 L 476,105.4 L 483.6,113 L 494.4,113 L 502,105.4 Z"/>
+                  <!-- 中層 -->
+                  <path fill="url(#s1-mid)" fill-rule="evenodd" d="M 375,352 L 283,260 L 315,228 L 375,288 L 501,162 L 533,194 Z M 502,200.6 L 494.4,193 L 483.6,193 L 476,200.6 L 476,211.4 L 483.6,219 L 494.4,219 L 502,211.4 Z"/>
+                  <!-- 底層 -->
+                  <path fill="url(#s1-bot)" fill-rule="evenodd" d="M 375,458 L 283,366 L 315,334 L 375,394 L 501,268 L 533,300 Z M 502,306.6 L 494.4,299 L 483.6,299 L 476,306.6 L 476,317.4 L 483.6,325 L 494.4,325 L 502,317.4 Z"/>
+                </g>
+              </svg>
+            </div>
+
+            <!-- 品牌字標 -->
+            <div class="mt-4 text-center z-10">
+              <h2 class="text-2xl font-black tracking-tight text-white font-display splash-title-trust">
+                Trust<span class="text-brand-mint">CV</span>
+              </h2>
+              <p class="text-[9px] font-semibold text-slate-400 tracking-[3px] mt-0.5 uppercase">
+                BY TEAFORIA
+              </p>
+            </div>
+
+            <!-- 加載狀態與安全管線指示 -->
+            <div class="w-full max-w-[210px] mt-12 z-10 flex flex-col items-center">
+              <div class="w-full bg-slate-900 splash-progress-track h-1.5 rounded-full overflow-hidden border border-slate-800">
+                <div class="h-full bg-gradient-to-r from-brand-emerald to-brand-mint w-2/3 rounded-full relative">
+                  <div class="absolute inset-0 bg-white/30 animate-pulse"></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 mt-3 text-[11px] font-mono text-emerald-400/90">
+                <svg class="w-3 h-3 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+                <span>Establishing Secure Vault...</span>
+              </div>
+              <span class="text-[9.5px] text-slate-500 font-mono mt-1">RFC 5322 Ingestion Node Active</span>
+            </div>
+          </div>
+
+          <!-- 底部版本號 -->
+          <div class="py-2 text-center text-[10px] text-slate-600 font-mono">
+            cv.teaforia.in • Build 2026.09-MVP
+          </div>
+
+          <!-- 手勢條 -->
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SCREEN 2: 默認首頁 (Default Home - Job Feed)-->
+      <!-- ========================================== -->
+      <div id="screen-2" class="flex flex-col items-center">
+        <div class="mb-3 text-center">
+          <span class="text-xs font-mono font-bold text-brand-mint bg-brand-forest/50 border border-brand-emerald/40 px-2.5 py-1 rounded-md">
+            VIEW 02 / HOME JOBS
+          </span>
+          <h3 class="text-sm font-semibold text-white mt-1">首頁台商即時脫敏職缺</h3>
+        </div>
+
+        <div class="iphone-frame">
+          <!-- 動態島 -->
+          <div class="dynamic-island">
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+            <span class="text-[9px] text-emerald-400 font-mono">2 New JDs</span>
+          </div>
+
+          <!-- 頂部系統狀態欄 -->
+          <div class="pt-3 px-7 flex justify-between items-center text-[11px] font-semibold text-slate-400 z-40 select-none">
+            <span>09:41</span>
+            <div class="flex items-center gap-1.5">
+              <span>5G</span>
+              <div class="w-5 h-2.5 border border-slate-400 rounded-sm p-0.5 flex items-center">
+                <div class="h-full w-full bg-slate-400 rounded-2xs"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PWA 頂部導航列 (Navbar Lockup) -->
+          <header class="px-4 py-2 flex items-center justify-between border-b border-brand-border bg-brand-obsidian/95 sticky top-0 z-30">
+            <div class="flex items-center gap-2">
+              <!-- Navbar 向量 Icon -->
+              <div class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 p-1 flex items-center justify-center">
+                <svg viewBox="0 0 40 40" class="w-full h-full">
+                  <path d="M11 15 L16.5 20.5 L27 10" fill="none" stroke="#6EE7B7" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" opacity="0.4"/>
+                  <path d="M11 21.5 L16.5 27 L27 16.5" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" opacity="0.75"/>
+                  <path d="M11 28 L16.5 33.5 L27 23" fill="none" stroke="#10B981" stroke-width="3.5" stroke-linecap="square" stroke-linejoin="miter"/>
+                </svg>
+              </div>
+              <div class="leading-tight">
+                <div class="text-sm font-extrabold text-white tracking-tight">Trust<span class="text-brand-mint">CV</span></div>
+                <div class="text-[7.5px] font-semibold text-slate-400 tracking-wider">BY TEAFORIA</div>
+              </div>
+            </div>
+
+            <!-- 語系切換膠囊 -->
+            <div class="flex items-center bg-slate-900 border border-slate-800 rounded-full px-2 py-1 text-[10.5px]">
+              <span class="text-brand-mint font-bold px-1.5">EN</span>
+              <span class="text-slate-600">|</span>
+              <span class="text-slate-400 hover:text-white px-1.5 cursor-pointer">繁中</span>
+            </div>
+          </header>
+
+          <!-- 職缺列表內容區 (滾動) -->
+          <div class="flex-1 overflow-y-auto no-scrollbar p-3.5 space-y-3">
+            <!-- 搜尋與技能標籤 -->
+            <div class="space-y-2">
+              <div class="relative">
+                <input type="text" placeholder="Search PLC, Servo, Semiconductor..." class="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-emerald" readonly value="PLC, Automation">
+                <svg class="w-4 h-4 text-slate-400 absolute right-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+
+              <!-- 篩選晶片 -->
+              <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1 text-[11px]">
+                <span class="px-2.5 py-1 rounded-full bg-brand-emerald text-slate-950 font-bold whitespace-nowrap shadow-sm">All Jobs</span>
+                <span class="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 font-medium whitespace-nowrap">PLC 電控</span>
+                <span class="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 font-medium whitespace-nowrap">半導體設備</span>
+                <span class="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 font-medium whitespace-nowrap">電力電子</span>
+              </div>
+            </div>
+
+            <!-- 職缺卡片 1 (聚焦首推) -->
+            <div class="bg-brand-card border border-brand-emerald/40 rounded-2xl p-3.5 shadow-lg shadow-emerald-950/20 relative group hover:border-brand-mint transition-all">
+              <div class="flex justify-between items-start">
+                <div class="space-y-0.5">
+                  <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/70 border border-emerald-800/60 px-2 py-0.5 rounded-full inline-block">
+                    JR-2026-TW-01 • Invic Direct
+                  </span>
+                  <h4 class="text-sm font-bold text-white leading-snug pt-1">Senior PLC Automation Engineer</h4>
+                  <p class="text-xs text-slate-400">資深 PLC 電控自動化工程師</p>
+                </div>
+                <span class="w-2.5 h-2.5 rounded-full bg-brand-mint"></span>
+              </div>
+
+              <div class="mt-2 text-xs text-slate-300 flex items-center gap-1.5">
+                <span class="text-slate-400">🏢 脫敏雇主：</span>
+                <span class="font-medium text-white">台灣前三大半導體晶圓傳送設備大廠</span>
+              </div>
+
+              <!-- 關鍵指標 -->
+              <div class="grid grid-cols-2 gap-2 my-2.5 py-2 px-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 text-[11px]">
+                <div>
+                  <span class="text-slate-400 block text-[9.5px]">月薪區間</span>
+                  <span class="text-brand-mint font-mono font-bold">NT$ 75,000 - 95,000</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[9.5px]">工作地點 / 名額</span>
+                  <span class="text-slate-200 font-medium">Hsinchu, TW (2 名)</span>
+                </div>
+              </div>
+
+              <!-- 技能 Tags -->
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-[10px] px-2 py-0.5 bg-slate-800 text-slate-300 rounded font-mono">Siemens S7-1500</span>
+                <span class="text-[10px] px-2 py-0.5 bg-slate-800 text-slate-300 rounded font-mono">SCADA</span>
+                <span class="text-[10px] px-2 py-0.5 bg-slate-800 text-slate-300 rounded font-mono">Servo Tuning</span>
+              </div>
+
+              <!-- 投遞按鈕 -->
+              <button class="w-full py-2 bg-gradient-to-r from-brand-emerald to-brand-mint text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-md">
+                <span>View Requisition & Apply</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </button>
+            </div>
+
+            <!-- 職缺卡片 2 -->
+            <div class="bg-brand-card/80 border border-brand-border rounded-2xl p-3.5 space-y-2">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="text-[10px] font-mono text-slate-400 bg-slate-900 border border-slate-800 px-2 py-0.5 rounded-full inline-block">
+                    JR-2026-TW-02
+                  </span>
+                  <h4 class="text-sm font-bold text-white leading-snug pt-1">Power Electronics R&D Engineer</h4>
+                  <p class="text-xs text-slate-400">大功率電力電子硬體研發工程師</p>
+                </div>
+              </div>
+              <div class="text-xs text-slate-300">
+                <span class="text-slate-400">🏢 脫敏雇主：</span>
+                <span class="font-medium text-white">台灣知名工業電源與光伏變流器上市大廠</span>
+              </div>
+              <div class="flex justify-between items-center text-[11px] pt-1">
+                <span class="text-brand-mint font-mono font-bold">NT$ 80,000 - 110,000</span>
+                <span class="text-slate-400">Taichung, TW</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 底部 5 槽位導航欄 (Bottom Navigation Bar) -->
+          <nav class="border-t border-brand-border bg-brand-obsidian/95 px-3 py-1.5 flex justify-around items-center z-30">
+            <!-- Tab 1: Jobs (Active) -->
+            <div class="flex flex-col items-center cursor-pointer text-brand-mint">
+              <svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              <span class="text-[9.5px] font-bold mt-0.5">Jobs</span>
+            </div>
+            <!-- Tab 2: My CV -->
+            <div class="flex flex-col items-center cursor-pointer text-slate-500 hover:text-slate-300">
+              <svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <span class="text-[9.5px] font-medium mt-0.5">My CV</span>
+            </div>
+            <!-- Tab 3: Status -->
+            <div class="flex flex-col items-center cursor-pointer text-slate-500 hover:text-slate-300">
+              <svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <span class="text-[9.5px] font-medium mt-0.5">Status</span>
+            </div>
+            <!-- Tab 4: Vault -->
+            <div class="flex flex-col items-center cursor-pointer text-slate-500 hover:text-slate-300">
+              <svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span class="text-[9.5px] font-medium mt-0.5">Vault</span>
+            </div>
+            <!-- Tab 5: Profile -->
+            <div class="flex flex-col items-center cursor-pointer text-slate-500 hover:text-slate-300">
+              <svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span class="text-[9.5px] font-medium mt-0.5">Profile</span>
+            </div>
+          </nav>
+
+          <!-- 手勢條 -->
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SCREEN 3: 瀏覽 JR/JD 頁 (Job Detail & Apply)-->
+      <!-- ========================================== -->
+      <div id="screen-3" class="flex flex-col items-center">
+        <div class="mb-3 text-center">
+          <span class="text-xs font-mono font-bold text-accent bg-sky-950/60 border border-sky-800/40 px-2.5 py-1 rounded-md">
+            VIEW 03 / JD DETAIL
+          </span>
+          <h3 class="text-sm font-semibold text-white mt-1">JR/JD 職缺詳情與防繞道</h3>
+        </div>
+
+        <div class="iphone-frame">
+          <!-- 動態島 -->
+          <div class="dynamic-island">
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+          </div>
+
+          <!-- 頂部系統狀態欄 -->
+          <div class="pt-3 px-7 flex justify-between items-center text-[11px] font-semibold text-slate-400 z-40 select-none">
+            <span>09:41</span>
+            <div class="flex items-center gap-1.5">
+              <span>5G</span>
+              <div class="w-5 h-2.5 border border-slate-400 rounded-sm p-0.5 flex items-center">
+                <div class="h-full w-full bg-slate-400 rounded-2xs"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 詳情頂部導航 -->
+          <div class="px-4 py-2 flex items-center justify-between border-b border-brand-border bg-brand-obsidian">
+            <button class="flex items-center gap-1 text-xs text-slate-400 hover:text-white">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              <span>Back</span>
+            </button>
+            <span class="text-xs font-mono text-slate-400">JR-2026-TW-01</span>
+            <button class="text-slate-400 hover:text-brand-mint">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+            </button>
+          </div>
+
+          <!-- 職缺細節內容 (滾動) -->
+          <div class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4">
+            <!-- 標題與脫敏聲明 -->
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 rounded bg-emerald-950 text-brand-mint border border-emerald-800 text-[10px] font-mono">
+                  GREEN_VERIFIED_JOB
+                </span>
+                <span class="text-[10px] text-slate-500 font-mono">180D Non-Circumvention</span>
+              </div>
+              <h3 class="text-base font-bold text-white">Senior PLC Automation Engineer</h3>
+              <p class="text-xs text-slate-400 mt-0.5">資深 PLC 電控自動化工程師 (半導體設備)</p>
+            </div>
+
+            <!-- 防繞道雇主資訊遮罩卡片 (Triple-Gate Mask) -->
+            <div class="p-3 bg-brand-card rounded-xl border border-brand-borderLight space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] text-slate-400">雇主資訊 (前台脫敏展示)</span>
+                <span class="text-[10px] font-mono text-amber-400 flex items-center gap-1">
+                  🔒 Triple-Gate Encrypted
+                </span>
+              </div>
+              <p class="text-xs font-semibold text-white">
+                台灣知名半導體自動化設備龍頭廠 (新竹科學園區 / 台中廠)
+              </p>
+              <div class="text-[10px] text-slate-400 bg-slate-900/80 p-2 rounded border border-slate-800 flex items-start gap-1.5">
+                <span class="text-emerald-400 font-bold">ℹ</span>
+                <span>真實法定雇主名稱將於通過綠標初審、簽署獨家切結並獲勝拓正式面試確認後自動解密。</span>
+              </div>
+            </div>
+
+            <!-- 待遇與基本條件 -->
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="p-2.5 bg-slate-900/60 rounded-xl border border-slate-800">
+                <span class="text-[10px] text-slate-400 block">固定月薪 (月薪制)</span>
+                <span class="font-bold text-brand-mint font-mono">NTD 75,000 - 95,000</span>
+              </div>
+              <div class="p-2.5 bg-slate-900/60 rounded-xl border border-slate-800">
+                <span class="text-[10px] text-slate-400 block">需求經驗</span>
+                <span class="font-bold text-white font-mono">3+ Years (B.Tech/碩士)</span>
+              </div>
+            </div>
+
+            <!-- 核心職責與技能要求 -->
+            <div class="space-y-2">
+              <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Required Technical Skills</h4>
+              <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                <li>3+ 年以上 PLC 程式架構開發實務 (Siemens S7-1500 / TIA Portal 尤佳)。</li>
+                <li>熟悉伺服馬達驅動定位控制 (Servo Tuning) 與 EtherCAT 通訊協定。</li>
+                <li>具備廠端現場調試 (Commissioning on-site) 與除錯抗壓能力。</li>
+                <li>英語流利沟通 (可直接與台灣工程團隊對接技術細節)。</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 底部常駐投遞按鈕區 (Fixed Sticky Bottom Bar) -->
+          <div class="p-3 border-t border-brand-border bg-brand-obsidian/95 space-y-2">
+            <div class="flex items-center justify-between text-[11px] px-1">
+              <span class="text-slate-400">目前投遞身分：</span>
+              <span class="text-brand-mint font-mono font-semibold">Rajesh Kumar (TCV-008)</span>
+            </div>
+            <button class="w-full py-2.5 bg-gradient-to-r from-brand-emerald to-brand-mint text-slate-950 font-extrabold text-xs rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 active:scale-95 transition-transform">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+              <span>Apply with My TrustCV Profile (一鍵直投)</span>
+            </button>
+          </div>
+
+          <!-- 手勢條 -->
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SCREEN 4: 編輯個人 CV 頁 (My CV Hub)       -->
+      <!-- ========================================== -->
+      <div id="screen-4" class="flex flex-col items-center">
+        <div class="mb-3 text-center">
+          <span class="text-xs font-mono font-bold text-amber-400 bg-amber-950/50 border border-amber-800/40 px-2.5 py-1 rounded-md">
+            VIEW 04 / MY CV HUB
+          </span>
+          <h3 class="text-sm font-semibold text-white mt-1">個人履歷與台灣繁中在地化</h3>
+        </div>
+
+        <div class="iphone-frame">
+          <!-- 動態島 -->
+          <div class="dynamic-island">
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+            <span class="text-[9px] text-brand-mint font-mono">LLM Ready</span>
+          </div>
+
+          <!-- 頂部系統狀態欄 -->
+          <div class="pt-3 px-7 flex justify-between items-center text-[11px] font-semibold text-slate-400 z-40 select-none">
+            <span>09:41</span>
+            <div class="flex items-center gap-1.5">
+              <span>5G</span>
+              <div class="w-5 h-2.5 border border-slate-400 rounded-sm p-0.5 flex items-center">
+                <div class="h-full w-full bg-slate-400 rounded-2xs"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CV 中心頂部 -->
+          <header class="px-4 py-2 flex items-center justify-between border-b border-brand-border bg-brand-obsidian">
+            <div>
+              <h2 class="text-sm font-bold text-white">Universal CV Hub</h2>
+              <p class="text-[10px] text-slate-400">標準化多國籍履歷中心</p>
+            </div>
+            <!-- 核驗標籤 -->
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-brand-mint border border-emerald-800/70 font-mono">
+              Stage 2 Verified
+            </span>
+          </header>
+
+          <!-- CV 編輯主體 (滾動) -->
+          <div class="flex-1 overflow-y-auto no-scrollbar p-3.5 space-y-3">
+            <!-- 雙軌預覽 Tab 切換器 (EN / ZH-TW) -->
+            <div class="grid grid-cols-2 p-1 bg-slate-900 rounded-xl border border-slate-800 text-xs text-center font-medium">
+              <button class="py-1.5 rounded-lg bg-slate-800 text-slate-400">English Source (EN)</button>
+              <button class="py-1.5 rounded-lg bg-brand-emerald text-slate-950 font-bold shadow-sm">台灣雇主專用 (繁中)</button>
+            </div>
+
+            <!-- LLM 智慧轉換橫幅 -->
+            <div class="p-3 bg-gradient-to-r from-brand-forest to-slate-900 llm-banner-box rounded-xl border border-brand-emerald/40 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                  <span>🤖 LLM 智慧在地化轉譯</span>
+                </span>
+                <span class="text-[10px] text-brand-mint font-mono">Gemini 1.5 Active</span>
+              </div>
+              <p class="text-[11px] text-slate-300">
+                已自動校準機電/PLC 與半導體設備習慣術語，消除兩岸與跨國語言隔閡。
+              </p>
+              <button class="w-full py-1.5 bg-brand-emerald/20 hover:bg-brand-emerald/30 border border-brand-emerald/50 text-brand-mint text-[11px] font-bold rounded-lg flex items-center justify-center gap-1 transition-colors llm-banner-btn">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span>重新轉化為台灣在地化繁中</span>
+              </button>
+            </div>
+
+            <!-- 基本資料卡 -->
+            <div class="bg-brand-card p-3 rounded-xl border border-brand-border space-y-2 text-xs">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-white">候選人檔案 (Candidate Dossier)</span>
+                <span class="text-[10px] text-slate-400 font-mono">TCV-CAN-2026-008</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-[11px]">
+                <div>
+                  <span class="text-slate-400 block text-[9.5px]">真實姓名</span>
+                  <span class="text-white font-medium">Rajesh Kumar (拉傑許)</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[9.5px]">國籍與最高學歷</span>
+                  <span class="text-white font-medium">印度 • 電機工程學士</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[9.5px]">總工作年資</span>
+                  <span class="text-brand-mint font-mono font-bold">5.5 年 (製造業現場)</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[9.5px]">官方離職信與稅單</span>
+                  <span class="text-emerald-400 font-mono font-medium">Form 16 驗訖 ✔</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 核心技能標籤編輯區 -->
+            <div class="bg-brand-card p-3 rounded-xl border border-brand-border space-y-1.5 text-xs">
+              <span class="font-bold text-white block">核心專業技術組 (Verified Skills)</span>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="text-[10px] px-2.5 py-1 bg-slate-900 border border-slate-700 text-slate-200 rounded-md font-mono">西門子 PLC (S7-1500)</span>
+                <span class="text-[10px] px-2.5 py-1 bg-slate-900 border border-slate-700 text-slate-200 rounded-md font-mono">三菱伺服定位 (Motion)</span>
+                <span class="text-[10px] px-2.5 py-1 bg-slate-900 border border-slate-700 text-slate-200 rounded-md font-mono">廠端調試 (Commissioning)</span>
+                <span class="text-[10px] px-2.5 py-1 bg-slate-900 border border-slate-700 text-slate-200 rounded-md font-mono">SCADA 監控系統</span>
+              </div>
+            </div>
+
+            <!-- 專案經歷文字摘要 -->
+            <div class="bg-brand-card p-3 rounded-xl border border-brand-border space-y-1 text-xs">
+              <span class="font-bold text-white block">在地化實績摘要 (Taiwan Spec)</span>
+              <p class="text-[11px] text-slate-300 leading-relaxed bg-slate-900/70 p-2 rounded border border-slate-800">
+                主導 4 條全自動產線之 PLC 電控與伺服馬達同動調教；具備晶圓潔淨室機台異常排障實績，可無障礙使用全英文與台籍主管匯報進度。
+              </p>
+            </div>
+          </div>
+
+          <!-- 底部 5 槽位導航欄 (Tab 2 Active) -->
+          <nav class="border-t border-brand-border bg-brand-obsidian/95 px-3 py-1.5 flex justify-around items-center z-30">
+            <div class="flex flex-col items-center cursor-pointer text-slate-500 hover:text-slate-300">
+              <svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              <span class="text-[9.5px] font-medium mt-0.5">Jobs</span>
+            </div>
+            <!-- Tab 2: My CV (Active) -->
+            <div class="flex flex-col items-center cursor-pointer text-brand-mint">
+              <svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <span class="text-[9.5px] font-bold mt-0.5">My CV</span>
+            </div>
+            <div class="flex flex-col items-center cursor-pointer text-slate-500 hover:text-slate-300">
+              <svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <span class="text-[9.5px] font-medium mt-0.5">Status</span>
+            </div>
+            <div class="flex flex-col items-center cursor-pointer text-slate-500 hover:text-slate-300">
+              <svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span class="text-[9.5px] font-medium mt-0.5">Vault</span>
+            </div>
+            <div class="flex flex-col items-center cursor-pointer text-slate-500 hover:text-slate-300">
+              <svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span class="text-[9.5px] font-medium mt-0.5">Profile</span>
+            </div>
+          </nav>
+
+          <!-- 手勢條 -->
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 頁尾說明註解 -->
+  <footer class="border-t border-slate-800 bg-slate-900/60 py-6 mt-12 text-center text-xs text-slate-500 font-mono">
+    <p>Project TrustCV • Front-end Architecture Compliance: Strict No-LaTeX • Safe-Area Adaptive (100dvh) • English & Traditional Chinese</p>
+  </footer>
+
+  <script>
+    // 錨點平滑滾動輔助
+    function scrollToScreen(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    // 暗黑模式 (Dark Mode) 與 清爽明亮模式 (Light Mode) 即時動態切換
+    function switchTheme(theme) {
+      const isLight = theme === 'light';
+      document.body.classList.toggle('light-mode', isLight);
+
+      const darkBtn = document.getElementById('theme-btn-dark');
+      const lightBtn = document.getElementById('theme-btn-light');
+
+      if (isLight) {
+        lightBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-emerald text-slate-950 shadow-sm transition-all";
+        darkBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all";
+      } else {
+        darkBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-emerald text-slate-950 shadow-sm transition-all";
+        lightBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all";
+      }
+    }
+  </script>
+</body>
+</html>

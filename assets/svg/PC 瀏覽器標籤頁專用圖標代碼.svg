@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- V 字翡翠綠漸層 -->
+    <linearGradient id="vGradFavicon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#40F5A3"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 沉穩深邃底板（保證深/淺色瀏覽器標籤頁皆高對比顯示） -->
+  <rect width="64" height="64" rx="14" fill="#080C0E"/>
+
+  <!-- 專屬 CV 核心字標（無字體依賴之純向量路徑） -->
+  <g transform="translate(6, 12)">
+    <!-- 字母 'C'：高對比純白 -->
+    <path d="
+      M 19, 3
+      C 8.5, 3 1, 10.5 1, 20.5
+      C 1, 30.5 8.5, 38 19, 38
+      L 23.5, 38
+      L 23.5, 29
+      L 19, 29
+      C 13.5, 29 9.5, 25 9.5, 20.5
+      C 9.5, 16 13.5, 12 19, 12
+      L 23.5, 12
+      L 23.5, 3
+      Z
+    " fill="#FFFFFF"/>
+
+    <!-- 字母 'V'：動態翡翠綠 -->
+    <path d="
+      M 26.5, 3
+      L 34.5, 3
+      L 42, 28
+      L 49.5, 3
+      L 57.5, 3
+      L 46.5, 38
+      L 37.5, 38
+      Z
+    " fill="url(#vGradFavicon)"/>
+
+    <!-- 綠標驗證微光原點 -->
+    <circle cx="53" cy="7" r="2.8" fill="#40F5A3"/>
+  </g>
+</svg>

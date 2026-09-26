@@ -1,0 +1,444 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cv.teaforia.in/schemas/v1/verified_candidate.schema.json",
+  "title": "TeaforiaVerifiedCandidateDossier",
+  "description": "Project TrustCV / Credence: Teaforia India x INVIC Global 雙重核實人才交付封包標準資料模型",
+  "type": "object",
+  "required": [
+    "dossier_id",
+    "metadata",
+    "candidate_profile",
+    "verified_credentials",
+    "human_audit_assessment",
+    "risk_scoring"
+  ],
+  "properties": {
+    "dossier_id": {
+      "type": "string",
+      "description": "Teaforia 系統唯一檔案編號，格式：TEA-西元年-IND-流水號",
+      "pattern": "^TEA-[0-9]{4}-IND-[0-9]{4,}$",
+      "examples": ["TEA-2026-IND-0088"]
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "source_system",
+        "delivery_timestamp_utc",
+        "partner_recipient",
+        "verification_level",
+        "digital_fingerprint_sha256"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "enum": ["1.0.0"]
+        },
+        "source_system": {
+          "type": "string",
+          "enum": ["cv.teaforia.in"]
+        },
+        "delivery_timestamp_utc": {
+          "type": "string",
+          "format": "date-time",
+          "description": "官方發送存證時間戳（RFC 3339 格式），為防繞道所有權生效基準"
+        },
+        "partner_recipient": {
+          "type": "string",
+          "enum": ["INVIC_GLOBAL"],
+          "description": "接收合作夥伴識別碼（勝拓國際 invic）"
+        },
+        "verification_level": {
+          "type": "string",
+          "enum": [
+            "LEVEL_1_DOCS_VERIFIED",
+            "LEVEL_2_DUAL_VERIFIED",
+            "LEVEL_3_PREMIUM_VETTED"
+          ],
+          "description": "驗證等級：LEVEL_2 為 Teaforia 標準之「原件比對 + 人工視訊複審」"
+        },
+        "digital_fingerprint_sha256": {
+          "type": "string",
+          "description": "交付附件包（含脫敏原件 PDF）之 SHA-256 數位指紋，確保文件不可竄改"
+        }
+      }
+    },
+    "candidate_profile": {
+      "type": "object",
+      "required": [
+        "full_name",
+        "date_of_birth",
+        "gender",
+        "contact_masked",
+        "target_job_spec"
+      ],
+      "properties": {
+        "full_name": {
+          "type": "string",
+          "description": "候選人護照法定英文全名"
+        },
+        "date_of_birth": {
+          "type": "string",
+          "format": "date"
+        },
+        "gender": {
+          "type": "string",
+          "enum": ["MALE", "FEMALE", "OTHER"]
+        },
+        "contact_masked": {
+          "type": "object",
+          "required": [
+            "email_proxy",
+            "phone_masked",
+            "current_location_city",
+            "current_location_state"
+          ],
+          "properties": {
+            "email_proxy": {
+              "type": "string",
+              "format": "email",
+              "description": "Teaforia 系統內部安全轉發信箱（防止未簽約前被直接繞道聯絡）",
+              "examples": ["rajesh.sharma@candidate.teaforia.in"]
+            },
+            "phone_masked": {
+              "type": "string",
+              "description": "遮罩電話號碼（僅保留前四碼與後兩碼）",
+              "examples": ["+91-9876****12"]
+            },
+            "current_location_city": {
+              "type": "string",
+              "examples": ["Bengaluru"]
+            },
+            "current_location_state": {
+              "type": "string",
+              "examples": ["Karnataka"]
+            }
+          }
+        },
+        "identity_documents": {
+          "type": "object",
+          "required": ["passport_verified", "passport_valid_months_remaining"],
+          "properties": {
+            "passport_number_masked": {
+              "type": "string",
+              "examples": ["Z58****9"]
+            },
+            "passport_expiry_date": {
+              "type": "string",
+              "format": "date"
+            },
+            "passport_valid_months_remaining": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "距今有效月數，外派台灣門檻需大於 18 個月"
+            },
+            "passport_verified": {
+              "type": "boolean"
+            },
+            "pan_card_matched_with_tax": {
+              "type": "boolean",
+              "description": "PAN 個人稅號是否與 Form 16 一致"
+            }
+          }
+        },
+        "target_job_spec": {
+          "type": "object",
+          "required": [
+            "target_role_category",
+            "jd_reference_id",
+            "willing_to_relocate_taiwan",
+            "expected_ctc_twd_monthly"
+          ],
+          "properties": {
+            "target_role_category": {
+              "type": "string",
+              "enum": [
+                "ELECTROMECHANICAL_ENGINEER",
+                "AUTOMATION_PLC_SPECIALIST",
+                "EMBEDDED_FIRMWARE_ENGINEER",
+                "SEMICONDUCTOR_EQUIPMENT_ENGINEER",
+                "OTHER_TECHNICAL_WHITE_COLLAR"
+              ]
+            },
+            "jd_reference_id": {
+              "type": "string",
+              "description": "關聯之脫敏職缺代碼（如 TW-ME-202610-01）"
+            },
+            "willing_to_relocate_taiwan": {
+              "type": "boolean"
+            },
+            "expected_ctc_twd_monthly": {
+              "type": "number",
+              "description": "候選人期望之新台幣實領月薪"
+            },
+            "notice_period_days": {
+              "type": "integer",
+              "description": "離職交接預告期（天數）"
+            }
+          }
+        }
+      }
+    },
+    "verified_credentials": {
+      "type": "object",
+      "required": [
+        "education_records",
+        "employment_records",
+        "career_timeline_integrity"
+      ],
+      "properties": {
+        "education_records": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "degree_level",
+              "degree_name",
+              "institution_name",
+              "passing_year",
+              "is_institution_accredited",
+              "document_type",
+              "verification_status"
+            ],
+            "properties": {
+              "degree_level": {
+                "type": "string",
+                "enum": ["DIPLOMA", "BACHELORS", "MASTERS", "DOCTORATE"]
+              },
+              "degree_name": {
+                "type": "string",
+                "examples": ["B.Tech in Mechatronics Engineering"]
+              },
+              "institution_name": {
+                "type": "string",
+                "examples": ["Visvesvaraya Technological University"]
+              },
+              "passing_year": {
+                "type": "integer"
+              },
+              "is_institution_accredited": {
+                "type": "boolean",
+                "description": "是否名列於 UGC / AICTE 官方名冊"
+              },
+              "document_type": {
+                "type": "string",
+                "enum": [
+                  "ORIGINAL_DEGREE_CERTIFICATE",
+                  "PROVISIONAL_CERTIFICATE",
+                  "CONSOLIDATED_MARKSHEET_ONLY"
+                ]
+              },
+              "verification_status": {
+                "type": "string",
+                "enum": ["VERIFIED_VALID", "SUSPICIOUS_UNLISTED", "CONFIRMED_FAKE"]
+              }
+            }
+          }
+        },
+        "employment_records": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "company_name",
+              "job_title_verified",
+              "start_date",
+              "end_date",
+              "relieving_letter_verified",
+              "tax_or_salary_verified"
+            ],
+            "properties": {
+              "company_name": {
+                "type": "string",
+                "examples": ["Uno Minda Components Ltd."]
+              },
+              "company_cin": {
+                "type": "string",
+                "description": "印度商工部企業登記代碼（CIN），若無則備註微型企業"
+              },
+              "company_mca_status_active": {
+                "type": "boolean",
+                "description": "MCA 官方登記是否為 Active（排除已倒閉空殼公司）"
+              },
+              "job_title_claimed": {
+                "type": "string"
+              },
+              "job_title_verified": {
+                "type": "string",
+                "description": "以離職信/聘書官方記載為準之正式職稱"
+              },
+              "start_date": {
+                "type": "string",
+                "pattern": "^[0-9]{4}-[0-9]{2}$"
+              },
+              "end_date": {
+                "type": "string",
+                "pattern": "^([0-9]{4}-[0-9]{2}|PRESENT)$"
+              },
+              "relieving_letter_verified": {
+                "type": "boolean"
+              },
+              "service_certificate_verified": {
+                "type": "boolean"
+              },
+              "tax_or_salary_verified": {
+                "type": "boolean"
+              },
+              "salary_audit_evidence": {
+                "type": "object",
+                "properties": {
+                  "form16_traces_verified": {
+                    "type": "boolean",
+                    "description": "是否具備所得稅 TRACES 官方水印"
+                  },
+                  "employer_tan": {
+                    "type": "string",
+                    "description": "雇主稅籍扣繳編號"
+                  },
+                  "epfo_uan_passbook_verified": {
+                    "type": "boolean",
+                    "description": "公積金提撥紀錄是否核實"
+                  },
+                  "payslip_last_drawn_inr_monthly": {
+                    "type": "number",
+                    "description": "最近 3 個月實發平均薪資（盧比）"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "career_timeline_integrity": {
+          "type": "object",
+          "required": [
+            "total_experience_years_claimed",
+            "total_experience_years_verified",
+            "dual_employment_detected",
+            "unexplained_gap_detected"
+          ],
+          "properties": {
+            "total_experience_years_claimed": {
+              "type": "number"
+            },
+            "total_experience_years_verified": {
+              "type": "number"
+            },
+            "dual_employment_detected": {
+              "type": "boolean",
+              "description": "是否發現多份工作重疊大於 30 天（Moonlighting 警示）"
+            },
+            "unexplained_gap_detected": {
+              "type": "boolean",
+              "description": "是否有未附證明的 90 天以上職涯空窗"
+            },
+            "gap_explanation_summary": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "human_audit_assessment": {
+      "type": "object",
+      "required": [
+        "auditor_name",
+        "audit_completed_date",
+        "identity_facial_match_passed",
+        "english_communication_level",
+        "taiwan_relocation_readiness"
+      ],
+      "properties": {
+        "auditor_name": {
+          "type": "string",
+          "description": "Teaforia 負責初審面試之專員或主管"
+        },
+        "audit_completed_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "identity_facial_match_passed": {
+          "type": "boolean",
+          "description": "視訊者本人與護照/畢業證照片是否完全吻合"
+        },
+        "english_communication_level": {
+          "type": "string",
+          "enum": [
+            "GRADE_A_FLUENT",
+            "GRADE_B_OPERATIONAL",
+            "GRADE_C_BELOW_STANDARD"
+          ],
+          "description": "A: 無障礙流暢；B: 具口音但溝通清楚（達赴台門檻）；C: 淘汰"
+        },
+        "technical_competence_self_expression": {
+          "type": "string",
+          "description": "面試官對其敘述過去專案、機電故障排除能力的直觀評價"
+        },
+        "taiwan_relocation_readiness": {
+          "type": "object",
+          "required": [
+            "family_consent_secured",
+            "willing_to_commit_minimum_years"
+          ],
+          "properties": {
+            "family_consent_secured": {
+              "type": "boolean",
+              "description": "配偶或直系家屬是否知情並同意其外派台灣"
+            },
+            "willing_to_commit_minimum_years": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "承諾至少外派年限（常規為 2~3 年）"
+            }
+          }
+        },
+        "interviewer_executive_summary": {
+          "type": "string",
+          "description": "提供給 invic 顧問與台灣企業人資的主管推薦摘要"
+        }
+      }
+    },
+    "risk_scoring": {
+      "type": "object",
+      "required": [
+        "background_integrity_score",
+        "overall_status_band",
+        "audit_flags"
+      ],
+      "properties": {
+        "background_integrity_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "綜合背景真實性評分（100 分制）"
+        },
+        "overall_status_band": {
+          "type": "string",
+          "enum": [
+            "GREEN_VERIFIED_READY",
+            "YELLOW_REVIEW_NEEDED",
+            "RED_FRAUD_REJECTED"
+          ],
+          "description": "綠標：放行提報；黃標：需附瑕疵備註；紅標：確定造假永久封鎖"
+        },
+        "audit_flags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "FLAG_DOC_CLEAN",
+              "FLAG_TITLE_MISMATCH",
+              "FLAG_TENURE_GAP",
+              "FLAG_SALARY_INFLATED",
+              "FLAG_DUAL_EMPLOYMENT",
+              "FLAG_UNVERIFIED_SME",
+              "FLAG_PDF_MUTATED",
+              "FLAG_FRAUD_FORGERY"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
