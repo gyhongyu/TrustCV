@@ -14,9 +14,10 @@
 | `docs/` | **研發 DMC 知識庫** | `STATE.md` (架構真理 ≤200行)、`ACTIVE_LOG.md` (只追加研發日誌)、`TOPOLOGY.md` (拓撲活地圖) | 了解專案狀態、排查踩坑、架構決策時必讀 |
 | `.agents/skills/` | **專案常駐守護技能** | `project_structure_keeper/` (專案現場結構導航與維護) | 掌握專案全景與模組分工時喚醒 |
 | `.agent_profiles/` | **多模式規則倉庫** | `production/` (生產只查不改) 與 `development/` (開發重構) | 模式切換與權限隔離 |
-| 根目錄前端 | **GitHub Pages PWA 應用** | `index.html` (正式 SPA 入口)、`manifest.json`、`sw.js`、`css/`、`js/` | 前端開發與上線發布 |
-| `gas/` (預留) | **Google Apps Script 網關** | 後端 API 路由器、Google Sheets 4 張表 CRUD、Drive 檔案隔離庫 | 後端資料持久化與跨域介接 |
-| `worker/` (預留) | **打工仔 LLM 與上游同步** | 履歷結構化提取、台灣在地化術語轉譯、勝拓 (invic) 職缺自動入庫 | 異步運算與打工仔調度 |
+| 根目錄前端 | **GitHub Pages PWA 應用** | `index.html` (SPA 入口)、`manifest.json`、`sw.js`、`css/style.css`、`js/` (`app.js`, `store.js`, `i18n.js`, `api.js`, `mock/`, `components/`) | 前端 PWA 開發與發布 |
+| `gas/` | **Google Apps Script 網關** | `Code.js` (路由)、`Database.js` (Sheets CRUD)、`DriveService.js` (Drive 隔離庫)、`JobService.js` (脫敏業務)、`Config.js` | 後端資料持久化與雲端儲存 |
+| `worker/` | **打工仔 LLM 與上游同步** | `resume_parser.py` (履歷提取)、`dossier_translator.py` (在地化轉譯)、`sync_upstream_jobs.py` (上游同步)、`config.py` | 異步運算與打工仔調度 |
+| `specs/mock_data/` & `tests/` | **虛擬種子與測試樣本** | `jobs_seed.json`、`candidates_seed.json`、`sample_resume.txt` | 供前端/Worker 離線測試與 Schema 驗收 |
 
 ---
 

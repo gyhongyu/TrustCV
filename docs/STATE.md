@@ -53,6 +53,8 @@
 - [x] 多模式規則架構部署 (預設開發模式)
 - [x] 全域拓撲規整 (specs/、assets/ 歸位與鏈接校正)
 - [x] 專案專屬守護技能部署 (`.agents/skills/project_structure_keeper`)
-- [ ] PWA 前端原型與 UI 設計 (Tailwind CDN + Responsive + Multi-lang)
+- [x] 前端 PWA、GAS 後端、Worker 與 Mock 測試資料骨架落地 (0KB 佔位完成)
+- [ ] PWA 前端原型與 UI 實現 (Tailwind CDN + Responsive + Multi-lang + 4屏組件)
 - [ ] GAS 後端 Gateway 與 Google Sheets/Drive 自動化結構落地
 - [ ] OpenRouter 打工仔 LLM 履歷萃取/在地化翻譯串接
+

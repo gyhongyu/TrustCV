@@ -1,0 +1,1 @@
+// TrustCV State & LocalStorage Manager

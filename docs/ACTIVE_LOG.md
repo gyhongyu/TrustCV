@@ -31,3 +31,19 @@
   - 避免日常瑣碎改動頻繁更新拓撲造成維護過載，嚴格定調「僅在架構重大變更/模組化拆分時觸發粗粒度同步」。
 - **防禦手段 / 測試背書**:
   - 執行 `py topology_engine.py apply` 完成端到端驗收，檢查目錄樹與鏈接校正結果 100% 通過。
+
+---
+
+### [2026-09-27] [UNREFINED] [scaffold/modules] 前端 PWA、GAS 後端、Worker 與 Mock 測試資料骨架落地
+- **類型**: `ARCH_DECISION`
+- **代碼錨點**: `index.html`, `manifest.json`, `sw.js`, `css/`, `js/`, `gas/`, `worker/`, `specs/mock_data/`, `tests/`
+- **核心事實 / 決策理由**:
+  - 依據 HANDOFF.md 經討論模式與「驗屍+十人法則」審核，確保持續遵循 MVP 輕量封測原則。
+  - 確立「前端 PWA 純靜態免構建 + GAS 雲端無伺服 + Python 打工仔 Worker」三層易移植架構。
+  - 確立「二進位履歷與證件全數隔離存儲於 Google Drive，代碼與規格留在 Git」之紅線，徹底杜絕二進位檔案污染 GitHub Commit 歷史。
+  - 建立三維虛擬資料（Mock Data）契約體系（`jobs_seed.json`, `candidates_seed.json`, `mockData.js`, `sample_resume.txt`），提供全鏈路離線開發與 Schema 驗收依據。
+- **踩坑 / 失敗模式**:
+  - `keeper.py` 初始版本 `parents[3]` 路徑解析過短導致尋址錯誤，已修復為 `parents[4]` 並更新白名單以容納 `.git` 與 `tests/`。
+- **防禦手段 / 測試背書**:
+  - 調用 `py .agents/skills/project_structure_keeper/scripts/keeper.py audit` 與 `sync` 執行雙向驗收，通過 0 散落項目稽核。
+

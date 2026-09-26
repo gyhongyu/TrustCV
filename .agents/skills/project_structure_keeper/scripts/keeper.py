@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 def sync_topology():
-    proj_root = Path(__file__).resolve().parents[3]
+    proj_root = Path(__file__).resolve().parents[4]
     top_file = proj_root / "docs" / "TOPOLOGY.md"
     print(f"🔄 正在同步專案拓撲活地圖: {top_file}")
     if top_file.is_file():
@@ -15,14 +15,8 @@ def sync_topology():
 
 def audit_hygiene():
     """只讀掃描：只報警未登記檔案，絕對不擅自刪除或移動，交由人類或固化審查處理"""
-    # __file__ = E:\Projects\TrustCV\.agents\skills\project_structure_keeper\scripts\keeper.py
-    # parents[0] = scripts
-    # parents[1] = project_structure_keeper
-    # parents[2] = skills
-    # parents[3] = .agents
-    # parents[4] = E:\Projects\TrustCV
     proj_root = Path(__file__).resolve().parents[4]
-    known_roots = {".agent_profiles", ".agents", "specs", "assets", "docs", "gas", "worker", "scripts", "css", "js"}
+    known_roots = {".agent_profiles", ".agents", ".git", "specs", "assets", "docs", "gas", "worker", "scripts", "css", "js", "tests"}
     known_files = {"index.html", "manifest.json", "sw.js", "README.md", "HANDOFF.md", "AGENTS.md", "CLAUDE.md",
                    ".clinerules", ".cursorrules", ".windsurfrules", ".gitignore", "切換為生產模式.bat", "切換為開發模式.bat"}
     

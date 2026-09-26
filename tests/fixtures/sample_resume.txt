@@ -1,0 +1,3 @@
+TrustCV Sample Resume Fixture
+Candidate: Test Candidate
+Experience: Linux Kernel, C/C++, Embedded Firmware
