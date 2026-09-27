@@ -10,14 +10,17 @@
 | 物理路徑 | 模組名稱 | 職責與包含內容 | 代理人調閱時機 |
 | :--- | :--- | :--- | :--- |
 | `specs/` | **業務規格與法典庫** | 包含 `PRD.md`、`00_architecture/` 至 `04_templates/`，涵蓋防繞道法務、六大管線 SOP 與 JSON Schema 資料模型 | 凡涉及業務邏輯、審核標準、API 欄位、報價或佣金時必讀 |
-| `assets/` | **視覺設計與原型庫** | 包含 `BRAND_GUIDE.md`、`prototypes/trustcv_pwa_ui.html` (4屏擬真展示)、`svg/` (官方向量圖資) | 凡進行 PWA 頁面開發、UI 樣式編寫、圖標設計時必讀，嚴禁私造配色 |
-| `docs/` | **研發 DMC 知識庫** | `STATE.md` (架構真理 ≤200行)、`ACTIVE_LOG.md` (只追加研發日誌)、`TOPOLOGY.md` (拓撲活地圖) | 了解專案狀態、排查踩坑、架構決策時必讀 |
-| `.agents/skills/` | **專案常駐守護技能** | `project_structure_keeper/` (專案現場結構導航與維護) | 掌握專案全景與模組分工時喚醒 |
+| `assets/` | **視覺設計與原型庫** | 包含 `BRAND_GUIDE.md`、`prototypes/trustcv_pwa_ui.html` (4屏擬真展示)、`svg/` (官方向量圖資)、`icons/` | 凡進行 PWA 頁面開發、UI 樣式編寫、圖標設計時必讀，嚴禁私造配色 |
+| `docs/` | **研發 DMC 知識庫與法務** | `STATE.md` (架構真理 ≤200行)、`ACTIVE_LOG.md` (只追加日誌)、`TOPOLOGY.md` (活地圖)、`how-to/` (OAuth 設定等)、`legal/` (隱私條款 SSOT) | 了解專案狀態、排查踩坑、法務更新或配置查驗時必讀 |
+| `.agents/skills/` | **專案常駐守護與輔助技能** | `project_structure_keeper/` (專案結構守門)、`agent_code_map/` (代碼語法拓撲與調用鏈穿透) | 掌握專案全景、查找呼叫者與模組分工時喚醒 |
 | `.agent_profiles/` | **多模式規則倉庫** | `production/` (生產只查不改) 與 `development/` (開發重構) | 模式切換與權限隔離 |
-| 根目錄前端 | **GitHub Pages PWA 應用** | `index.html` (SPA 入口)、`manifest.json`、`sw.js`、`css/style.css`、`js/` (`app.js`, `store.js`, `i18n.js`, `api.js`, `mock/`, `components/`) | 前端 PWA 開發與發布 |
+| `js/` | **前端核心邏輯與組件** | `app.js` (總裝)、`auth.js` (OAuth)、`drive.js` (Drive API)、`store.js`、`i18n.js`、`components/` (vault, header 等) | 前端邏輯、狀態管理與雲端硬碟功能開發時調用 |
+| `css/` | **全域樣式與主題** | `style.css` (Tailwind 自訂指令與全域色彩變更) | 前端視覺樣式微調時調用 |
+| `tests/` | **測試套件** | 端到端與模組單元測試檔案 | 跑自動化測試時調用 |
 | `gas/` | **Google Apps Script 網關** | `Code.js` (路由)、`Database.js` (Sheets CRUD)、`DriveService.js` (Drive 隔離庫)、`JobService.js` (脫敏業務)、`Config.js` | 後端資料持久化與雲端儲存 |
 | `worker/` | **打工仔 LLM 與上游同步** | `resume_parser.py` (履歷提取)、`dossier_translator.py` (在地化轉譯)、`sync_upstream_jobs.py` (上游同步)、`config.py` | 異步運算與打工仔調度 |
-| `specs/mock_data/` & `tests/` | **虛擬種子與測試樣本** | `jobs_seed.json`、`candidates_seed.json`、`sample_resume.txt` | 供前端/Worker 離線測試與 Schema 驗收 |
+| 根目錄前端 | **GitHub Pages PWA 入口** | `index.html` (SPA 入口)、`privacy.html` (Google 品牌審核雙語隱私頁面)、`manifest.json`、`sw.js` | 前端 PWA 發布與認證入口 |
+| `tools/` | **輔助開發工具** | 本機開發輔助腳本與轉換工具 | 本地除錯與數據預處理時調用 |
 
 ---
 

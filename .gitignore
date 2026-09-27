@@ -25,3 +25,7 @@ scratch/
 *.tmp
 .env
 .env.local
+
+# Google OAuth Credentials (contains client_secret - NEVER commit!)
+client_secret*.json
+trustcv_google_cloud_oauth.md

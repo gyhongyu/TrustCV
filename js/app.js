@@ -6,11 +6,14 @@
 import { store } from './store.js';
 import { i18n } from './i18n.js';
 import { ApiClient } from './api.js';
+import { authService } from './auth.js';
+import { driveService } from './drive.js';
 import { renderHeader } from './components/header.js';
 import { renderJobList } from './components/jobList.js';
 import { renderJobDetail } from './components/jobDetail.js';
 import { renderApplyModal } from './components/applyForm.js';
 import { renderStatusTracker, renderDossierHub } from './components/statusTracker.js';
+import { renderVault } from './components/vault.js';
 
 class App {
   constructor() {
@@ -145,10 +148,97 @@ class App {
         const current = store.getState().theme;
         store.setTheme(current === 'dark' ? 'light' : 'dark');
       },
-      // PWA 跨平台主動安裝處理
+      // PWA cross-platform install
       promptInstall: () => this.handleInstallPrompt(),
       closeIosPrompt: () => this.closeIosPromptModal(),
-      dismissInstallBanner: () => this.dismissInstallBanner()
+      dismissInstallBanner: () => this.dismissInstallBanner(),
+
+      // ── Google Auth + Drive handlers ──
+
+      signInGoogle: async () => {
+        if (authService.isAuthenticated()) {
+          store.setTab('vault');
+          return;
+        }
+        try {
+          store.setState({ driveLoading: true, driveError: null });
+          const userInfo = await authService.login();
+          store.setUser(userInfo);
+          store.setTab('vault');
+          store.showToast(i18n.getLanguage() === 'en' ? 'Signed in successfully!' : '登入成功！');
+          // Auto-setup Drive vault after sign-in
+          await window.TrustCV.setupDriveFolders();
+        } catch (e) {
+          console.error('[Auth] Sign-in failed', e);
+          store.setState({ driveLoading: false, driveError: e.message });
+        }
+      },
+
+      signOutGoogle: () => {
+        authService.logout();
+        store.clearUser();
+        store.showToast(i18n.getLanguage() === 'en' ? 'Signed out.' : '已登出。');
+      },
+
+      setupDriveFolders: async () => {
+        if (!authService.isAuthenticated()) return;
+        try {
+          store.setState({ driveLoading: true, driveError: null });
+          const folderIds = await driveService.ensureFolderStructure();
+          store.setDriveFolderIds(folderIds);
+          // Load file listings for all 3 folders in parallel
+          const [certs, resumes, exports_] = await Promise.all([
+            driveService.listFiles(folderIds.certificates),
+            driveService.listFiles(folderIds.resumes),
+            driveService.listFiles(folderIds.exports)
+          ]);
+          store.setState({
+            driveFiles: { certificates: certs, resumes, exports: exports_ },
+            driveLoading: false
+          });
+        } catch (e) {
+          console.error('[Drive] Setup failed', e);
+          store.setState({ driveLoading: false, driveError: e.message });
+        }
+      },
+
+      uploadToDrive: async (folderKey, input) => {
+        if (!authService.isAuthenticated()) return;
+        const { driveFolderIds } = store.getState();
+        if (!driveFolderIds) return;
+        const files = Array.from(input.files || []);
+        if (!files.length) return;
+
+        store.setState({ driveLoading: true });
+        try {
+          await Promise.all(files.map(f => driveService.uploadFile(driveFolderIds[folderKey], f)));
+          const isEn = i18n.getLanguage() === 'en';
+          store.showToast(isEn ? `${files.length} file(s) uploaded!` : `已上傳 ${files.length} 個檔案！`);
+          const updated = await driveService.listFiles(driveFolderIds[folderKey]);
+          store.setDriveFiles(folderKey, updated);
+        } catch (e) {
+          store.setState({ driveError: e.message });
+        } finally {
+          store.setState({ driveLoading: false });
+          input.value = '';
+        }
+      },
+
+      deleteDriveFile: async (fileId, folderKey) => {
+        if (!authService.isAuthenticated()) return;
+        const { driveFolderIds } = store.getState();
+        if (!driveFolderIds) return;
+        const isEn = i18n.getLanguage() === 'en';
+        if (!confirm(isEn ? 'Delete this file from Drive?' : '確定要從 Drive 刪除這個檔案嗎？')) return;
+        try {
+          await driveService.deleteFile(fileId);
+          const updated = await driveService.listFiles(driveFolderIds[folderKey]);
+          store.setDriveFiles(folderKey, updated);
+          store.showToast(isEn ? 'File deleted.' : '檔案已刪除。');
+        } catch (e) {
+          store.setState({ driveError: e.message });
+        }
+      }
     };
   }
 
@@ -419,21 +509,7 @@ class App {
         mainContent = renderStatusTracker();
         break;
       case 'vault':
-        mainContent = `
-          <div class="p-6 md:p-12 text-center space-y-4 max-w-xl mx-auto my-8">
-            <div class="w-16 h-16 rounded-2xl ${isLight ? 'bg-emerald-50 border border-emerald-200 text-emerald-600' : 'bg-emerald-950/70 border border-emerald-800 text-brand-mint'} flex items-center justify-center mx-auto shadow-md">
-              <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
-            <div class="space-y-1.5">
-              <h3 class="text-base md:text-lg font-bold ${isLight ? 'text-slate-900' : 'text-white'}">${i18n.t('vault_title')}</h3>
-              <p class="text-xs md:text-sm ${isLight ? 'text-slate-600' : 'text-slate-400'} leading-relaxed">${i18n.t('vault_desc')}</p>
-            </div>
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono ${isLight ? 'bg-slate-100 text-slate-600 border border-slate-200' : 'bg-slate-900 text-slate-400 border border-slate-800'}">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>${i18n.t('vault_node_status')}</span>
-            </div>
-          </div>
-        `;
+        mainContent = renderVault();
         break;
       default:
         mainContent = renderJobList();

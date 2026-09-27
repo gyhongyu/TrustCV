@@ -15,3 +15,20 @@
    - 嚴禁主動發起 `git push`；嚴禁以 `taskkill` 殺除核心進程。
    - 零即時上行律、Schema 探測先行、終端 stdout 真值管道。
 </RULE[development_invariants]>
+
+<!-- [START: CODE_MAP_INVARIANT] -->
+## 🗺️ 專案代碼導航與呼叫鏈門禁 (Code Map Navigation Invariant)
+1. **嚴禁盲目摸象**：排查 Bug、尋找函式位置或跨檔案追蹤時，**絕對嚴禁**一上來直接使用全局 `grep` 大海撈針！
+2. **第一步宏觀導航**：凡面對未知代碼或排查架構，優先在終端執行極速地圖命令（0 成本在記憶體建立心智模型）：
+   ```powershell
+   py .agents\skills\agent_code_map\scripts\map.py
+   ```
+3. **第二步微觀定位**：若要追蹤某個函式/方法被專案中「哪些檔案、哪些類別呼叫」，強制調用呼叫者穿透指令：
+   ```powershell
+   py .agents\skills\agent_code_map\scripts\callers.py <symbol_name>
+   ```
+4. **定義尋址**：若要定位類別或函式的原始定義位置：
+   ```powershell
+   py .agents\skills\agent_code_map\scripts\callers.py --def <symbol_name>
+   ```
+<!-- [END: CODE_MAP_INVARIANT] -->

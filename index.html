@@ -92,6 +92,12 @@
       <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 11px; font-family: monospace; color: #3DF5A7;">
         <span id="splash-status-text">Establishing Secure Vault...</span>
       </div>
+      <!-- 隱私權政策連結：依語系自適應，想看的人可自由點擊，零侵入 -->
+      <div style="margin-top: 20px;">
+        <a id="splash-privacy-link" href="./privacy.html" target="_blank" rel="noopener noreferrer" style="font-size: 11px; color: #64748B; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#3DF5A7'" onmouseout="this.style.color='#64748B'">
+          隱私權政策 / Privacy Policy
+        </a>
+      </div>
     </div>
   </div>
 
@@ -101,6 +107,21 @@
       var bar = document.getElementById('splash-progress-bar');
       var status = document.getElementById('splash-status-text');
       var splash = document.getElementById('splash-screen');
+      var privacyLink = document.getElementById('splash-privacy-link');
+
+      // 語系自適應判斷：優先看本機儲存，其次看瀏覽器系統語言
+      var savedLang = localStorage.getItem('trustcv_lang') || navigator.language || 'zh';
+      var isEn = savedLang.toLowerCase().startsWith('en');
+      if (privacyLink) {
+        if (isEn) {
+          privacyLink.textContent = 'Privacy Policy';
+          privacyLink.href = './privacy.html#en';
+        } else {
+          privacyLink.textContent = '隱私權政策';
+          privacyLink.href = './privacy.html#zh';
+        }
+      }
+
       if (bar) {
         setTimeout(function() { bar.style.width = '45%'; }, 150);
         setTimeout(function() { 
@@ -124,6 +145,9 @@
 
   <!-- PWA SPA Root Container: 全寬響應式自適應容器 (打破 max-w-md 限制) -->
   <div id="app-root" class="min-h-screen flex flex-col w-full"></div>
+
+  <!-- Google Identity Services (GIS) - required for OAuth 2.0 login + Drive API -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <!-- Entry Script (ES Modules) -->
   <script type="module" src="./js/app.js"></script>

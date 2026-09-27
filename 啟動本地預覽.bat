@@ -11,9 +11,9 @@ setlocal enabledelayedexpansion
 rem 1. 強制鎖定工作目錄為本專案根目錄
 cd /d "%~dp0"
 
-rem 2. 設定偏門端口 (避免 8000, 8080, 3000 等常用端口衝突)
-set "PORT=27891"
-set "URL=http://127.0.0.1:!PORT!"
+rem 2. 設定端口 (需與 Google Cloud Console OAuth Authorized Origins 一致)
+set "PORT=5188"
+set "URL=http://localhost:!PORT!"
 
 title TrustCV PWA Local Preview Server - Port !PORT!
 

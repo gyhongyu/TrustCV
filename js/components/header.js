@@ -7,7 +7,7 @@ import { store } from '../store.js';
 
 export function renderHeader() {
   const currentLang = i18n.getLanguage();
-  const { theme, currentTab } = store.getState();
+  const { theme, currentTab, user } = store.getState();
   const isLight = theme === 'light';
 
   // 官方定版核驗標章：精確還原 assets/svg/APP開啟加載畫面.svg 之三階防偽核驗勾標 (含八角沖孔透雕)
@@ -99,12 +99,36 @@ export function renderHeader() {
             <span>${currentLang === 'en' ? '中文' : 'EN'}</span>
           </button>
 
-          <!-- 深淺主題切換按鈕 -->
+          <!-- Deep/Light theme toggle -->
           <button onclick="window.TrustCV.toggleTheme()" class="p-1.5 md:p-2 rounded-xl transition-all shrink-0 ${isLight ? 'bg-slate-100 border border-slate-200 text-amber-600 hover:bg-slate-200' : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white'}" title="${isLight ? '切換為深色模式' : '切換為明亮模式'}">
             ${isLight 
               ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
               : '<svg class="w-4 h-4 fill-current text-slate-300" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'}
           </button>
+
+          <!-- Google Auth: user avatar (logged in) or compact sign-in button -->
+          ${user ? `
+            <button onclick="window.TrustCV.navigateTab('vault')" title="${user.name}" class="shrink-0">
+              <img src="${user.picture}" alt="${user.name}"
+                class="w-7 h-7 md:w-8 md:h-8 rounded-full ring-2 transition-all
+                  ${isLight ? 'ring-emerald-300 hover:ring-emerald-500' : 'ring-emerald-700 hover:ring-emerald-500'}"
+                onerror="this.outerHTML='<div class=\'w-7 h-7 rounded-full flex items-center justify-center bg-emerald-700 text-white font-bold text-xs\'>${(user.name || 'U')[0].toUpperCase()}</div>'"
+              >
+            </button>
+          ` : `
+            <button onclick="window.TrustCV.signInGoogle()" id="header-signin-btn"
+              class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all whitespace-nowrap shrink-0
+                ${isLight ? 'bg-white border border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-blue-50 shadow-sm' : 'bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:border-blue-600'}"
+              title="Sign in with Google">
+              <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Sign In
+            </button>
+          `}
         </div>
 
       </div>

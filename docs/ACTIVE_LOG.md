@@ -294,3 +294,27 @@
   - 避免底部彈窗擋住下方 Tab 點擊，精準定位在 `bottom-16`；並透過 localStorage 進行本機永久防騷擾記憶。
 - **防禦手段 / 測試背書**:
   - `keeper.py audit` 通過 100% 結構審計。
+
+---
+
+### [2026-09-27] [UNREFINED] [feature/google-oauth-drive-vault-and-privacy] Google OAuth 登入、個人雲端保險庫、雙語隱私權政策與根目錄架構收斂
+- **類型**: `FEATURE_DELIVERY`
+- **代碼錨點**: `js/auth.js`, `js/drive.js`, `js/components/vault.js`, `privacy.html`, `docs/legal/privacy_policy.md`, `docs/how-to/google_oauth_setup.md`, `index.html`
+- **核心事實 / 決策理由**:
+  - **Google OAuth 2.0 與 Drive API 串接**：
+    - 引入 GIS (Google Identity Services) 客戶端，整合 `auth.js` 實現彈窗安全登入。
+    - 落地 `drive.js` 專用服務，請求 `drive.file` 最小權限，於用戶 Google Drive 自動維護 `TrustCV/` 專用目錄（`Certificates/`, `Resumes/`, `Exports/`）。
+    - 實現 `vault.js` 模組，未登入顯示安全功能卡，登入後呈現個人保險庫三欄儀表板與檔案管理。
+  - **Google 品牌審核與雙語隱私權政策**：
+    - 建置獨立公開頁面 `privacy.html`，符合 Google Limited Use Policy 與 User Data Policy 合規要求。
+    - 支援繁體中文與 English 雙語切換與 URL Hash 直連 (`#zh`, `#en`)。
+    - 於主頁加載畫面底部植入非侵入性、中英文自適應之隱私政策連結。
+  - **全域架構收斂與安全性治理**：
+    - 物理刪除根目錄敏感 `client_secret` JSON 檔案，杜絕外洩風險。
+    - 將 OAuth 配置脫敏後收納至 `docs/how-to/google_oauth_setup.md`。
+    - 將雙語隱私政策源文稿歸位收納至 `docs/legal/privacy_policy.md` 作為單一真理源 (SSOT)。
+    - 同步更新 `docs/TOPOLOGY.md`，登錄新模組職責。
+- **踩坑 / 失敗模式**:
+  - 避免將金鑰與內部除錯說明散落在根目錄污染倉庫，依 DMC 知識庫規範嚴格分層收納。
+- **防禦手段 / 測試背書**:
+  - 執行 `py .agents/skills/project_structure_keeper/scripts/keeper.py audit` 零孤兒檔案，通過 100% 拓撲審計。

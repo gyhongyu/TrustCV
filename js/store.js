@@ -19,7 +19,13 @@ class Store {
       filterCategory: 'ALL',
       applyModalOpen: false,
       applyTargetJob: null,
-      toastMessage: null
+      toastMessage: null,
+      // ── Google Auth & Drive state ──
+      user: null,          // { id, name, email, picture } | null
+      driveFolderIds: null, // { root, certificates, resumes, exports } | null
+      driveFiles: { certificates: [], resumes: [], exports: [] },
+      driveLoading: false,
+      driveError: null
     };
     this.listeners = [];
   }
@@ -68,6 +74,30 @@ class Store {
     setTimeout(() => {
       this.setState({ toastMessage: null });
     }, duration);
+  }
+
+  // ── Auth & Drive mutations ──
+
+  setUser(userInfo) {
+    this.setState({ user: userInfo, driveError: null });
+  }
+
+  setDriveFolderIds(ids) {
+    this.setState({ driveFolderIds: ids });
+  }
+
+  setDriveFiles(key, files) {
+    this.setState({ driveFiles: { ...this.state.driveFiles, [key]: files } });
+  }
+
+  clearUser() {
+    this.setState({
+      user: null,
+      driveFolderIds: null,
+      driveFiles: { certificates: [], resumes: [], exports: [] },
+      driveLoading: false,
+      driveError: null
+    });
   }
 
   subscribe(listener) {

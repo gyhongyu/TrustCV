@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title id="page-title">TrustCV | 隱私權政策 Privacy Policy</title>
+  
+  <!-- SEO & Meta -->
+  <meta name="description" content="TrustCV 隱私權政策與 Google API 使用者資料規範說明。說明履歷資料存取、Google Drive API 範圍及保護規範。">
+  <meta name="theme-color" content="#080C0E">
+  <link rel="canonical" href="https://cv.teaforia.in/privacy.html">
+  
+  <!-- Favicon & PWA Icons -->
+  <link rel="icon" type="image/svg+xml" href="./assets/svg/PC 瀏覽器標籤頁專用圖標代碼.svg">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              obsidian: '#080C0E',
+              dark: '#0B1117',
+              card: '#121A24',
+              surface: '#182433',
+              border: '#1E293B',
+              borderLight: '#334155',
+              mint: '#3DF5A7',
+              mintGlow: '#40F5A3',
+              emerald: '#10B981',
+              emeraldDeep: '#059669',
+              forest: '#143B32',
+              forestDeep: '#2A725E',
+              accent: '#38BDF8'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #080C0E;
+      color: #E2E8F0;
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+    .lang-section {
+      transition: opacity 0.25s ease-in-out;
+    }
+    .lang-section.hidden {
+      display: none;
+    }
+    .legal-card {
+      background: linear-gradient(180deg, rgba(18, 26, 36, 0.75) 0%, rgba(11, 17, 23, 0.9) 100%);
+      border: 1px solid rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(12px);
+    }
+    .badge-pill {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(61, 245, 167, 0.3);
+      color: #3DF5A7;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-brand-obsidian flex flex-col selection:bg-brand-emerald selection:text-white">
+
+  <!-- Navigation Bar -->
+  <header class="sticky top-0 z-50 bg-brand-obsidian/85 backdrop-blur-md border-b border-brand-border/70">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <!-- Brand Logo -->
+      <a href="./" class="flex items-center gap-3 group transition-transform active:scale-95">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-mint to-brand-emerald p-[1.5px] shadow-lg shadow-brand-emerald/20">
+          <div class="w-full h-full bg-brand-dark rounded-[10px] flex items-center justify-center">
+            <svg class="w-5 h-5 text-brand-mint" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-base font-bold tracking-tight text-white group-hover:text-brand-mint transition-colors">TrustCV</span>
+          <span class="text-[10px] text-slate-400 font-medium tracking-wider uppercase">Privacy & Compliance</span>
+        </div>
+      </a>
+
+      <!-- Right Controls: Language Switcher & Home Link -->
+      <div class="flex items-center gap-3">
+        <!-- Language Switcher Pill Button -->
+        <div class="inline-flex p-1 bg-brand-card/90 rounded-full border border-brand-border">
+          <button id="btn-lang-zh" onclick="setLanguage('zh')" class="px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 bg-brand-emerald text-white shadow-sm shadow-brand-emerald/30">
+            繁體中文
+          </button>
+          <button id="btn-lang-en" onclick="setLanguage('en')" class="px-3 py-1 text-xs font-medium rounded-full text-slate-400 hover:text-white transition-all duration-200">
+            English
+          </button>
+        </div>
+
+        <!-- Back to App Link -->
+        <a href="./" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/70 transition-all">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span id="nav-back-text">返回主頁</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="relative overflow-hidden border-b border-brand-border/40 py-10 sm:py-14">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-brand-emerald/10 via-transparent to-transparent pointer-events-none"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-pill text-xs font-medium mb-4">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" clip-rule="evenodd" />
+        </svg>
+        <span id="hero-badge">Google API 服務規範與隱私保護承諾</span>
+      </div>
+      <h1 id="hero-title" class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+        TrustCV 隱私權政策
+      </h1>
+      <p id="hero-effective" class="text-xs sm:text-sm text-slate-400">
+        生效日期：2026 年 9 月 27 日 • 官方網址：<a href="https://cv.teaforia.in" class="text-brand-mint hover:underline">https://cv.teaforia.in</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Content Container -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-grow w-full">
+
+    <!-- ========================================== -->
+    <!-- CHINESE CONTENT SECTION (繁體中文版) -->
+    <!-- ========================================== -->
+    <article id="content-zh" class="lang-section space-y-8">
+      
+      <!-- Intro Card -->
+      <div class="legal-card p-6 sm:p-7 rounded-2xl">
+        <p class="text-sm sm:text-base leading-relaxed text-slate-200">
+          歡迎使用 <strong class="text-brand-mint font-semibold">TrustCV</strong>（以下簡稱「本服務」或「我們」，官方網址：<code class="text-xs px-2 py-0.5 rounded bg-brand-dark/80 text-brand-mint border border-slate-700">https://cv.teaforia.in</code>）。我們非常重視使用者（以下簡稱「您」）的個人資料與履歷隱私安全。本政策旨在向您清楚說明我們如何收集、使用、保護您的個人資料，以及本服務對 Google 使用者資料與 Google 雲端硬碟 API 的處理規範。
+        </p>
+      </div>
+
+      <!-- Section 1 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">1</span>
+          我們收集與處理的資料項目
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          當您透過 Google 帳號授權登入並使用 TrustCV 時，我們僅在提供核心服務所需的必要範圍內存取與處理以下資訊：
+        </p>
+        <ul class="space-y-3 text-sm text-slate-300">
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-mint mt-1">▪</span>
+            <div>
+              <strong class="text-white">Google 帳號基本公開資訊</strong>：包括您的電子郵件地址（Email）、公開姓名與個人資料照片，僅用於確認您的登入身分與建立連線。
+            </div>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-mint mt-1">▪</span>
+            <div>
+              <strong class="text-white">履歷資料與使用者上傳內容</strong>：包括您主動輸入的個人履歷資訊、工作經歷、教育背景、技能描述，以及您選擇上傳至專屬資料夾的證件照片、證書等相關檔案。
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">2</span>
+          Google Drive API 權限範圍與存取原則
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          TrustCV 嚴格遵循「最小權限原則（Principle of Least Privilege）」，僅請求以下特定權限範圍：
+        </p>
+        <div class="space-y-3 text-sm text-slate-300">
+          <div class="p-3.5 rounded-xl bg-brand-dark/70 border border-brand-border font-mono text-xs text-brand-mint flex items-center gap-2">
+            <svg class="w-4 h-4 text-brand-emerald shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            https://www.googleapis.com/auth/drive.file
+          </div>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2.5">
+              <span class="text-brand-mint mt-1">▪</span>
+              <div>
+                <strong class="text-white">專屬檔案存取</strong>：本服務僅能在您的 Google 雲端硬碟（Google Drive）中建立專用目錄（名為 <code class="text-brand-mint">TrustCV</code>），並僅能存取、上傳、編輯或刪除由 TrustCV 自身所建立的檔案與結構。
+              </div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-brand-mint mt-1">▪</span>
+              <div>
+                <strong class="text-white">無法讀取私人硬碟檔案</strong>：TrustCV <strong class="text-rose-400">完全無法</strong>存取、讀取、下載、修改或刪除您個人 Google 雲端硬碟內的任何其他既有私人檔案、相片或文件。
+              </div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-brand-mint mt-1">▪</span>
+              <div>
+                <strong class="text-white">資料主權歸屬使用者</strong>：所有履歷、自訂匯出版本與證件檔案均直接儲存於您個人的 Google 雲端硬碟空間中。TrustCV 伺服器不會在未經您許可的情況下備份或持久儲存您的私人履歷內容。
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Google Limited Use Callout Box -->
+        <div class="mt-4 p-4 rounded-xl bg-brand-emerald/10 border border-brand-emerald/30 text-xs sm:text-sm text-slate-200 space-y-2">
+          <div class="flex items-center gap-2 font-semibold text-brand-mint">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Google API 限制使用規範聲明 (Limited Use Policy)
+          </div>
+          <p class="leading-relaxed">
+            TrustCV 對從 Google API 接收到的任何資訊之使用與傳輸，均完全遵守 <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer" class="text-brand-mint underline font-medium hover:text-white">Google API 服務使用者資料政策 (Google API Services User Data Policy)</a>，包括其「有限使用（Limited Use）」之具體要求。
+          </p>
+        </div>
+      </section>
+
+      <!-- Section 3 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">3</span>
+          資料使用目的
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          我們收集或存取資料的目的僅限於：
+        </p>
+        <ul class="space-y-2 text-sm text-slate-300">
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-brand-mint shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            為您提供多版本履歷線上編輯、分類管理及格式匯出功能。
+          </li>
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-brand-mint shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            將履歷 PDF / DOCX 檔案與證書檔案同步儲存至您個人的 Google Drive 專屬目錄。
+          </li>
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-brand-mint shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            維持應用程式的基本認證狀態與系統功能正常運作。
+          </li>
+        </ul>
+      </section>
+
+      <!-- Section 4 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">4</span>
+          資料分享與第三方揭露政策
+        </h2>
+        <ul class="space-y-3 text-sm text-slate-300">
+          <li class="flex items-start gap-2.5">
+            <span class="text-rose-400 font-bold">✕</span>
+            <div>
+              <strong class="text-white">不進行商業買賣</strong>：我們絕不會將您的個人資訊、履歷或 Google 資料出售、出租、轉讓或交換給任何第三方機構或廣告商。
+            </div>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-rose-400 font-bold">✕</span>
+            <div>
+              <strong class="text-white">不用於 AI 模型訓練</strong>：未經您的明確授權，我們絕不會將您的履歷或上傳文件用於訓練任何第三方通用人工智慧模型。
+            </div>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-slate-400">§</span>
+            <div>
+              <strong class="text-white">法定揭露例外</strong>：除依據法律法規要求、傳票或司法命令外，我們不會向任何外部機構或個人揭露您的資料。
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Section 5 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">5</span>
+          資料之儲存、撤銷與刪除機制
+        </h2>
+        <ul class="space-y-3 text-sm text-slate-300">
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-mint mt-1">▪</span>
+            <div>
+              <strong class="text-white">隨時撤銷存取授權</strong>：您可以隨時前往 <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" class="text-brand-mint underline hover:text-white font-medium">Google 帳戶安全性設定</a> 頁面，隨時撤銷 TrustCV 對您 Google 帳號的存取授權。撤銷後，本服務將立即喪失對您雲端硬碟的存取權限。
+            </div>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-mint mt-1">▪</span>
+            <div>
+              <strong class="text-white">自主刪除檔案</strong>：因為所有檔案均儲存在您的 Google 雲端硬碟中，您亦可隨時在自己的雲端硬碟中永久刪除 <code class="text-brand-mint">TrustCV</code> 目錄及其內部所有檔案。
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Section 6 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">6</span>
+          政策更新
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          我們保留隨時修訂本隱私權政策的權利。任何變更均會更新於本頁面，並修改頁面頂部的生效日期。重大變更時我們將於網站主頁進行公告。
+        </p>
+      </section>
+
+      <!-- Section 7 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">7</span>
+          聯絡我們
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          若您對本隱私權政策、資料處理方式或您的個人權益有任何疑問或反饋，請透過官方電子郵件與專案管理團隊聯繫：
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+          <div class="p-3.5 rounded-xl bg-brand-dark/70 border border-brand-border">
+            <div class="text-xs text-slate-400 mb-1">聯絡信箱 (Email)</div>
+            <a href="mailto:info@teaforia.in" class="text-brand-mint hover:underline font-mono text-xs sm:text-sm">info@teaforia.in</a>
+          </div>
+          <div class="p-3.5 rounded-xl bg-brand-dark/70 border border-brand-border">
+            <div class="text-xs text-slate-400 mb-1">官方網址 (Website)</div>
+            <a href="https://cv.teaforia.in" class="text-slate-200 hover:text-brand-mint font-mono text-xs sm:text-sm">https://cv.teaforia.in</a>
+          </div>
+        </div>
+      </section>
+
+    </article>
+
+
+    <!-- ========================================== -->
+    <!-- ENGLISH CONTENT SECTION (英文版) -->
+    <!-- ========================================== -->
+    <article id="content-en" class="lang-section hidden space-y-8">
+      
+      <!-- Intro Card -->
+      <div class="legal-card p-6 sm:p-7 rounded-2xl">
+        <p class="text-sm sm:text-base leading-relaxed text-slate-200">
+          Welcome to <strong class="text-brand-mint font-semibold">TrustCV</strong> ("the Service", "we", "us", or "our", accessible at <code class="text-xs px-2 py-0.5 rounded bg-brand-dark/80 text-brand-mint border border-slate-700">https://cv.teaforia.in</code>). We are committed to protecting your privacy and ensuring transparency regarding how we handle your personal information and Google user data. This policy outlines our data collection, usage, and protection practices.
+        </p>
+      </div>
+
+      <!-- Section 1 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">1</span>
+          Information We Collect
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          When you authenticate and use TrustCV through Google OAuth, we only access and process the following categories of information strictly required for core functionality:
+        </p>
+        <ul class="space-y-3 text-sm text-slate-300">
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-mint mt-1">▪</span>
+            <div>
+              <strong class="text-white">Google Account Profile Information</strong>: Your primary email address, public profile name, and profile picture, solely used to authenticate your identity and facilitate secure login sessions.
+            </div>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-mint mt-1">▪</span>
+            <div>
+              <strong class="text-white">Resume Content & Uploaded Documents</strong>: Information you voluntarily input into resumes (e.g., contact info, employment history, education, skills) and documents (such as certificates or portfolio attachments) you choose to upload to your dedicated storage folder.
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">2</span>
+          Google Drive API Permissions & Usage
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          TrustCV adheres strictly to the principle of least privilege by requesting only the following dedicated scope:
+        </p>
+        <div class="space-y-3 text-sm text-slate-300">
+          <div class="p-3.5 rounded-xl bg-brand-dark/70 border border-brand-border font-mono text-xs text-brand-mint flex items-center gap-2">
+            <svg class="w-4 h-4 text-brand-emerald shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            https://www.googleapis.com/auth/drive.file
+          </div>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2.5">
+              <span class="text-brand-mint mt-1">▪</span>
+              <div>
+                <strong class="text-white">App-Specific Access</strong>: The Service only creates, views, edits, and deletes files and folders specifically created by TrustCV itself within your Google Drive (specifically under the dedicated <code class="text-brand-mint">TrustCV</code> folder).
+              </div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-brand-mint mt-1">▪</span>
+              <div>
+                <strong class="text-white">No Access to Personal Drive Files</strong>: TrustCV <strong class="text-rose-400">cannot</strong> read, browse, modify, access, or delete any other files, folders, photos, or documents residing in your personal Google Drive.
+              </div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-brand-mint mt-1">▪</span>
+              <div>
+                <strong class="text-white">User Data Sovereignty</strong>: All resume files, custom versions, and certificates remain exclusively in your own Google Drive. We do not store persistent copies of your private resume documents on external servers.
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Google Limited Use Callout Box -->
+        <div class="mt-4 p-4 rounded-xl bg-brand-emerald/10 border border-brand-emerald/30 text-xs sm:text-sm text-slate-200 space-y-2">
+          <div class="flex items-center gap-2 font-semibold text-brand-mint">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Google API Services User Data Policy Compliance
+          </div>
+          <p class="leading-relaxed">
+            TrustCV's use and transfer of information received from Google APIs to any other app will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer" class="text-brand-mint underline font-medium hover:text-white">Google API Services User Data Policy</a>, including the Limited Use requirements.
+          </p>
+        </div>
+      </section>
+
+      <!-- Section 3 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">3</span>
+          How We Use Your Information
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          We use the data we access strictly to provide core features, including:
+        </p>
+        <ul class="space-y-2 text-sm text-slate-300">
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-brand-mint shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Enabling online resume creation, customization, and export to PDF/DOCX formats.
+          </li>
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-brand-mint shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Organizing and synchronizing your resume documents within your own Google Drive directory.
+          </li>
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-brand-mint shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Maintaining secure authentication and proper user session management.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Section 4 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">4</span>
+          Data Sharing & Third-Party Disclosure
+        </h2>
+        <ul class="space-y-3 text-sm text-slate-300">
+          <li class="flex items-start gap-2.5">
+            <span class="text-rose-400 font-bold">✕</span>
+            <div>
+              <strong class="text-white">No Sale of Personal Data</strong>: We do not sell, rent, lease, trade, or share your personal data or Google account information with third parties or advertisers.
+            </div>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-rose-400 font-bold">✕</span>
+            <div>
+              <strong class="text-white">No Unauthorized AI Training</strong>: We do not use your private resume content or uploaded attachments to train artificial intelligence or machine learning models without your explicit consent.
+            </div>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-slate-400">§</span>
+            <div>
+              <strong class="text-white">Legal Disclosure</strong>: Your information will only be disclosed if required by law, subpoena, or valid legal process.
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Section 5 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">5</span>
+          User Data Retention, Deletion, and Revocation
+        </h2>
+        <ul class="space-y-3 text-sm text-slate-300">
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-mint mt-1">▪</span>
+            <div>
+              <strong class="text-white">Revoking Access</strong>: You can revoke TrustCV's access to your Google account at any time via your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" class="text-brand-mint underline hover:text-white font-medium">Google Account Security Settings</a>. Upon revocation, the Service will immediately lose all access permissions.
+            </div>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-mint mt-1">▪</span>
+            <div>
+              <strong class="text-white">Deleting Your Data</strong>: Since all created files reside directly in your Google Drive, you may delete the <code class="text-brand-mint">TrustCV</code> folder and its contents directly within Google Drive at any time.
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Section 6 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">6</span>
+          Changes to This Policy
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          We may update this Privacy Policy periodically. Any modifications will become effective immediately upon posting to this page with an updated effective date.
+        </p>
+      </section>
+
+      <!-- Section 7 -->
+      <section class="legal-card p-6 sm:p-7 rounded-2xl space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-brand-emerald/15 text-brand-mint flex items-center justify-center text-xs font-bold border border-brand-emerald/30">7</span>
+          Contact Information
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          If you have any questions, concerns, or requests regarding this Privacy Policy, please contact our team at:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+          <div class="p-3.5 rounded-xl bg-brand-dark/70 border border-brand-border">
+            <div class="text-xs text-slate-400 mb-1">Email</div>
+            <a href="mailto:info@teaforia.in" class="text-brand-mint hover:underline font-mono text-xs sm:text-sm">info@teaforia.in</a>
+          </div>
+          <div class="p-3.5 rounded-xl bg-brand-dark/70 border border-brand-border">
+            <div class="text-xs text-slate-400 mb-1">Official Website</div>
+            <a href="https://cv.teaforia.in" class="text-slate-200 hover:text-brand-mint font-mono text-xs sm:text-sm">https://cv.teaforia.in</a>
+          </div>
+        </div>
+      </section>
+
+    </article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-brand-border/60 bg-brand-dark/95 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>
+        © 2026 TrustCV. All rights reserved.
+      </div>
+      <div class="flex items-center gap-4 text-slate-400">
+        <a href="./" class="hover:text-brand-mint transition-colors">Home</a>
+        <span>•</span>
+        <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" class="hover:text-brand-mint transition-colors">Google Permissions</a>
+        <span>•</span>
+        <a href="mailto:info@teaforia.in" class="hover:text-brand-mint transition-colors">info@teaforia.in</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Language Switch Script -->
+  <script>
+    function setLanguage(lang) {
+      const zhSection = document.getElementById('content-zh');
+      const enSection = document.getElementById('content-en');
+      const btnZh = document.getElementById('btn-lang-zh');
+      const btnEn = document.getElementById('btn-lang-en');
+      const pageTitle = document.getElementById('page-title');
+      const heroBadge = document.getElementById('hero-badge');
+      const heroTitle = document.getElementById('hero-title');
+      const heroEffective = document.getElementById('hero-effective');
+      const navBackText = document.getElementById('nav-back-text');
+
+      if (lang === 'en') {
+        zhSection.classList.add('hidden');
+        enSection.classList.remove('hidden');
+
+        // Buttons
+        btnZh.className = "px-3 py-1 text-xs font-medium rounded-full text-slate-400 hover:text-white transition-all duration-200";
+        btnEn.className = "px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 bg-brand-emerald text-white shadow-sm shadow-brand-emerald/30";
+
+        // Headings
+        pageTitle.innerText = "TrustCV | Privacy Policy";
+        heroBadge.innerText = "Google API Services User Data Policy Compliance";
+        heroTitle.innerText = "TrustCV Privacy Policy";
+        heroEffective.innerHTML = 'Effective Date: September 27, 2026 • Official Website: <a href="https://cv.teaforia.in" class="text-brand-mint hover:underline">https://cv.teaforia.in</a>';
+        if (navBackText) navBackText.innerText = "Back to App";
+
+        // URL Hash update
+        history.replaceState(null, null, '#en');
+      } else {
+        enSection.classList.add('hidden');
+        zhSection.classList.remove('hidden');
+
+        // Buttons
+        btnEn.className = "px-3 py-1 text-xs font-medium rounded-full text-slate-400 hover:text-white transition-all duration-200";
+        btnZh.className = "px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 bg-brand-emerald text-white shadow-sm shadow-brand-emerald/30";
+
+        // Headings
+        pageTitle.innerText = "TrustCV | 隱私權政策 Privacy Policy";
+        heroBadge.innerText = "Google API 服務規範與隱私保護承諾";
+        heroTitle.innerText = "TrustCV 隱私權政策";
+        heroEffective.innerHTML = '生效日期：2026 年 9 月 27 日 • 官方網址：<a href="https://cv.teaforia.in" class="text-brand-mint hover:underline">https://cv.teaforia.in</a>';
+        if (navBackText) navBackText.innerText = "返回主頁";
+
+        // URL Hash update
+        history.replaceState(null, null, '#zh');
+      }
+    }
+
+    // Auto-detect hash on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.toLowerCase();
+      if (hash === '#en') {
+        setLanguage('en');
+      } else {
+        setLanguage('zh');
+      }
+    });
+  </script>
+</body>
+</html>
