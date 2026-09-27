@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trustcv-cache-v1.2.0';
+const CACHE_NAME = 'trustcv-cache-v1.3.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -8,12 +8,16 @@ const ASSETS_TO_CACHE = [
   './js/store.js',
   './js/i18n.js',
   './js/api.js',
+  './js/auth.js',
+  './js/drive.js',
   './js/mock/mockData.js',
   './js/components/header.js',
   './js/components/jobList.js',
   './js/components/jobDetail.js',
   './js/components/applyForm.js',
   './js/components/statusTracker.js',
+  './js/components/vault.js',
+  './js/components/myCv.js',
   './assets/icons/icon-192x192.png',
   './assets/icons/icon-512x512.png',
   './assets/icons/apple-touch-icon.png',

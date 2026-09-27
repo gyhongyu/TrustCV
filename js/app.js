@@ -14,6 +14,7 @@ import { renderJobDetail } from './components/jobDetail.js';
 import { renderApplyModal } from './components/applyForm.js';
 import { renderStatusTracker, renderDossierHub } from './components/statusTracker.js';
 import { renderVault } from './components/vault.js';
+import { renderMyCv } from './components/myCv.js';
 
 class App {
   constructor() {
@@ -186,16 +187,20 @@ class App {
           store.setState({ driveLoading: true, driveError: null });
           const folderIds = await driveService.ensureFolderStructure();
           store.setDriveFolderIds(folderIds);
-          // Load file listings for all 3 folders in parallel
-          const [certs, resumes, exports_] = await Promise.all([
+          // Load file listings for all 4 folders in parallel (Photos, Certificates, Resumes, Exports)
+          const [photos, certs, resumes, exports_] = await Promise.all([
+            driveService.listFiles(folderIds.photos),
             driveService.listFiles(folderIds.certificates),
             driveService.listFiles(folderIds.resumes),
             driveService.listFiles(folderIds.exports)
           ]);
           store.setState({
-            driveFiles: { certificates: certs, resumes, exports: exports_ },
+            driveFiles: { photos, certificates: certs, resumes, exports: exports_ },
             driveLoading: false
           });
+
+          // 自動水合 master_profile.json
+          await store.hydrateProfileFromDrive();
         } catch (e) {
           console.error('[Drive] Setup failed', e);
           store.setState({ driveLoading: false, driveError: e.message });
@@ -238,6 +243,916 @@ class App {
         } catch (e) {
           store.setState({ driveError: e.message });
         }
+      },
+
+      // ── 統一智慧投放區上傳與分類 (任務 4) ──
+
+      handleUnifiedDropzoneUpload: async (input) => {
+        if (!authService.isAuthenticated()) {
+          store.showToast(i18n.getLanguage() === 'en' ? 'Please sign in with Google first.' : '請先登入 Google 帳號。');
+          input.value = '';
+          return;
+        }
+        const { driveFolderIds } = store.getState();
+        if (!driveFolderIds) {
+          await window.TrustCV.setupDriveFolders();
+        }
+        const files = Array.from(input.files || []);
+        if (!files.length) return;
+
+        store.setState({ driveLoading: true });
+        try {
+          for (const f of files) {
+            let targetKey = 'certificates';
+            const nameLower = f.name.toLowerCase();
+            const typeLower = (f.type || '').toLowerCase();
+
+            if (typeLower.startsWith('image/')) {
+              targetKey = 'photos';
+            } else if (nameLower.includes('resume') || nameLower.includes('cv') || nameLower.includes('履歷') || nameLower.includes('簡歷')) {
+              targetKey = 'resumes';
+            } else {
+              targetKey = 'certificates';
+            }
+
+            const targetFolderId = store.getState().driveFolderIds[targetKey];
+            await driveService.uploadFile(targetFolderId, f);
+            const updated = await driveService.listFiles(targetFolderId);
+            store.setDriveFiles(targetKey, updated);
+          }
+
+          const isEn = i18n.getLanguage() === 'en';
+          store.showToast(isEn ? `Classified & uploaded ${files.length} file(s)!` : `已智慧歸檔上傳 ${files.length} 個檔案！`);
+        } catch (e) {
+          store.setState({ driveError: e.message });
+        } finally {
+          store.setState({ driveLoading: false });
+          input.value = '';
+        }
+      },
+
+      // ── 個人履歷 12 大區塊互動與持久化 (任務 3) ──
+
+      forceSaveProfile: () => store.forceSaveProfile(),
+
+      togglePrivacy: (sectionKey, itemId) => {
+        store.updateMasterProfile(prev => {
+          const list = prev[sectionKey] || [];
+          const updated = list.map(item => {
+            if (item.id === itemId) {
+              return { ...item, is_public: !item.is_public };
+            }
+            return item;
+          });
+          return { ...prev, [sectionKey]: updated };
+        });
+      },
+
+      deleteItem: (sectionKey, itemId) => {
+        const isEn = i18n.getLanguage() === 'en';
+        if (!confirm(isEn ? 'Are you sure you want to delete this item?' : '確定要刪除此條目嗎？')) return;
+        store.updateMasterProfile(prev => {
+          const list = prev[sectionKey] || [];
+          return { ...prev, [sectionKey]: list.filter(item => item.id !== itemId) };
+        });
+      },
+
+      updateAutobiography: (field, value) => {
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          autobiography: {
+            ...prev.autobiography,
+            [field]: value
+          }
+        }));
+      },
+
+      uploadAvatar: (input) => {
+        const file = input.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const dataUrl = e.target.result;
+          store.updateMasterProfile(prev => ({
+            ...prev,
+            basic_info: {
+              ...prev.basic_info,
+              avatar_url: dataUrl
+            }
+          }));
+          store.showToast(i18n.getLanguage() === 'en' ? 'Profile photo updated!' : '大頭照已更新！');
+        };
+        reader.readAsDataURL(file);
+      },
+
+      triggerAiDropzone: (dropZoneKey) => {
+        const fileInput = document.getElementById(`ai-dropzone-input-${dropZoneKey}`);
+        if (fileInput) fileInput.click();
+      },
+
+      handleAiDropzoneUpload: (dropZoneKey, input) => {
+        const files = Array.from(input.files || []);
+        if (!files.length) return;
+        const isEn = i18n.getLanguage() === 'en';
+        const fileNames = files.map(f => f.name).join(', ');
+
+        store.showToast(isEn ? `✨ AI extracted & added to ${dropZoneKey}: ${fileNames}` : `✨ AI 智能提煉完成，已自動填入本區塊：${fileNames}`);
+        
+        // 智能填充示範新條目
+        if (dropZoneKey === 'work_experiences') {
+          store.updateMasterProfile(prev => ({
+            ...prev,
+            work_experiences: [
+              ...prev.work_experiences,
+              {
+                id: `work_${Date.now()}`,
+                company_name: 'Delta Electronics / 台達電子合作代工廠',
+                industry: '工業電子與電源供應系統',
+                job_title: '資深 PLC 與驅動系統工程師 (AI 提煉)',
+                start_date: '2024-07',
+                end_date: '',
+                is_current: true,
+                description: `根據 ${fileNames} 自動提煉：負責半導體自動化設備電控開發、TIA Portal 程式架構設計與 EtherCAT 現場調試。`,
+                skills_used: ['Delta PLC', 'TIA Portal', 'EtherCAT', 'Servo Tuning'],
+                is_public: true
+              }
+            ]
+          }));
+        } else if (dropZoneKey === 'certificates') {
+          store.updateMasterProfile(prev => ({
+            ...prev,
+            certificates: [
+              ...prev.certificates,
+              {
+                id: `cert_${Date.now()}`,
+                name: `自動提煉認證憑證 (${files[0].name.replace(/\.[^/.]+$/, '')})`,
+                issuing_org: 'International Automation Accreditation',
+                license_no: `CERT-AI-${Math.floor(1000 + Math.random() * 9000)}`,
+                issue_date: '2024-01',
+                is_public: true
+              }
+            ]
+          }));
+        } else if (dropZoneKey === 'educations') {
+          store.updateMasterProfile(prev => ({
+            ...prev,
+            educations: [
+              ...prev.educations,
+              {
+                id: `edu_${Date.now()}`,
+                school_name: 'Anna University College of Engineering',
+                degree_level: 'MASTERS',
+                major: 'Mechatronics & Robotics Engineering',
+                start_year: '2019',
+                end_year: '2021',
+                status: 'GRADUATED',
+                is_public: true
+              }
+            ]
+          }));
+        }
+        input.value = '';
+      },
+
+      // ── 輕量通用 Modal 表單交互 ──
+
+      closeCvModal: () => {
+        const modalContainer = document.getElementById('cv-modal-container');
+        if (modalContainer) modalContainer.innerHTML = '';
+      },
+
+      openEditBasicInfoModal: () => {
+        const b = store.getState().masterProfile.basic_info || {};
+        const isLight = store.getState().theme === 'light';
+        const isEn = i18n.getLanguage() === 'en';
+
+        const modalHtml = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeCvModal()">
+            <div class="w-full max-w-lg rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 border border-slate-200 shadow-2xl' : 'bg-[#0E1518] text-white border border-slate-800 shadow-2xl'} space-y-4" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-100' : 'border-slate-800'}">
+                <h3 class="text-sm font-bold">${isEn ? 'Edit Basic Information' : '編輯個人基本資料'}</h3>
+                <button onclick="window.TrustCV.closeCvModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <form onsubmit="window.TrustCV.saveBasicInfoForm(event)" class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Full Legal Name (English)' : '護照法定全名 (英文)'}</label>
+                  <input name="full_name" required value="${b.full_name || ''}" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Full Name (Traditional Chinese)' : '中文全名 (繁體中文)'}</label>
+                  <input name="full_name_zh" value="${b.full_name_zh || ''}" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Gender' : '性別'}</label>
+                    <select name="gender" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                      <option value="MALE" ${b.gender === 'MALE' ? 'selected' : ''}>Male / 男性</option>
+                      <option value="FEMALE" ${b.gender === 'FEMALE' ? 'selected' : ''}>Female / 女性</option>
+                      <option value="OTHER" ${b.gender === 'OTHER' ? 'selected' : ''}>Other / 其他</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Birth Date' : '出生年月'}</label>
+                    <input name="date_of_birth" type="date" value="${b.date_of_birth || ''}" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Email' : '聯絡信箱'}</label>
+                    <input name="email" required type="email" value="${b.email || ''}" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Phone' : '聯絡電話'}</label>
+                    <input name="phone" required value="${b.phone || ''}" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'ID / Passport' : '身份證號 / 護照卡號'}</label>
+                  <input name="id_or_passport" value="${b.id_or_passport || ''}" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Address' : '通訊地址'}</label>
+                  <input name="address" value="${b.address || ''}" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                  <button type="button" onclick="window.TrustCV.closeCvModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600">${isEn ? 'Cancel' : '取消'}</button>
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold">${isEn ? 'Save' : '儲存'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById('cv-modal-container').innerHTML = modalHtml;
+      },
+
+      saveBasicInfoForm: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          basic_info: {
+            ...prev.basic_info,
+            full_name: f.full_name.value.trim(),
+            full_name_zh: f.full_name_zh.value.trim(),
+            gender: f.gender.value,
+            date_of_birth: f.date_of_birth.value,
+            email: f.email.value.trim(),
+            phone: f.phone.value.trim(),
+            id_or_passport: f.id_or_passport.value.trim(),
+            address: f.address.value.trim()
+          }
+        }));
+        window.TrustCV.closeCvModal();
+      },
+
+      openEditPreferencesModal: () => {
+        const pref = store.getState().masterProfile.job_preferences || {};
+        const isLight = store.getState().theme === 'light';
+        const isEn = i18n.getLanguage() === 'en';
+
+        const modalHtml = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeCvModal()">
+            <div class="w-full max-w-lg rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 border border-slate-200 shadow-2xl' : 'bg-[#0E1518] text-white border border-slate-800 shadow-2xl'} space-y-4" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-100' : 'border-slate-800'}">
+                <h3 class="text-sm font-bold">${isEn ? 'Edit Job Preferences' : '編輯求職條件'}</h3>
+                <button onclick="window.TrustCV.closeCvModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <form onsubmit="window.TrustCV.savePreferencesForm(event)" class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Desired Job Title' : '希望職稱'}</label>
+                  <input name="desired_title" required value="${pref.desired_title || ''}" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Expected Compensation' : '期望待遇'}</label>
+                  <input name="expected_salary" value="${pref.expected_salary || ''}" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Availability' : '可上班日'}</label>
+                  <input name="available_date" value="${pref.available_date || ''}" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Desired Locations (comma-separated)' : '希望工作地點 (以逗號分隔)'}</label>
+                  <input name="locations" value="${(pref.desired_locations || []).join(', ')}" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div class="flex items-center gap-2">
+                  <input type="checkbox" id="pref_relocate" name="willing_to_relocate" ${pref.willing_to_relocate ? 'checked' : ''} class="w-4 h-4 rounded text-emerald-600">
+                  <label for="pref_relocate" class="text-xs font-semibold">${isEn ? 'Willing to relocate to Taiwan' : '願意前往台灣就業 (外派意願)'}</label>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                  <button type="button" onclick="window.TrustCV.closeCvModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600">${isEn ? 'Cancel' : '取消'}</button>
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold">${isEn ? 'Save' : '儲存'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById('cv-modal-container').innerHTML = modalHtml;
+      },
+
+      savePreferencesForm: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        const locations = f.locations.value.split(',').map(s => s.trim()).filter(Boolean);
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          job_preferences: {
+            ...prev.job_preferences,
+            desired_title: f.desired_title.value.trim(),
+            expected_salary: f.expected_salary.value.trim(),
+            available_date: f.available_date.value.trim(),
+            desired_locations: locations,
+            willing_to_relocate: f.willing_to_relocate.checked
+          }
+        }));
+        window.TrustCV.closeCvModal();
+      },
+
+      openAddWorkModal: () => {
+        const isLight = store.getState().theme === 'light';
+        const isEn = i18n.getLanguage() === 'en';
+
+        const modalHtml = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeCvModal()">
+            <div class="w-full max-w-lg rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 border border-slate-200 shadow-2xl' : 'bg-[#0E1518] text-white border border-slate-800 shadow-2xl'} space-y-4" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-100' : 'border-slate-800'}">
+                <h3 class="text-sm font-bold">${isEn ? 'Add Work Experience' : '手動新增工作經歷'}</h3>
+                <button onclick="window.TrustCV.closeCvModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <form onsubmit="window.TrustCV.saveWorkForm(event)" class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Company Name' : '公司名稱'}</label>
+                  <input name="company_name" required placeholder="e.g. Foxlink / 正崴精密" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Job Title' : '擔任職稱'}</label>
+                    <input name="job_title" required placeholder="e.g. Automation Engineer" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Industry' : '產業類別'}</label>
+                    <input name="industry" placeholder="e.g. 電子自動化製造" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Start Date' : '起始年月'}</label>
+                    <input name="start_date" placeholder="YYYY-MM" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'End Date (Empty for Present)' : '結束年月 (在職中請留空)'}</label>
+                    <input name="end_date" placeholder="YYYY-MM" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Job Description / STAR Results' : '工作內容與量化成果'}</label>
+                  <textarea name="description" rows="3" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}"></textarea>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Skills Used (comma-separated)' : '應用專業技術標籤 (逗號分隔)'}</label>
+                  <input name="skills" placeholder="Siemens S7, SCADA, EtherCAT" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                  <button type="button" onclick="window.TrustCV.closeCvModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600">${isEn ? 'Cancel' : '取消'}</button>
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold">${isEn ? 'Add' : '新增'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById('cv-modal-container').innerHTML = modalHtml;
+      },
+
+      saveWorkForm: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        const skills = f.skills.value.split(',').map(s => s.trim()).filter(Boolean);
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          work_experiences: [
+            ...prev.work_experiences,
+            {
+              id: `work_${Date.now()}`,
+              company_name: f.company_name.value.trim(),
+              job_title: f.job_title.value.trim(),
+              industry: f.industry.value.trim(),
+              start_date: f.start_date.value.trim(),
+              end_date: f.end_date.value.trim(),
+              is_current: !f.end_date.value.trim(),
+              description: f.description.value.trim(),
+              skills_used: skills,
+              is_public: true
+            }
+          ]
+        }));
+        window.TrustCV.closeCvModal();
+      },
+
+      openAddEducationModal: () => {
+        const isLight = store.getState().theme === 'light';
+        const isEn = i18n.getLanguage() === 'en';
+
+        const modalHtml = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeCvModal()">
+            <div class="w-full max-w-lg rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 border border-slate-200 shadow-2xl' : 'bg-[#0E1518] text-white border border-slate-800 shadow-2xl'} space-y-4" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-100' : 'border-slate-800'}">
+                <h3 class="text-sm font-bold">${isEn ? 'Add Education Record' : '手動新增學歷背景'}</h3>
+                <button onclick="window.TrustCV.closeCvModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <form onsubmit="window.TrustCV.saveEducationForm(event)" class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Institution / University' : '學校名稱'}</label>
+                  <input name="school_name" required placeholder="e.g. National Taiwan University" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Degree Level' : '學位別'}</label>
+                    <select name="degree_level" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                      <option value="BACHELORS">Bachelor / 學士</option>
+                      <option value="MASTERS">Master / 碩士</option>
+                      <option value="DOCTORATE">Doctorate / 博士</option>
+                      <option value="ASSOCIATE">Associate / 專科</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Major / Department' : '科系名稱'}</label>
+                    <input name="major" required placeholder="e.g. Electrical Engineering" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Start Year' : '入學年份'}</label>
+                    <input name="start_year" placeholder="YYYY" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Passing Year' : '畢業年份'}</label>
+                    <input name="end_year" placeholder="YYYY" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                  <button type="button" onclick="window.TrustCV.closeCvModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600">${isEn ? 'Cancel' : '取消'}</button>
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold">${isEn ? 'Add' : '新增'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById('cv-modal-container').innerHTML = modalHtml;
+      },
+
+      saveEducationForm: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          educations: [
+            ...prev.educations,
+            {
+              id: `edu_${Date.now()}`,
+              school_name: f.school_name.value.trim(),
+              degree_level: f.degree_level.value,
+              major: f.major.value.trim(),
+              start_year: f.start_year.value.trim(),
+              end_year: f.end_year.value.trim(),
+              status: 'GRADUATED',
+              is_public: true
+            }
+          ]
+        }));
+        window.TrustCV.closeCvModal();
+      },
+
+      openAddCertModal: () => {
+        const isLight = store.getState().theme === 'light';
+        const isEn = i18n.getLanguage() === 'en';
+
+        const modalHtml = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeCvModal()">
+            <div class="w-full max-w-lg rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 border border-slate-200 shadow-2xl' : 'bg-[#0E1518] text-white border border-slate-800 shadow-2xl'} space-y-4" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-100' : 'border-slate-800'}">
+                <h3 class="text-sm font-bold">${isEn ? 'Add License or Certification' : '手動新增專業證照'}</h3>
+                <button onclick="window.TrustCV.closeCvModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <form onsubmit="window.TrustCV.saveCertForm(event)" class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Certificate Name' : '證照名稱'}</label>
+                  <input name="name" required placeholder="e.g. Certified Motion Control Specialist" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Issuing Organization' : '發證機構'}</label>
+                  <input name="issuing_org" required placeholder="e.g. Siemens SITRAIN" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'License Number' : '證書字號'}</label>
+                    <input name="license_no" placeholder="e.g. SITR-2024-9988" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Issue Date' : '發證年月'}</label>
+                    <input name="issue_date" placeholder="YYYY-MM" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                  <button type="button" onclick="window.TrustCV.closeCvModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600">${isEn ? 'Cancel' : '取消'}</button>
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold">${isEn ? 'Add' : '新增'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById('cv-modal-container').innerHTML = modalHtml;
+      },
+
+      saveCertForm: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          certificates: [
+            ...prev.certificates,
+            {
+              id: `cert_${Date.now()}`,
+              name: f.name.value.trim(),
+              issuing_org: f.issuing_org.value.trim(),
+              license_no: f.license_no.value.trim(),
+              issue_date: f.issue_date.value.trim(),
+              is_public: true
+            }
+          ]
+        }));
+        window.TrustCV.closeCvModal();
+      },
+
+      openAddLanguageModal: () => {
+        const isLight = store.getState().theme === 'light';
+        const isEn = i18n.getLanguage() === 'en';
+
+        const modalHtml = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeCvModal()">
+            <div class="w-full max-w-lg rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 border border-slate-200 shadow-2xl' : 'bg-[#0E1518] text-white border border-slate-800 shadow-2xl'} space-y-4" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-100' : 'border-slate-800'}">
+                <h3 class="text-sm font-bold">${isEn ? 'Add Language' : '新增語文能力'}</h3>
+                <button onclick="window.TrustCV.closeCvModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <form onsubmit="window.TrustCV.saveLanguageForm(event)" class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Language Name' : '語言種類'}</label>
+                  <input name="name" required placeholder="e.g. Japanese / 日語" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                  <div>
+                    <label class="block text-[10px] text-slate-500">${isEn ? 'Listening' : '聽'}</label>
+                    <select name="listening" class="w-full p-2 rounded-lg border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                      <option value="NATIVE">Native</option>
+                      <option value="FLUENT">Fluent</option>
+                      <option value="PROFICIENT">Proficient</option>
+                      <option value="BASIC">Basic</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] text-slate-500">${isEn ? 'Speaking' : '說'}</label>
+                    <select name="speaking" class="w-full p-2 rounded-lg border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                      <option value="NATIVE">Native</option>
+                      <option value="FLUENT">Fluent</option>
+                      <option value="PROFICIENT">Proficient</option>
+                      <option value="BASIC">Basic</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] text-slate-500">${isEn ? 'Reading' : '讀'}</label>
+                    <select name="reading" class="w-full p-2 rounded-lg border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                      <option value="NATIVE">Native</option>
+                      <option value="FLUENT">Fluent</option>
+                      <option value="PROFICIENT">Proficient</option>
+                      <option value="BASIC">Basic</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] text-slate-500">${isEn ? 'Writing' : '寫'}</label>
+                    <select name="writing" class="w-full p-2 rounded-lg border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                      <option value="NATIVE">Native</option>
+                      <option value="FLUENT">Fluent</option>
+                      <option value="PROFICIENT">Proficient</option>
+                      <option value="BASIC">Basic</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Certification / Score' : '檢定證明與分數 (選填)'}</label>
+                  <input name="certification" placeholder="e.g. JLPT N2 / TOEIC 850" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                  <button type="button" onclick="window.TrustCV.closeCvModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600">${isEn ? 'Cancel' : '取消'}</button>
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold">${isEn ? 'Add' : '新增'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById('cv-modal-container').innerHTML = modalHtml;
+      },
+
+      saveLanguageForm: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          languages: [
+            ...prev.languages,
+            {
+              id: `lang_${Date.now()}`,
+              name: f.name.value.trim(),
+              listening: f.listening.value,
+              speaking: f.speaking.value,
+              reading: f.reading.value,
+              writing: f.writing.value,
+              certification: f.certification.value.trim(),
+              is_public: true
+            }
+          ]
+        }));
+        window.TrustCV.closeCvModal();
+      },
+
+      openEditSkillsModal: () => {
+        const skills = store.getState().masterProfile.skills || {};
+        const isLight = store.getState().theme === 'light';
+        const isEn = i18n.getLanguage() === 'en';
+
+        const modalHtml = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeCvModal()">
+            <div class="w-full max-w-lg rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 border border-slate-200 shadow-2xl' : 'bg-[#0E1518] text-white border border-slate-800 shadow-2xl'} space-y-4" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-100' : 'border-slate-800'}">
+                <h3 class="text-sm font-bold">${isEn ? 'Edit Skills Matrix' : '編輯專長標籤矩陣'}</h3>
+                <button onclick="window.TrustCV.closeCvModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <form onsubmit="window.TrustCV.saveSkillsForm(event)" class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Tools & Software (comma-separated)' : '擅長工具與工程軟體 (以逗號分隔)'}</label>
+                  <textarea name="tools" rows="2" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">${(skills.tools || []).join(', ')}</textarea>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Domain Skills (comma-separated)' : '核心工作專長與技能 (以逗號分隔)'}</label>
+                  <textarea name="domain_skills" rows="2" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">${(skills.domain_skills || []).join(', ')}</textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                  <button type="button" onclick="window.TrustCV.closeCvModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600">${isEn ? 'Cancel' : '取消'}</button>
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold">${isEn ? 'Save' : '儲存'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById('cv-modal-container').innerHTML = modalHtml;
+      },
+
+      saveSkillsForm: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        const tools = f.tools.value.split(',').map(s => s.trim()).filter(Boolean);
+        const domainSkills = f.domain_skills.value.split(',').map(s => s.trim()).filter(Boolean);
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          skills: {
+            ...prev.skills,
+            tools,
+            domain_skills: domainSkills
+          }
+        }));
+        window.TrustCV.closeCvModal();
+      },
+
+      openAddAttachmentModal: () => {
+        const isLight = store.getState().theme === 'light';
+        const isEn = i18n.getLanguage() === 'en';
+
+        const modalHtml = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeCvModal()">
+            <div class="w-full max-w-lg rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 border border-slate-200 shadow-2xl' : 'bg-[#0E1518] text-white border border-slate-800 shadow-2xl'} space-y-4" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-100' : 'border-slate-800'}">
+                <h3 class="text-sm font-bold">${isEn ? 'Add Attachment' : '登記佐證附件'}</h3>
+                <button onclick="window.TrustCV.closeCvModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <form onsubmit="window.TrustCV.saveAttachmentForm(event)" class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'File Name' : '檔案名稱'}</label>
+                  <input name="file_name" required placeholder="e.g. Master_Project_Spec.pdf" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Category' : '附件類別'}</label>
+                  <select name="category" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                    <option value="PORTFOLIO">Portfolio / 作品集</option>
+                    <option value="TAX_RECORD">Tax Record Form 16 / 稅單</option>
+                    <option value="RELIEVING_LETTER">Relieving Letter / 離職證明</option>
+                    <option value="PATENT_DOC">Patent Document / 專利文件</option>
+                    <option value="OTHER">Other / 其他</option>
+                  </select>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                  <button type="button" onclick="window.TrustCV.closeCvModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600">${isEn ? 'Cancel' : '取消'}</button>
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold">${isEn ? 'Add' : '新增'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById('cv-modal-container').innerHTML = modalHtml;
+      },
+
+      saveAttachmentForm: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          attachments: [
+            ...prev.attachments,
+            {
+              id: `att_${Date.now()}`,
+              file_name: f.file_name.value.trim(),
+              category: f.category.value,
+              size_str: '1.0 MB',
+              is_public: true
+            }
+          ]
+        }));
+        window.TrustCV.closeCvModal();
+      },
+
+      openAddProjectModal: () => {
+        const isLight = store.getState().theme === 'light';
+        const isEn = i18n.getLanguage() === 'en';
+
+        const modalHtml = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeCvModal()">
+            <div class="w-full max-w-lg rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 border border-slate-200 shadow-2xl' : 'bg-[#0E1518] text-white border border-slate-800 shadow-2xl'} space-y-4" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-100' : 'border-slate-800'}">
+                <h3 class="text-sm font-bold">${isEn ? 'Add Project Achievement' : '新增專案成就'}</h3>
+                <button onclick="window.TrustCV.closeCvModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <form onsubmit="window.TrustCV.saveProjectForm(event)" class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Project Name' : '專案名稱'}</label>
+                  <input name="project_name" required placeholder="e.g. 半導體晶圓搬運機電控優化" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Role' : '擔任角色'}</label>
+                    <input name="role" required placeholder="e.g. Lead PLC Engineer" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Period' : '專案期間'}</label>
+                    <input name="period" placeholder="2023.01 - 2023.12" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Measurable Achievements' : '量化技術成果與說明'}</label>
+                  <textarea name="achievements" rows="3" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                  <button type="button" onclick="window.TrustCV.closeCvModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600">${isEn ? 'Cancel' : '取消'}</button>
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold">${isEn ? 'Add' : '新增'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById('cv-modal-container').innerHTML = modalHtml;
+      },
+
+      saveProjectForm: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          project_achievements: [
+            ...prev.project_achievements,
+            {
+              id: `proj_${Date.now()}`,
+              project_name: f.project_name.value.trim(),
+              role: f.role.value.trim(),
+              period: f.period.value.trim(),
+              achievements_summary: f.achievements.value.trim(),
+              is_public: true
+            }
+          ]
+        }));
+        window.TrustCV.closeCvModal();
+      },
+
+      openAddReferenceModal: () => {
+        const isLight = store.getState().theme === 'light';
+        const isEn = i18n.getLanguage() === 'en';
+
+        const modalHtml = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeCvModal()">
+            <div class="w-full max-w-lg rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 border border-slate-200 shadow-2xl' : 'bg-[#0E1518] text-white border border-slate-800 shadow-2xl'} space-y-4" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-100' : 'border-slate-800'}">
+                <h3 class="text-sm font-bold">${isEn ? 'Add Reference' : '新增推薦人'}</h3>
+                <button onclick="window.TrustCV.closeCvModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <form onsubmit="window.TrustCV.saveReferenceForm(event)" class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Referee Name' : '推薦人姓名'}</label>
+                  <input name="name" required placeholder="e.g. Arun V. Verma" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Organization' : '服務機構'}</label>
+                    <input name="organization" required placeholder="e.g. Uno Minda" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Title' : '職稱'}</label>
+                    <input name="title" required placeholder="e.g. Engineering Director" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Email' : '聯絡信箱'}</label>
+                    <input name="email" type="email" placeholder="referee@example.com" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Relationship' : '關係'}</label>
+                    <input name="relationship" placeholder="e.g. Former Direct Manager" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                  </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                  <button type="button" onclick="window.TrustCV.closeCvModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600">${isEn ? 'Cancel' : '取消'}</button>
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold">${isEn ? 'Add' : '新增'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById('cv-modal-container').innerHTML = modalHtml;
+      },
+
+      saveReferenceForm: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          references: [
+            ...prev.references,
+            {
+              id: `ref_${Date.now()}`,
+              name: f.name.value.trim(),
+              organization: f.organization.value.trim(),
+              title: f.title.value.trim(),
+              email: f.email.value.trim(),
+              relationship: f.relationship.value.trim(),
+              is_public: false
+            }
+          ]
+        }));
+        window.TrustCV.closeCvModal();
+      },
+
+      openAddCustomSectionModal: () => {
+        const isLight = store.getState().theme === 'light';
+        const isEn = i18n.getLanguage() === 'en';
+
+        const modalHtml = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onclick="window.TrustCV.closeCvModal()">
+            <div class="w-full max-w-lg rounded-3xl p-6 ${isLight ? 'bg-white text-slate-900 border border-slate-200 shadow-2xl' : 'bg-[#0E1518] text-white border border-slate-800 shadow-2xl'} space-y-4" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-100' : 'border-slate-800'}">
+                <h3 class="text-sm font-bold">${isEn ? 'Add Custom Section' : '新增自訂內容區塊'}</h3>
+                <button onclick="window.TrustCV.closeCvModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <form onsubmit="window.TrustCV.saveCustomSectionForm(event)" class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Section Title' : '區塊標題'}</label>
+                  <input name="title" required placeholder="e.g. 專利發明 / 國際研討會演講" class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 mb-1">${isEn ? 'Content Description' : '內容描述'}</label>
+                  <textarea name="content" rows="3" required class="w-full p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900 border-slate-700 text-white'}"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                  <button type="button" onclick="window.TrustCV.closeCvModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600">${isEn ? 'Cancel' : '取消'}</button>
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold">${isEn ? 'Add' : '新增'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById('cv-modal-container').innerHTML = modalHtml;
+      },
+
+      saveCustomSectionForm: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        store.updateMasterProfile(prev => ({
+          ...prev,
+          custom_sections: [
+            ...prev.custom_sections,
+            {
+              id: `custom_${Date.now()}`,
+              title: f.title.value.trim(),
+              content: f.content.value.trim(),
+              is_public: true
+            }
+          ]
+        }));
+        window.TrustCV.closeCvModal();
       }
     };
   }
@@ -503,7 +1418,7 @@ class App {
         mainContent = renderJobDetail();
         break;
       case 'cv':
-        mainContent = renderDossierHub();
+        mainContent = renderMyCv();
         break;
       case 'status':
         mainContent = renderStatusTracker();

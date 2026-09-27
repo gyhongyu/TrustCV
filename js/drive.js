@@ -17,10 +17,13 @@ const UPLOAD_V3  = 'https://www.googleapis.com/upload/drive/v3';
 
 export const FOLDER_LABELS = {
   root:         '📋 TrustCV',
+  photos:       '🖼️ Photos',
   certificates: '🪪 Certificates',
   resumes:      '📄 Resumes',
   exports:      '🚀 Exports'
 };
+
+const MASTER_PROFILE_NAME = 'master_profile.json';
 
 class DriveService {
   _authHeaders(extra = {}) {
@@ -65,15 +68,107 @@ class DriveService {
     return created.id;
   }
 
-  /** Ensure TrustCV folder structure exists; returns { root, certificates, resumes, exports } */
+  /** Ensure TrustCV folder structure exists; returns { root, photos, certificates, resumes, exports } */
   async ensureFolderStructure() {
     const rootId = await this._findOrCreateFolder(FOLDER_LABELS.root);
-    const [certsId, resumesId, exportsId] = await Promise.all([
+    const [photosId, certsId, resumesId, exportsId] = await Promise.all([
+      this._findOrCreateFolder(FOLDER_LABELS.photos,       rootId),
       this._findOrCreateFolder(FOLDER_LABELS.certificates, rootId),
       this._findOrCreateFolder(FOLDER_LABELS.resumes,      rootId),
       this._findOrCreateFolder(FOLDER_LABELS.exports,      rootId)
     ]);
-    return { root: rootId, certificates: certsId, resumes: resumesId, exports: exportsId };
+    return { root: rootId, photos: photosId, certificates: certsId, resumes: resumesId, exports: exportsId };
+  }
+
+  /**
+   * Find a file by name inside a specific parent folder.
+   */
+  async _findFile(name, parentId) {
+    const q = `name='${name}' and '${parentId}' in parents and trashed=false`;
+    const url = `${DRIVE_V3}/files?q=${encodeURIComponent(q)}&fields=files(id,name,mimeType,modifiedTime)&spaces=drive&pageSize=1`;
+    const result = await this._apiFetch(url);
+    return result?.files?.[0] || null;
+  }
+
+  /**
+   * Load master_profile.json from TrustCV root directory in user's Drive.
+   * Returns parsed object or null if not found.
+   */
+  async loadMasterProfile(rootFolderId = null) {
+    let rootId = rootFolderId;
+    if (!rootId) {
+      rootId = await this._findOrCreateFolder(FOLDER_LABELS.root);
+    }
+    const file = await this._findFile(MASTER_PROFILE_NAME, rootId);
+    if (!file) return null;
+
+    const token = authService.getToken();
+    const res = await fetch(`${DRIVE_V3}/files/${file.id}?alt=media`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!res.ok) {
+      if (res.status === 404) return null;
+      throw new Error(`Failed to download master profile: ${res.status}`);
+    }
+    const data = await res.json();
+    return {
+      fileId: file.id,
+      modifiedTime: file.modifiedTime,
+      data
+    };
+  }
+
+  /**
+   * Save master_profile.json to TrustCV root directory in user's Drive.
+   * Overwrites if already exists, creates if not.
+   */
+  async saveMasterProfile(profileData, rootFolderId = null) {
+    let rootId = rootFolderId;
+    if (!rootId) {
+      rootId = await this._findOrCreateFolder(FOLDER_LABELS.root);
+    }
+
+    const token = authService.getToken();
+    const existingFile = await this._findFile(MASTER_PROFILE_NAME, rootId);
+    const contentBlob = new Blob([JSON.stringify(profileData, null, 2)], { type: 'application/json' });
+
+    if (existingFile) {
+      // Update existing file content using upload PATCH
+      const res = await fetch(`${UPLOAD_V3}/files/${existingFile.id}?uploadType=media`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: contentBlob
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error?.message || `Failed to update ${MASTER_PROFILE_NAME}`);
+      }
+      return await res.json();
+    } else {
+      // Create new file with multipart upload
+      const metadata = JSON.stringify({
+        name: MASTER_PROFILE_NAME,
+        parents: [rootId],
+        mimeType: 'application/json'
+      });
+      const form = new FormData();
+      form.append('metadata', new Blob([metadata], { type: 'application/json' }));
+      form.append('file', contentBlob);
+
+      const res = await fetch(`${UPLOAD_V3}/files?uploadType=multipart&fields=id,name,modifiedTime`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: form
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error?.message || `Failed to create ${MASTER_PROFILE_NAME}`);
+      }
+      return await res.json();
+    }
   }
 
   /** List files in a folder, newest first */

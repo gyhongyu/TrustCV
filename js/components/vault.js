@@ -1,7 +1,7 @@
 /**
- * TrustCV Drive Vault Component
- * Google Drive-backed personal document manager with 3-folder structure.
- * Renders: login prompt (unauthenticated) | dashboard + folder cards (authenticated)
+ * TrustCV Drive Vault Component (js/components/vault.js)
+ * Google Drive-backed personal document manager with Unified Smart Dropzone (✨ 統一智慧投放區)
+ * and 4-Folder Clean Showcase (Photos, Certificates, Resumes, Exports) with direct Drive links.
  */
 
 import { store } from '../store.js';
@@ -11,15 +11,14 @@ import { driveService } from '../drive.js';
 /* ─────────────────── helpers ─────────────────── */
 
 function isEn() { return i18n.getLanguage() === 'en'; }
-
 function t(zh, en) { return isEn() ? en : zh; }
 
 function fileEmoji(mimeType = '') {
-  if (mimeType.includes('pdf'))               return '📕';
-  if (mimeType.includes('image'))             return '🖼️';
+  if (mimeType.includes('pdf'))                                   return '📕';
+  if (mimeType.includes('image'))                                 return '🖼️';
   if (mimeType.includes('word') || mimeType.includes('document')) return '📝';
   if (mimeType.includes('spreadsheet') || mimeType.includes('excel')) return '📊';
-  if (mimeType.includes('folder'))            return '📁';
+  if (mimeType.includes('folder'))                                return '📁';
   return '📄';
 }
 
@@ -35,13 +34,14 @@ export function renderVault() {
 
 function renderLoginPrompt(isLight) {
   const features = [
-    ['🪪', t('證件與重要文件', 'Certificates & Documents')],
-    ['📄', t('主履歷同步', 'Master Resume Sync')],
-    ['🚀', t('多平台匯出版本', 'Multi-platform Exports')]
+    ['🖼️', t('大頭照與照片庫 (Photos/)', 'Headshots & Photos (Photos/)')],
+    ['🪪', t('證照、學歷與稅單 (Certificates/)', 'Credentials, Degrees & Tax (Certificates/)')],
+    ['📄', t('主履歷原始檔案 (Resumes/)', 'Master Resumes (Resumes/)')],
+    ['🚀', t('投遞導出唯讀存檔 (Exports/)', 'System Exports Archive (Exports/)')]
   ];
 
   return `
-    <div class="flex flex-col items-center justify-center min-h-[70vh] p-6">
+    <div class="flex flex-col items-center justify-center min-h-[70vh] p-6 animate-fade-in">
       <div class="w-full max-w-sm rounded-3xl p-8 text-center space-y-6 relative overflow-hidden
         ${isLight
           ? 'bg-white border border-slate-200 shadow-xl shadow-slate-200/60'
@@ -66,12 +66,12 @@ function renderLoginPrompt(isLight) {
         <!-- Title & description -->
         <div class="space-y-2 relative">
           <h2 class="text-xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}">
-            ${t('個人 Drive 保險庫', 'Your Personal Drive Vault')}
+            ${t('個人 Drive 安全保險庫', 'Your Personal Drive Vault')}
           </h2>
           <p class="text-sm ${isLight ? 'text-slate-500' : 'text-slate-400'} leading-relaxed">
             ${t(
-              '登入後自動在您的 Google Drive 建立 TrustCV 資料夾，安全管理證件、履歷與多平台匯出版本。',
-              'Sign in to auto-create your TrustCV folder in Google Drive and manage certificates, resumes & exports.'
+              '登入後自動在您的 Google Drive 建立 TrustCV 四層安全結構，集中保管大頭照、證照、履歷與投遞包。',
+              'Sign in to auto-partition your TrustCV 4-tier folder in Google Drive to manage photos, certificates, resumes & exports.'
             )}
           </p>
         </div>
@@ -106,8 +106,8 @@ function renderLoginPrompt(isLight) {
         <!-- Privacy note -->
         <p class="text-[10px] ${isLight ? 'text-slate-400' : 'text-slate-500'} leading-relaxed relative">
           🔒 ${t(
-            '檔案存在您自己的 Google Drive。TrustCV 僅存取自己建立的檔案，不讀取其他任何資料。',
-            'Files live in your own Google Drive. TrustCV only accesses files it creates.'
+            '檔案 100% 存在您個人的 Google Drive。TrustCV 僅存取自身建立之檔案，享完全資料主權。',
+            'Files reside 100% in your personal Google Drive with strict data sovereignty.'
           )}
         </p>
       </div>
@@ -122,33 +122,37 @@ function renderDashboard(isLight) {
 
   const folderConfigs = [
     {
+      key: 'photos',
+      emoji: '🖼️',
+      label:    t('照片寫真', 'Photos'),
+      sublabel: t('大頭照、求職證件照', 'Headshots, ID photos'),
+      colorKey: 'amber'
+    },
+    {
       key: 'certificates',
       emoji: '🪪',
-      label:    t('證件', 'Certificates'),
-      sublabel: t('身份證、護照、學歷證明', 'ID, passport, diplomas'),
-      accept:   'image/*,.pdf',
+      label:    t('證照學歷', 'Certificates'),
+      sublabel: t('學位證書、Form 16、離職證明', 'Degrees, Form 16, Relieving letters'),
       colorKey: 'blue'
     },
     {
       key: 'resumes',
       emoji: '📄',
-      label:    t('履歷', 'Resumes'),
-      sublabel: t('主履歷檔案', 'Master resume files'),
-      accept:   '.pdf,.doc,.docx',
+      label:    t('主履歷檔', 'Resumes'),
+      sublabel: t('PDF/Word 主履歷原件', 'PDF / Word master resumes'),
       colorKey: 'emerald'
     },
     {
       key: 'exports',
       emoji: '🚀',
-      label:    t('匯出版本', 'Exports'),
-      sublabel: t('LinkedIn 版、104 版等', 'LinkedIn, 104, CakeResume…'),
-      accept:   '.pdf,.doc,.docx,.txt',
+      label:    t('導出投遞包', 'Exports'),
+      sublabel: t('系統投遞快照 (唯讀存檔)', 'Official application snapshots (Read-only)'),
       colorKey: 'purple'
     }
   ];
 
   return `
-    <div class="max-w-4xl mx-auto p-4 md:p-6 space-y-5">
+    <div class="max-w-5xl mx-auto p-4 md:p-6 space-y-6 animate-fade-in">
 
       <!-- ── User Header ── -->
       <div class="flex items-center justify-between gap-3 p-4 rounded-2xl
@@ -174,7 +178,7 @@ function renderDashboard(isLight) {
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                 <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
               </svg>
-              ${t('開啟 Drive', 'Open Drive')}
+              ${t('開啟個人 Drive 總資料夾', 'Open Drive Root')}
             </a>
           ` : ''}
           <button onclick="window.TrustCV.signOutGoogle()"
@@ -184,6 +188,9 @@ function renderDashboard(isLight) {
           </button>
         </div>
       </div>
+
+      <!-- ── 頂部「✨ 統一智慧投放區」 (ADR 001 & 任務 4) ── -->
+      ${driveFolderIds ? renderUnifiedDropzone(isLight) : ''}
 
       <!-- ── Error Banner ── -->
       ${driveError ? `
@@ -202,10 +209,10 @@ function renderDashboard(isLight) {
             <span class="text-2xl">⚙️</span>
             <div>
               <div class="text-sm font-bold ${isLight ? 'text-emerald-800' : 'text-emerald-300'}">
-                ${t('建立 Drive 保險庫', 'Set Up Drive Vault')}
+                ${t('初始化四層 Drive 保險庫', 'Initialize 4-Tier Drive Vault')}
               </div>
               <div class="text-xs ${isLight ? 'text-emerald-600' : 'text-emerald-500'}">
-                ${t('在您的 Google Drive 中自動建立 TrustCV 資料夾結構', 'Auto-create TrustCV folder structure in your Drive')}
+                ${t('在您的 Google Drive 中自動建立 Photos、Certificates、Resumes 與 Exports 四層目錄', 'Auto-create Photos, Certificates, Resumes & Exports folders in your Drive')}
               </div>
             </div>
           </div>
@@ -227,10 +234,10 @@ function renderDashboard(isLight) {
         </div>
       ` : ''}
 
-      <!-- ── Folder Cards Grid ── -->
+      <!-- ── 下方四欄檔案檢視網格 (純展示 + 直連 Drive，移除零散上傳鈕) ── -->
       ${driveFolderIds && !driveLoading ? `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          ${folderConfigs.map(cfg => renderFolderCard(cfg, driveFolderIds, driveFiles, isLight)).join('')}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          ${folderConfigs.map(cfg => renderFolderCardClean(cfg, driveFolderIds, driveFiles, isLight)).join('')}
         </div>
       ` : ''}
 
@@ -238,9 +245,69 @@ function renderDashboard(isLight) {
   `;
 }
 
-/* ─────────────────── folder card ─────────────────── */
+/* ─────────────────── 頂部統一智慧投放區 ─────────────────── */
+
+function renderUnifiedDropzone(isLight) {
+  return `
+    <div class="rounded-3xl p-6 md:p-8 text-center border-2 border-dashed transition-all relative overflow-hidden group
+      ${isLight
+        ? 'border-emerald-300 bg-gradient-to-b from-emerald-50/60 to-white hover:border-emerald-500 shadow-sm'
+        : 'border-emerald-800/80 bg-gradient-to-b from-emerald-950/20 to-brand-card hover:border-emerald-600 shadow-xl'}">
+
+      <!-- 背景微光裝飾 -->
+      <div class="absolute inset-0 bg-radial from-emerald-500/10 via-transparent to-transparent pointer-events-none"></div>
+
+      <div class="max-w-lg mx-auto space-y-3 relative z-10">
+        <div class="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center text-2xl shadow-md transition-transform group-hover:scale-110
+          ${isLight ? 'bg-white text-emerald-600 border border-emerald-100' : 'bg-slate-800 text-brand-mint border border-emerald-800'}">
+          ✨
+        </div>
+
+        <h3 class="text-base md:text-lg font-black ${isLight ? 'text-slate-900' : 'text-white'}">
+          ${t('統一智慧投放倉 (Unified Smart Dropzone)', 'Unified Smart Dropzone')}
+        </h3>
+
+        <p class="text-xs ${isLight ? 'text-slate-600' : 'text-slate-400'} leading-relaxed">
+          ${t(
+            '支援多檔案一次性拖曳或選取。系統將智慧識別大頭照、證照、學歷單據與履歷，並自動歸檔至對應資料夾。',
+            'Drag and drop multiple files at once. System automatically classifies into Photos, Certificates or Resumes.'
+          )}
+        </p>
+
+        <!-- 集中選檔按鈕 -->
+        <div class="pt-2">
+          <label class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl cursor-pointer font-bold text-xs text-white transition-all shadow-lg active:scale-95
+            ${isLight ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500'}">
+            <input type="file" multiple class="hidden"
+              accept="image/*,.pdf,.doc,.docx,.txt"
+              onchange="window.TrustCV.handleUnifiedDropzoneUpload(this)">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <span>${t('選取檔案或整批丟入', 'Select or Drop Files Here')}</span>
+          </label>
+        </div>
+
+        <div class="flex items-center justify-center gap-4 text-[10px] ${isLight ? 'text-slate-400' : 'text-slate-500'} pt-1">
+          <span>🖼️ 圖片 ➔ Photos</span>
+          <span>🪪 證書/稅單 ➔ Certificates</span>
+          <span>📄 履歷文檔 ➔ Resumes</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ─────────────────── 四欄檔案檢視卡片 (純展示 + 直連 Drive) ─────────────────── */
 
 const COLORS = {
+  amber: {
+    icon:  { light: 'bg-amber-100 text-amber-600',   dark: 'bg-amber-900/50 text-amber-400' },
+    badge: 'bg-amber-500',
+    open:  { light: 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100', dark: 'bg-amber-950/40 text-amber-300 border-amber-800/50 hover:bg-amber-900/40' }
+  },
   blue: {
     icon:  { light: 'bg-blue-100 text-blue-600',    dark: 'bg-blue-900/50 text-blue-400'    },
     badge: 'bg-blue-500',
@@ -258,71 +325,55 @@ const COLORS = {
   }
 };
 
-function renderFolderCard(cfg, folderIds, driveFiles, isLight) {
-  const folderId = folderIds[cfg.key];
+function renderFolderCardClean(cfg, folderIds, driveFiles, isLight) {
+  const folderId = folderIds?.[cfg.key];
   const files    = driveFiles?.[cfg.key] || [];
-  const c        = COLORS[cfg.colorKey];
+  const c        = COLORS[cfg.colorKey] || COLORS.blue;
   const mode     = isLight ? 'light' : 'dark';
 
   return `
-    <div class="rounded-2xl overflow-hidden flex flex-col
-      ${isLight ? 'bg-white border border-slate-200 shadow-sm' : 'bg-brand-card border border-brand-border'}">
+    <div class="rounded-2xl overflow-hidden flex flex-col border transition-all
+      ${isLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-brand-card border-brand-border'}">
 
       <!-- Card Header -->
       <div class="p-4 space-y-3 border-b ${isLight ? 'border-slate-100' : 'border-brand-border'}">
-
-        <!-- Title row -->
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl flex items-center justify-center text-base ${c.icon[mode]}">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-8 h-8 rounded-xl flex items-center justify-center text-base shrink-0 ${c.icon[mode]}">
               ${cfg.emoji}
             </div>
-            <div>
-              <div class="text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}">${cfg.label}</div>
-              <div class="text-[10px] ${isLight ? 'text-slate-400' : 'text-slate-500'}">${cfg.sublabel}</div>
+            <div class="min-w-0">
+              <div class="text-sm font-bold truncate ${isLight ? 'text-slate-900' : 'text-white'}">${cfg.label}</div>
+              <div class="text-[10px] truncate ${isLight ? 'text-slate-400' : 'text-slate-500'}">${cfg.sublabel}</div>
             </div>
           </div>
-          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full text-white ${c.badge}">
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full text-white shrink-0 ${c.badge}">
             ${files.length}
           </span>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="flex gap-2">
-          <!-- Upload (native file picker) -->
-          <label class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl cursor-pointer text-xs font-semibold transition-all
-            ${isLight ? 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200' : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'}">
-            <input type="file" class="hidden" accept="${cfg.accept}" multiple
-              onchange="window.TrustCV.uploadToDrive('${cfg.key}', this)">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="17 8 12 3 7 8"/>
-              <line x1="12" y1="3" x2="12" y2="15"/>
-            </svg>
-            ${t('上傳', 'Upload')}
-          </label>
-
-          <!-- Open folder in Drive -->
+        <!-- 直連 Google Drive 按鈕 -->
+        ${folderId ? `
           <a href="${driveService.getFolderWebLink(folderId)}" target="_blank" rel="noopener"
-             class="flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-medium border transition-all ${c.open[mode]}">
+             class="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-xl text-xs font-semibold border transition-all ${c.open[mode]}">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
               <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
             </svg>
-            Drive
+            <span>${t('開啟資料夾', 'Open Folder')}</span>
           </a>
-        </div>
+        ` : ''}
       </div>
 
       <!-- File List -->
       <div class="flex-1 divide-y ${isLight ? 'divide-slate-50' : 'divide-slate-800/60'}">
         ${files.length === 0 ? `
-          <div class="py-7 text-center text-xs ${isLight ? 'text-slate-400' : 'text-slate-600'}">
+          <div class="py-8 text-center text-xs ${isLight ? 'text-slate-400' : 'text-slate-600'}">
             ${t('尚無檔案', 'No files yet')}
           </div>
         ` : [
           ...files.slice(0, 5).map(f => `
-            <div class="group flex items-center gap-2.5 px-4 py-2.5 transition-colors
+            <div class="group flex items-center gap-2 px-3 py-2 transition-colors
               hover:${isLight ? 'bg-slate-50' : 'bg-slate-800/30'}">
               <span class="text-sm shrink-0 leading-none">${fileEmoji(f.mimeType)}</span>
               <div class="flex-1 min-w-0">
@@ -330,7 +381,7 @@ function renderFolderCard(cfg, folderIds, driveFiles, isLight) {
                    class="text-xs font-medium truncate block hover:underline ${isLight ? 'text-slate-700' : 'text-slate-300'}">
                   ${f.name}
                 </a>
-                <div class="text-[10px] ${isLight ? 'text-slate-400' : 'text-slate-600'} mt-0.5">
+                <div class="text-[9.5px] ${isLight ? 'text-slate-400' : 'text-slate-600'} mt-0.5">
                   ${driveService.formatDate(f.modifiedTime)} · ${driveService.formatFileSize(f.size)}
                 </div>
               </div>
@@ -348,15 +399,16 @@ function renderFolderCard(cfg, folderIds, driveFiles, isLight) {
             </div>
           `),
           files.length > 5 ? `
-            <div class="px-4 py-2 text-center">
+            <div class="px-3 py-2 text-center">
               <a href="${driveService.getFolderWebLink(folderId)}" target="_blank" rel="noopener"
                  class="text-xs ${isLight ? 'text-blue-600 hover:text-blue-700' : 'text-blue-400 hover:text-blue-300'}">
-                +${files.length - 5} ${t('個檔案在 Drive 中', 'more files in Drive')}
+                +${files.length - 5} ${t('更多檔案在 Drive 中', 'more files')}
               </a>
             </div>
           ` : ''
         ].join('')}
       </div>
+
     </div>
   `;
 }

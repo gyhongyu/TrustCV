@@ -62,7 +62,11 @@
 - [x] GitHub 遠端倉庫建立 (`gyhongyu/TrustCV`) ＋ Google Sheet 倉庫台帳雙向登記
 - [x] GitHub Pages 正式發布 ＋ Cloudflare CNAME 與 Let's Encrypt SSL 憑證強制 HTTPS 閉環 (`https://cv.teaforia.in`)
 - [x] 前端全功能完工與踩坑根治 (Splash Screen 防卡屏、六階段雙語化、PWA 雙軌安裝按鈕與底部浮卡、導航欄瘦身、台灣在地化履歷 Meta v1.2.0)
-- [ ] 階段 3：GAS 後端 Gateway 與 Google Sheets/Drive 自動化結構落地
+- [x] 104 人力銀行 12 大區塊雙軌履歷畫布 (`myCv.js`) ＋ 二態隱私開關 (`is_public`) 落地
+- [x] Google Drive 個人四層目錄 (`Photos/`, `Certificates/`, `Resumes/`, `Exports/`) 與 `master_profile.json` 讀寫接口
+- [x] 前端 Local-first (0ms) ＋ 3 秒防抖 (3000ms) 背景回寫 Google Drive 與水合機制 (`store.js`)
+- [x] 安全保險庫重構：頂部「✨ 統一智慧投放區」自動歸檔 ＋ 下方四欄純淨檢視 (`vault.js`)
+- [ ] 階段 3：GAS 後端 Gateway 與 Google Sheets 官方審核台帳串接
 - [ ] 階段 4：OpenRouter 打工仔 LLM 履歷萃取/在地化翻譯串接
 - [ ] 階段 5：端到端整合聯調驗收
 

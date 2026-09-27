@@ -74,27 +74,69 @@
 
 ---
 
-## 📌 階段 3：Google Apps Script (GAS) 雲端網關實現 (Backend Implementation)
-> **目的**：建立以 Google Sheets 作為關聯庫、Google Drive 作為安全保險庫的無伺服器後端。
+## 📌 階段 2.9：智慧上傳分流與「影子膠囊 (.md)」處理器 (Smart Upload & Shadow Capsule)
+> **目的**：解決用戶上傳各類雜亂檔案的痛點，由 LLM 自動識別分類歸入 Drive 子目錄，並同步提煉同名 `.md` 影子膠囊。
+> ⚠️ **執行前置要求**：後續接手代理人**必須先向用戶提出以下細節設計方案並展開討論**後方可編碼。
 
-- [ ] **任務 3.1：GAS 設定與關聯資料表結構定義**
-  - **依據依賴**：[`specs/03_data_schemas/`](file:///specs/03_data_schemas/)
+- [ ] **任務 2.9.1：拖曳式「智慧上傳工作台」UI 組件**
+  - **產出目標**：[`js/components/uploader.js`](file:///js/components/uploader.js)
+  - **功能規範**：支援拖曳與批量選擇（PDF、JPG、PNG、DOCX、TXT），具備檔案類型圖標、大小檢測與上傳進度環。
+
+- [ ] **任務 2.9.2：LLM 智能分類器與子目錄路由**
+  - **核心邏輯**：快速分析檔案特徵或預覽內容：
+    - 證件、證照、執照、畢業證書 ➔ 歸入用戶 Drive `🪪 Certificates/`
+    - 主履歷、專案清單、經歷總表 ➔ 歸入用戶 Drive `📄 Resumes/`
+  - **交互防錯**：提供即時分類預測 Badge，並允許用戶在確認前手動切換覆寫目錄。
+
+- [ ] **任務 2.9.3：同名精煉 Markdown 膠囊 (Shadow Capsule) 產生器**
+  - **核心效益**：原始大檔上傳同時，生成同名純文字 `.md` 檔案儲存於同目錄。
+    - 證件類：提煉 `證照名稱`、`核發機構`、`證書字號`、`生效/到期日`、`認證技能標籤`。
+    - 履歷類：提煉標準時間軸、經歷條目、量化成果與技術清單。
+  - **未來價值**：後續生成多平台導出版 (`🚀 Exports/`) 或投遞 Dossier 時，**直接讀取同名 .md，0 OCR 成本、0 延遲**！
+
+---
+
+- [x] **任務 2.4：104 人力銀行標準 12 大區塊雙軌履歷畫布**
+  - **產出目標**：[`js/components/myCv.js`](file:///js/components/myCv.js)
+  - **核心機制**：12 大核心模組渲染、頂部「✨ AI 智能拖曳區」與「➕ 手動新增」雙軌入口、`[👁️ 公開 / 🙈 隱藏]` 二態隱私開關、0ms Local-first + 3000ms 防抖同步。已於 2026-09-28 落地固化。
+
+- [x] **任務 2.5：個人安全保險庫集中拖曳倉與四層目錄展示**
+  - **產出目標**：[`js/components/vault.js`](file:///js/components/vault.js)
+  - **核心機制**：頂部「✨ 統一智慧投放區」多檔案一次性丟入智慧歸檔、下方四欄 (`Photos/`, `Certificates/`, `Resumes/`, `Exports/`) 純淨檢視與 Drive 直連。已於 2026-09-28 落地固化。
+
+---
+
+## 📌 階段 3：Google Apps Script (GAS) 官方中央台帳與三級角色權限 (Central State & RBAC)
+> **目的**：建立動態三級權限台帳、官方審核網盤提存與投遞撮合之關係型資料庫（**對齊 ADR 006，絕不硬編碼**）。
+
+- [ ] **任務 3.1：關聯式資料表正規化定義 (RDBMS-Ready Schema)**
   - **產出目標**：[`gas/Config.js`](file:///gas/Config.js)、[`gas/Database.js`](file:///gas/Database.js)
-  - **資料表清單**：`Users_Auth`、`Job_Requisitions`、`Candidate_Profiles`、`Applications`、`Audit_Logs`。
-  - **驗收標準**：欄位定義與 JSON Schema 保持一致，支援 UUID 自動生核。
+  - **資料表清單 (純輕量 Metadata，無大文字塊)**：
+    1. `System_Roles`（Email PK、三級角色 `ADMIN` / `PARTNER` / `CANDIDATE`、狀態、建立時間，對齊 ADR 006）
+    2. `Users`（用戶 UID、Email、建立時間、個人 Drive 根目錄 ID）
+    3. `User_Documents`（文件 UUID、用戶 UID、分類標籤、檔案名稱、用戶 Drive 檔案 ID 指標、SHA-256 雜湊）
+    4. `Verified_Credentials`（證件 UUID、核驗標章等級 `LEVEL_2_DUAL_VERIFIED`、核驗時間、防偽 Hash）
+    5. `Applications`（投遞 UUID、職缺編號 `TW-AUT-...`、候選人編號、官方提存資料夾 ID `official_folder_id`、180天排他期、狀態）
+    6. `Audit_Logs`（系統操作流水號與審計日誌）
+  - **驗收標準**：全數遵循 3NF 正規化設計，欄位類型純淨，嚴禁 Google Sheets 特有髒資料。
 
-- [ ] **任務 3.2：Google Drive 二進位檔案隔離服務**
+- [ ] **任務 3.2：檔案指標與官方審核網盤提存接口**
   - **產出目標**：[`gas/DriveService.js`](file:///gas/DriveService.js)
-  - **業務邏輯**：依據 `Candidate_UUID` 動態建立隔離資料夾，接收 Base64 檔案上傳（**鐵律：二進位檔案嚴禁 commit 進 Git**）。
+  - **業務邏輯**：
+    1. 用戶個人日常：直傳個人 `📁 TrustCV/`，回傳 Metadata 登記。
+    2. 用戶投遞申請：透過 `Files.copy` 秒級複製公開原件至官方審核庫 `📁 TrustCV_Official_Vault/Applications/APP-YYYY-.../` 達成一夾一案存證。
 
-- [ ] **任務 3.3：職缺與申請流程業務邏輯**
-  - **產出目標**：[`gas/JobService.js`](file:///gas/JobService.js)
-  - **業務邏輯**：防重複投遞校驗、RFC 5322 時間戳紀錄、180 天排他權初始狀態註冊。
+- [ ] **任務 3.3：動態角色查詢與職缺申請業務邏輯**
+  - **產出目標**：[`gas/JobService.js`](file:///gas/JobService.js)、[`gas/RoleService.js`](file:///gas/RoleService.js)
+  - **業務邏輯**：
+    1. 查詢用戶角色：讀取 `System_Roles`，不在名單中者一律預設為 `CANDIDATE`。
+    2. 防重複投遞校驗、RFC 5322 時間戳紀錄、180 天排他權初始狀態註冊。
 
-- [ ] **任務 3.4：RESTful Web App 路由接口**
-  - **產出目標**：[`gas/Code.js`](file:///gas/Code.js)
-  - **提供接口**：`GET ?action=getJobs`、`GET ?action=getCandidate`、`POST action=apply`、`POST action=updateAudit`。
-  - **驗收標準**：支援 CORS、輸出標準 JSON 結構、全域異常捕捉。
+- [ ] **任務 3.4：RESTful Web App 路由接口與前端串接**
+  - **產出目標**：[`gas/Code.js`](file:///gas/Code.js)、[`js/api.js`](file:///js/api.js)
+  - **提供接口**：`GET ?action=getUserRole`、`GET ?action=getJobs`、`GET ?action=getCandidate`、`POST action=apply`。
+  - **前端門禁收緊**：未登入者（`GUEST`）僅開放瀏覽職缺，攔截履歷與保險庫；登入後水合角色與 Drive 讀寫。
+  - **驗收標準**：支援 CORS、輸出標準 JSON 結構、全域異常捕捉，首次手動授權後全流程暢通。
 
 ---
 
