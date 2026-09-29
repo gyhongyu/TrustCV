@@ -318,3 +318,17 @@
   - 避免將金鑰與內部除錯說明散落在根目錄污染倉庫，依 DMC 知識庫規範嚴格分層收納。
 - **防禦手段 / 測試背書**:
   - 執行 `py .agents/skills/project_structure_keeper/scripts/keeper.py audit` 零孤兒檔案，通過 100% 拓撲審計。
+
+---
+
+### [2026-09-29] [UNREFINED] [specs/interrogation-pipeline-governance] 雇主與候選人雙向拷問評分管線固化 (SPEC-001) 與交接技能接棒暖機升級
+- **類型**: `ARCH_DECISION`
+- **代碼錨點**: `specs/01_pipeline_specs/SPEC-001_bilateral_interrogation_pipeline.md`, `docs/TOPOLOGY.md`, `docs/STATE.md`, `IMPLEMENTATION_GUIDE.md`, `C:\Users\eric peng\.gemini\config\skills\handover_generator\SKILL.md`
+- **核心事實 / 決策理由**:
+  - **規格自洽固化 (SPEC-001)**：將根目錄孤兒文件《TrustCV 平台雇主與候選人雙向拷問評分機制管線設計規範.md》正式收編為 `SPEC-001_bilateral_interrogation_pipeline.md`，定義為非侵入式 Phase 2 增強特性，避免大規模變動現有 `ARCH-001` 與 `SPEC-000` 既有文檔。
+  - **實施手冊指引串聯**：在 `IMPLEMENTATION_GUIDE.md` 規劃「階段 4.5：雙向拷問評分機制實施」，明確定義 `worker/interrogation_agent.py` 提示詞推理鏈、Google Sheets `Employer_KYC` / `Interrogation_Logs` 結構及前端 AI 初面問答槽位。
+  - **全域交接技能接棒暖機升級 (handover_generator)**：升級全域技能為「交班封箱 ＋ 接棒暖機快照」雙軌模式。當使用者在新會話中發出自然語言提示（如「快速了解專案」、「建立專案知識」）時，0 額外 System Prompt Token 負擔，自動調用專案雙門禁（結構審計 + 代碼地圖 AST），極速建立拓撲心智模型。
+- **踩坑 / 失敗模式**:
+  - 避免將新業務直接粗暴撕裂現有規格引發連鎖修改，以 Feature Extension 獨立存在並以實施導航手冊對接開發最為乾淨。
+- **防禦手段 / 測試背書**:
+  - 物理清理根目錄孤兒檔案，執行 `keeper.py audit` 通過 100% 結構審核。

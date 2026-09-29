@@ -3,8 +3,8 @@
 ---
 
 ## 0. 🧠 智腦不二過記憶突觸 (Brain Synapse & Anti-Failure DNA)
-- **前次會話 ID**: `47d72853-83c5-45c6-9285-49b69051b92b`
-- **當前會話 ID**: `18700573-b279-4701-94d3-ff3b66df9cdd`
+- **前次會話 ID**: `18700573-b279-4701-94d3-ff3b66df9cdd`
+- **當前會話 ID**: `28a45471-a455-44e8-aadf-c377538afa5a`
 - **血淚紅線與不可破天條 (Hard Invariants)**:
   1. ⛔ **未授權絕對禁止 Git 推送**：除非使用者在對話中明確打出「git push」或「推送遠端」，否則任何代理人嚴禁發起遠端推送！
   2. ⛔ **嚴禁終端內嵌代碼落盤**：禁止使用 `py -c`、`node -e` 或 `echo` 拼接字串寫檔案，必須使用專屬檔案編輯工具。
@@ -28,6 +28,7 @@
 - GitHub 遠端倉庫: `https://github.com/gyhongyu/TrustCV.git` (分支 `master`)
 - 本地開發預覽: `http://127.0.0.1:27891` (後台運行中)
 - 當前 PWA 快取版本: `trustcv-cache-v1.2.0` (於 `sw.js` 維護)
+- 業務規格法典庫: `specs/` (包含主幹六階段管線 `SPEC-000` 與全新雙向拷問管線 `SPEC-001`)
 
 ---
 
@@ -37,22 +38,19 @@
 - [x] **階段 2：前端 PWA 核心骨架與響應式** 完成。
 - [x] **階段 2.5：PC 寬螢幕適配與深淺色主題解耦** 完成。
 - [x] **GitHub Pages 發布與 Cloudflare 域名綁定** 完成（`https://cv.teaforia.in` SSL 綠鎖生效）。
-- [x] **前端重大翻車 Bug 根治閉環 (2026-09-27)**：
-  - 手機開場 Splash Screen 卡屏已根治（純原生內聯樣式 + 2秒兜底強制銷毀計時器）。
-  - 六階段狀態機雙語對齊（已完成/審理中 vs COMPLETED/IN_PROGRESS）。
-  - 長代理郵箱 `break-all` 防撐爆、評分單位 `Pts` vs `分` 對齊。
-  - PWA 主動安裝按鈕與 iOS 雙語引導浮窗全套落地。
-  - 導航欄瘦身（單鍵語言切換 `🌐 EN`/`🌐 中文`、副標 `BY TEAFORIA`、防折行保護）。
-  - PWA 雙軌安裝機制（頂部常駐按鈕 ＋ 底部一次性毛玻璃浮卡）。
-  - 台灣在地化「履歷」Meta 定版（`TrustCV | 海外就業 | 免費履歷管理`）。
-  - Meta/Facebook Debugger 伺服器快取已手動刷新完畢。
+- [x] **前端重大翻車 Bug 根治閉環**（Splash Screen 防卡屏、六階段雙語化、PWA 雙軌安裝按鈕與底部浮卡、導航欄瘦身、台灣在地化履歷 Meta v1.2.0）。
+- [x] **Google OAuth 2.0 與個人雲端保險庫 (Vault)** 整合完成，`privacy.html` 與法務隱私條款落地。
+- [x] **重大架構規格追加與固化**：
+  - 《雇主與候選人雙向拷問評分機制管線》正式收納為 [`specs/01_pipeline_specs/SPEC-001_bilateral_interrogation_pipeline.md`](file:///specs/01_pipeline_specs/SPEC-001_bilateral_interrogation_pipeline.md)。
+  - 在 [`IMPLEMENTATION_GUIDE.md`](file:///IMPLEMENTATION_GUIDE.md) 中已新增「階段 4.5：雙向拷問評分機制實施」任務路徑。
+  - 全域交接技能 `handover_generator` 升級支援「接棒暖機模式 (Quick Onboarding Mode)」，新代理人輸入「快速了解專案」或「建立專案知識」自動觸發雙門禁。
 
 ---
 
-## 3. 下一棒核心接棒任務 (Next Steps for Incoming Agent)
+## 3. 下一棒核心接棒任務 (Immediate Action Items)
 
-> 💡 **當前進度狀態**：前端 PWA、視覺體驗、多語系、安裝機制與線上正式發布已 100% 達成穩定可用狀態。
-> 接棒代理人若要推進下一階段，依據 `IMPLEMENTATION_GUIDE.md` 應正式推進：
+> 💡 **進度指示**：前端 PWA、個人保險庫與規範體系皆已穩定封箱。
+> 接棒代理人若要推進下一階段，依據 [`IMPLEMENTATION_GUIDE.md`](file:///IMPLEMENTATION_GUIDE.md) 應正式推進：
 
 ### 🎯 主線任務：階段 3 —— Google Apps Script (GAS) 後端網關與雲端結構落地
 1. **GAS 後端網關 (`gas/`) 實作**：
@@ -63,10 +61,12 @@
 3. **前端 API 模式切換**：
    - 將 `js/api.js` 從目前 Mock 模式平滑銜接至 GAS 雲端真實端點。
 
+### 🔮 支線任務預備：階段 4.5 —— 雙向拷問評分機制 (SPEC-001)
+- 依據 `IMPLEMENTATION_GUIDE.md` 階段 4.5 規劃 `worker/interrogation_agent.py` 提示詞與 Sheets 表結構。
+
 ---
 
-## 4. 驗收啟動指令 (Verification Step)
-接手代理人請直接執行以下檢查命令確認環境：
-1. 執行 `py .agents/skills/project_structure_keeper/scripts/keeper.py audit` 確認目錄結構 100% 合規無散落。
-2. 檢查 `git status` 保持工作區乾淨。
-3. 閱讀 `IMPLEMENTATION_GUIDE.md` 階段 3 規格，準備進行 GAS 後端網關開發。
+## 4. 驗收啟動指令與導航門禁 (Pre-Flight Navigation & Verification Step)
+請新進場代理人執行以下兩大門禁建立全域心智模型：
+1. 執行 `py .agents\skills\project_structure_keeper\scripts\keeper.py audit` 掌握目錄職責邊界與文件規範。
+2. 執行 `py -X utf8 .agents\skills\agent_code_map\scripts\map.py` 掌握全專案代碼語法拓撲與函式位置。

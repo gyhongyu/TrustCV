@@ -9,7 +9,7 @@
 
 | 物理路徑 | 模組名稱 | 職責與包含內容 | 代理人調閱時機 |
 | :--- | :--- | :--- | :--- |
-| `specs/` | **業務規格與法典庫** | 包含 `PRD.md`、`00_architecture/` 至 `04_templates/`，涵蓋防繞道法務、六大管線 SOP 與 JSON Schema 資料模型 | 凡涉及業務邏輯、審核標準、API 欄位、報價或佣金時必讀 |
+| `specs/` | **業務規格與法典庫** | 包含 `PRD.md`、`00_architecture/` 至 `04_templates/`，以及 `SPEC-001` (雇主與候選人雙向拷問評分管線)，涵蓋防繞道法務、六大管線 SOP 與 JSON Schema 資料模型 | 凡涉及業務邏輯、審核標準、API 欄位、報價或雙向考問評分機制時必讀 |
 | `assets/` | **視覺設計與原型庫** | 包含 `BRAND_GUIDE.md`、`prototypes/trustcv_pwa_ui.html` (4屏擬真展示)、`svg/` (官方向量圖資)、`icons/` | 凡進行 PWA 頁面開發、UI 樣式編寫、圖標設計時必讀，嚴禁私造配色 |
 | `docs/` | **研發 DMC 知識庫與法務** | `STATE.md` (架構真理 ≤200行)、`ACTIVE_LOG.md` (只追加日誌)、`TOPOLOGY.md` (活地圖)、`how-to/` (OAuth 設定等)、`legal/` (隱私條款 SSOT) | 了解專案狀態、排查踩坑、法務更新或配置查驗時必讀 |
 | `.agents/skills/` | **專案常駐守護與輔助技能** | `project_structure_keeper/` (專案結構守門)、`agent_code_map/` (代碼語法拓撲與調用鏈穿透) | 掌握專案全景、查找呼叫者與模組分工時喚醒 |
