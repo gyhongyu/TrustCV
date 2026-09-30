@@ -171,12 +171,21 @@ def main():
     parser = argparse.ArgumentParser(description="專案極速宏觀代碼地圖生成器")
     parser.add_argument("target_dir", nargs="?", default=".", help="目標專案路徑 (預設為當前目錄)")
     parser.add_argument("--budget", type=int, default=100, help="輸出最大行數預算 (預設 100 行，防截斷)")
+    parser.add_argument("--out", nargs="?", const="docs/CODE_MAP.md", default=None,
+                        help="同時將地圖寫入指定文件 (不指定路徑時預設為 docs/CODE_MAP.md)")
     args = parser.parse_args()
 
     target_dir = os.path.abspath(args.target_dir)
     modules = scan_repository(target_dir)
     output = format_code_map(modules, target_dir, budget_lines=args.budget)
     print(output)
+
+    if args.out:
+        out_path = os.path.join(target_dir, args.out)
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(f"```\n{output}\n```\n")
+        print(f"\n✅ 地圖已寫入：{out_path}")
 
 if __name__ == "__main__":
     main()

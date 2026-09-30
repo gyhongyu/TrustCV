@@ -68,12 +68,11 @@ def audit_topology():
     # 嗅探 git status --porcelain
     orphan_root_files = []
     known_root_files = {
-        "readme.md", "agents.md", "gemini.md", "claude.md", ".gitignore",
+        "readme.md", "handoff.md", "agents.md", "gemini.md", "claude.md", ".gitignore",
         "package.json", "package-lock.json", "pnpm-lock.yaml", "yarn.lock",
         "pyproject.toml", "requirements.txt", "setup.py", "poetry.lock",
         "cargo.toml", "cargo.lock", "go.mod", "go.sum", "dockerfile",
-        "docker-compose.yml", "license", "license.md", "makefile", "index.html",
-        "privacy.html", "manifest.json", "sw.js", "cname", "favicon.ico"
+        "docker-compose.yml", "license", "license.md", "makefile", "index.html"
     }
 
     if (proj_root / ".git").exists():
@@ -95,8 +94,13 @@ def audit_topology():
                     status = item[:2].strip()
                     rel_file = item[3:].strip().strip('"')
                     p = Path(rel_file)
+                    target_path = proj_root / p
                     if len(p.parts) == 1 and (status == "??" or status == "A"):
-                        if p.name.lower() not in known_root_files and not p.name.startswith("."):
+                        if target_path.is_dir():
+                            dname = p.name
+                            if dname not in IGNORE_DIRS and dname not in registered_modules and dname not in unregistered_dirs:
+                                unregistered_dirs.append(dname)
+                        elif p.name.lower() not in known_root_files and not p.name.startswith("."):
                             orphan_root_files.append(p.name)
                     elif len(p.parts) > 1 and status == "??" and p.parts[0] not in IGNORE_DIRS and p.parts[0] not in registered_modules:
                         unregistered_dirs.append(p.parts[0])

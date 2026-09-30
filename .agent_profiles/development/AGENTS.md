@@ -8,7 +8,8 @@
 
 2. 📚【研發知識治理 (DMC Protocol)】：
    - 單向追加：所有重大改動與踩坑必須主動追加至 `docs/ACTIVE_LOG.md`。
-   - 單一真源：維護 `docs/STATE.md` 架構不變量 (嚴格 ≤200 行)。
+   - 單一真源：維護 `docs/STATE.md` (≤200 行) 與 `docs/TOPOLOGY.md` 拓撲地圖。
+   - 🗺️ 結構守門：涉及新建/拆分模組或查閱規格/UI前，強制查閱 `.agents/skills/project_structure_keeper/`。
    - 🚨 技能工程反饋：若本專案涉及技能研發或調用，嚴禁私造代碼，必須嚴格維護 `docs/incident_reports/` 工單與自動化測試閉環。
 
 3. ⛔【五大不可違背之工程紅線 (Hard Invariants)】：

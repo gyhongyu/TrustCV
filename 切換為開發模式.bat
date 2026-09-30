@@ -1,4 +1,4 @@
 @echo off
 chcp 65001 >nul
-py .agent_profiles/switch_mode.py dev
+py tools/switch_mode.py dev
 pause
