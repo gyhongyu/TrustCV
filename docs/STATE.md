@@ -36,7 +36,7 @@
 ---
 
 ## 4. 模組責任地圖 (Module Responsibility Map)
-- `specs/`: 業務規格與產品法典庫 (`PRD.md`, `00_architecture/` ~ `04_templates/`)
+- `specs/`: 業務規格與產品法典庫 (`PRD.md`, `00_architecture/` ~ `04_templates/`, `SPEC-001`)
 - `assets/`: 視覺設計與高保真原型庫 (`BRAND_GUIDE.md`, `prototypes/`, `svg/`)
 - `docs/`: DMC 研發知識庫 (`STATE.md`, `ACTIVE_LOG.md`, `TOPOLOGY.md`)
 - `.agents/skills/`: 專案常駐守護技能 (`project_structure_keeper/`)
@@ -68,5 +68,6 @@
 - [x] 安全保險庫重構：頂部「✨ 統一智慧投放區」自動歸檔 ＋ 下方四欄純淨檢視 (`vault.js`)
 - [ ] 階段 3：GAS 後端 Gateway 與 Google Sheets 官方審核台帳串接
 - [ ] 階段 4：OpenRouter 打工仔 LLM 履歷萃取/在地化翻譯串接
+- [ ] 階段 4.5：雙向拷問評分機制實施 (SPEC-001 Feature Flag 插件落地)
 - [ ] 階段 5：端到端整合聯調驗收
 

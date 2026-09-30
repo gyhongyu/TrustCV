@@ -163,6 +163,31 @@
 
 ---
 
+## 📌 階段 4.5：雙向拷問評分機制實施 (SPEC-001 Feature Flag 插件落地)
+> **目的**：落地新一代高可信度人力顧問雙向把關防線（雇主 KYC/反向考問 + 候選人憑證時間線 + AI 缺口追問打分）。
+> **依據規格**：[`specs/01_pipeline_specs/SPEC-001_bilateral_interrogation_pipeline.md`](file:///specs/01_pipeline_specs/SPEC-001_bilateral_interrogation_pipeline.md)
+
+- [ ] **任務 4.5.1：雙向考問 Worker Agent 提示詞與推理鏈**
+  - **產出目標**：`worker/interrogation_agent.py`
+  - **業務邏輯**：
+    1. **Stage 1A & 1C (雇主端)**：企業統編/名稱之大模型勞動合規 KYC 評估，以及 JD 模糊度反向考問與透明度星級評定。
+    2. **Stage 2.2 (候選人端)**：從官方憑證重構職涯時間線，自動識別「空窗期」與「重疊衝突」。
+    3. **Stage 4 & 5 (缺口考問與計分)**：針對資格落差發起 3 類考問策略（動機替代、情境題、狀態考問），依回答品質給予等效實力打分並產出加權百分總分。
+  - **驗收標準**：輸出格式符合三層結構化決策審查報告（時間線 -> 考問實錄與評分 -> 原始履歷折疊）。
+
+- [ ] **任務 4.5.2：資料庫工作表與狀態流轉擴展**
+  - **修改目標**：[`gas/Database.js`](file:///gas/Database.js)、[`gas/JobService.js`](file:///gas/JobService.js)
+  - **資料表清單**：擴增 `Employer_KYC`（企業信譽評級與反向考問）與 `Interrogation_Logs`（候選人考問對話實錄與動態評分）。
+  - **狀態機擴展**：支援 `KYC_Processing` ➔ `Consultant_Auditing` ➔ `Gap_Probing` ➔ `Scored_And_Ranked` 流程。
+
+- [ ] **任務 4.5.3：前端 AI 考問互動槽與決策報告視圖**
+  - **修改目標**：[`js/components/applyForm.js`](file:///js/components/applyForm.js)、[`js/components/statusTracker.js`](file:///js/components/statusTracker.js)
+  - **業務介面**：
+    1. 候選人投遞時若命中缺口，彈出輕量 AI 考問問答卡片（支援文字/語音作答或放棄）。
+    2. 顧問/管理員後台支援預覽「三層決策審查報告」。
+
+---
+
 ## 📌 階段 5：端到端整合聯調與驗收 (E2E Integration & Verification)
 > **目的**：串聯 PWA、GAS 與 Worker，執行完整業務流轉驗收。
 
