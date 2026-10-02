@@ -340,3 +340,16 @@
 - **防禦手段 / 測試背書**:
   - 物理清理根目錄孤兒檔案，執行 `keeper.py audit` 通過 100% 結構審核。
 
+### [2026-10-02] [UNREFINED] [skills/fleet-sync-and-cleanup] 全域自治技能大一統播種同步與散落檔案清理
+- **類型**: `REFACTOR`
+- **代碼錨點**: `.agents/skills/`, `環境依賴自檢.bat`, `docs/TOPOLOGY.md`
+- **核心事實 / 決策理由**:
+  - **全域技能艦隊播種**：調用 `agent_skill_architect/bootstrap.py`，全量部署 7 大具備 `seedable: true` 特性的自治子技能至本專案（`agent_code_map`、`dmc_knowledge_manager`、`project_environment_doctor`、`handover_generator`、`project_structure_keeper`、`teaforia_llm_developer` 等）。
+  - **散落檔案清理與結構內聚**：清理早期散落在 `lib/teaforia`、`tools/probe_teaforia.py` 與 `docs/TEAFORIA_LLM_GUIDE.md` 的舊版本檔案，將 `teaforia_llm_developer` v2.0 完整收納於 `.agents/skills/teaforia_llm_developer/` 標準模組內。
+  - **環境自檢啟動器落地**：配發根目錄 `環境依賴自檢.bat`，支援跨機 Clone 後 0 依賴快速探測與自癒安裝。
+- **踩坑 / 失敗模式**:
+  - 舊版播種若將檔案散落至 `lib/` 或 `docs/`，會破壞 `.agents/skills/` 的高內聚原則並觸發拓撲審計告警。清理空目錄後拓撲恢復 100% 純淨。
+- **防禦手段 / 測試背書**:
+  - 執行 `keeper.py audit` 通過全域拓撲審計，0 孤兒雜檔。
+
+

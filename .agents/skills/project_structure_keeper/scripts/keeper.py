@@ -10,6 +10,12 @@ import re
 import subprocess
 from pathlib import Path
 
+# Windows console encoding defense
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 IGNORE_DIRS = {
     ".git", ".svn", ".hg", ".agents", ".agent_profiles",
     "node_modules", "bower_components", "__pycache__", ".pytest_cache",
@@ -72,7 +78,9 @@ def audit_topology():
         "package.json", "package-lock.json", "pnpm-lock.yaml", "yarn.lock",
         "pyproject.toml", "requirements.txt", "setup.py", "poetry.lock",
         "cargo.toml", "cargo.lock", "go.mod", "go.sum", "dockerfile",
-        "docker-compose.yml", "license", "license.md", "makefile", "index.html"
+        "docker-compose.yml", "license", "license.md", "makefile", "index.html",
+        "start_all.bat", "stop_all.bat", "setup_all.bat",
+        "切換為生產模式.bat", "切換為開發模式.bat", "環境依賴自檢.bat"
     }
 
     if (proj_root / ".git").exists():
@@ -92,7 +100,14 @@ def audit_topology():
                     if not item:
                         continue
                     status = item[:2].strip()
-                    rel_file = item[3:].strip().strip('"')
+                    rel_file = item[3:].strip()
+                    if rel_file.startswith('"') and rel_file.endswith('"'):
+                        rel_file = rel_file[1:-1]
+                        try:
+                            # 解碼 Git 的 C-style 8進位轉義字元 (如 \345\210\207...)
+                            rel_file = rel_file.encode("latin1").decode("unicode_escape").encode("latin1").decode("utf-8")
+                        except Exception:
+                            pass
                     p = Path(rel_file)
                     target_path = proj_root / p
                     if len(p.parts) == 1 and (status == "??" or status == "A"):

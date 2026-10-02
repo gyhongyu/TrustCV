@@ -10,6 +10,12 @@ import ast
 import re
 import argparse
 
+# Windows console encoding defense
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 try:
     from ignore_filter import prune_walk
 except ImportError:
