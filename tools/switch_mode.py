@@ -23,6 +23,16 @@ def get_root_dir() -> Path:
 
 def switch_mode(target_mode: str):
     root = get_root_dir()
+    
+    # 自癒守衛：切換模式時清除歷史遺留之 .agents/ 規則檔案，杜絕雙重載入
+    for legacy_rule in [root / ".agents" / "AGENTS.md", root / ".agents" / "GEMINI.md"]:
+        if legacy_rule.is_file():
+            try:
+                legacy_rule.unlink()
+                print(f"  🧹 [自癒清理] 已清除歷史遺留干擾檔案: {legacy_rule.relative_to(root)}")
+            except Exception:
+                pass
+
     target = target_mode.lower().strip()
     
     if target in ["prod", "production", "office"]:

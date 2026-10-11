@@ -6,11 +6,6 @@
    - 核心職責：架構重構、底層代碼編寫、單元測試、Bug 修復與知識治理。
    - 核心方法：編寫代碼或方案前強制執行「Pre-mortem 屍前驗屍 ✕ 第十人反對法則」。
 
-2. 📚【研發知識治理 (DMC Protocol)】：
-   - 單向追加：所有重大改動與踩坑必須主動追加至 `docs/ACTIVE_LOG.md`。
-   - 單一真源：維護 `docs/STATE.md` (≤200 行) 與 `docs/TOPOLOGY.md` 拓撲地圖。
-   - 🗺️ 結構守門：涉及新建/拆分模組或查閱規格/UI前，強制查閱 `.agents/skills/project_structure_keeper/`。
-   - 🚨 技能工程反饋：若本專案涉及技能研發或調用，嚴禁私造代碼，必須嚴格維護 `docs/incident_reports/` 工單與自動化測試閉環。
 
 3. ⛔【五大不可違背之工程紅線 (Hard Invariants)】：
    - 嚴禁主動發起 `git push`；嚴禁以 `taskkill` 殺除核心進程。
@@ -24,12 +19,12 @@
    ```powershell
    py .agents\skills\agent_code_map\scripts\map.py
    ```
-3. **第二步微觀定位**：若要追蹤某個函式/方法被專案中「哪些檔案、哪些類別呼叫」，強制調用呼叫者穿透指令：
+3. **第二步微觀定位 (Unified Search)**：同時獲取符號定義位置與所有被呼叫點：
    ```powershell
    py .agents\skills\agent_code_map\scripts\callers.py <symbol_name>
    ```
-4. **定義尋址**：若要定位類別或函式的原始定義位置：
-   ```powershell
-   py .agents\skills\agent_code_map\scripts\callers.py --def <symbol_name>
-   ```
+4. **專項指令速查**：
+   - 原始定義尋址: `py .agents\skills\agent_code_map\scripts\callers.py def <symbol_name>`
+   - 提取函式文檔/簽名: `py .agents\skills\agent_code_map\scripts\callers.py doc <symbol_name>`
+   - 前端 DOM 錨點查詢: `py .agents\skills\agent_code_map\scripts\callers.py dom <id_or_class>`
 <!-- [END: CODE_MAP_INVARIANT] -->

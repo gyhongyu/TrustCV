@@ -170,10 +170,22 @@
 /* 綠標徽章與高亮狀態 */
 .light-mode .bg-emerald-950,
 .light-mode .bg-emerald-950\/70,
+.light-mode .bg-emerald-950\/60,
+.light-mode .bg-emerald-950\/50,
+.light-mode .bg-emerald-950\/40,
+.light-mode .bg-emerald-950\/20,
+.light-mode .bg-emerald-500\/10,
+.light-mode .bg-emerald-500\/20,
 .light-mode .bg-brand-forest\/40,
 .light-mode .bg-brand-forest\/50 {
   background-color: #ECFDF5 !important;
   border-color: #A7F3D0 !important;
+  color: #065F46 !important;
+}
+
+.light-mode .border-emerald-500\/30,
+.light-mode .border-emerald-500\/50 {
+  border-color: #6EE7B7 !important;
 }
 
 .light-mode .text-brand-mint {
@@ -185,15 +197,76 @@
   color: #047857 !important;
 }
 
-/* 琥珀色與警告警示區塊 */
+/* 琥珀色與警告警示區塊 (明亮模式高對比焦糖深棕/深琥珀，徹底杜絕淺黃發白看不清) */
 .light-mode .bg-amber-950\/60,
-.light-mode .bg-amber-950 {
+.light-mode .bg-amber-950\/40,
+.light-mode .bg-amber-950\/30,
+.light-mode .bg-amber-950\/20,
+.light-mode .bg-amber-950,
+.light-mode .bg-amber-500\/10 {
   background-color: #FFFBEB !important;
   border-color: #FDE68A !important;
+  color: #92400E !important;
+}
+
+.light-mode .border-amber-500\/30 {
+  border-color: #FCD34D !important;
+}
+
+.light-mode .bg-amber-500\/20 {
+  background-color: #FEF3C7 !important;
+  border-color: #FCD34D !important;
+}
+
+.light-mode .text-amber-200,
+.light-mode .text-amber-300 {
+  color: #92400E !important;
+}
+
+.light-mode .bg-amber-950\/20 strong,
+.light-mode .bg-amber-950\/20 div {
+  color: #92400E !important;
 }
 
 .light-mode .text-amber-400 {
-  color: #D97706 !important;
+  color: #B45309 !important;
+}
+
+/* 紅色警示區塊明亮模式 */
+.light-mode .bg-red-950\/20,
+.light-mode .bg-red-950\/30,
+.light-mode .bg-red-950\/60,
+.light-mode .bg-red-950,
+.light-mode .bg-red-500\/10,
+.light-mode .bg-red-500\/20 {
+  background-color: #FEF2F2 !important;
+  border-color: #FECACA !important;
+  color: #991B1B !important;
+}
+
+.light-mode .border-red-500\/30 {
+  border-color: #FCA5A5 !important;
+}
+
+.light-mode .text-red-400 {
+  color: #DC2626 !important;
+}
+
+/* 藍色高亮區塊明亮模式 */
+.light-mode .bg-sky-500\/10,
+.light-mode .bg-sky-500\/20 {
+  background-color: #F0F9FF !important;
+  border-color: #BAE6FD !important;
+  color: #0369A1 !important;
+}
+
+.light-mode .border-sky-500\/30 {
+  border-color: #7DD3FC !important;
+}
+
+.light-mode .text-sky-400,
+.light-mode .text-brand-accent {
+  color: #0284C7 !important;
 }
 
 /* 桌面端導航與 Tab */

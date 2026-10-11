@@ -24,12 +24,12 @@
    ```powershell
    py .agents\skills\agent_code_map\scripts\map.py
    ```
-3. **第二步微觀定位**：若要追蹤某個函式/方法被專案中「哪些檔案、哪些類別呼叫」，強制調用呼叫者穿透指令：
+3. **第二步微觀定位 (Unified Search)**：同時獲取符號定義位置與所有被呼叫點：
    ```powershell
    py .agents\skills\agent_code_map\scripts\callers.py <symbol_name>
    ```
-4. **定義尋址**：若要定位類別或函式的原始定義位置：
-   ```powershell
-   py .agents\skills\agent_code_map\scripts\callers.py --def <symbol_name>
-   ```
+4. **專項指令速查**：
+   - 原始定義尋址: `py .agents\skills\agent_code_map\scripts\callers.py def <symbol_name>`
+   - 提取函式文檔/簽名: `py .agents\skills\agent_code_map\scripts\callers.py doc <symbol_name>`
+   - 前端 DOM 錨點查詢: `py .agents\skills\agent_code_map\scripts\callers.py dom <id_or_class>`
 <!-- [END: CODE_MAP_INVARIANT] -->
