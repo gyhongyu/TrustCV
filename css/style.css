@@ -125,6 +125,29 @@
   border-color: #E2E8F0 !important;
 }
 
+/* 彈窗與卡片在亮色模式下的深度適配 */
+.light-mode #pitchDownloadModal {
+  background-color: rgba(15, 23, 42, 0.45) !important;
+}
+
+.light-mode .bg-brand-surface,
+.light-mode .bg-brand-surface\/40 {
+  background-color: #F8FAFC !important;
+}
+
+.light-mode #pitchDownloadModal .from-emerald-500\/10 {
+  background-image: linear-gradient(to right, rgba(16, 185, 129, 0.12), #F8FAFC, #F8FAFC) !important;
+  border-color: #A7F3D0 !important;
+}
+
+.light-mode #pitchDownloadModal .from-emerald-500\/10 h4 {
+  color: #0F172A !important;
+}
+
+.light-mode #pitchDownloadModal .from-emerald-500\/10 p {
+  color: #475569 !important;
+}
+
 .light-mode .text-white,
 .light-mode .text-slate-100 {
   color: #0F172A !important;
@@ -190,6 +213,11 @@
 
 .light-mode .text-brand-mint {
   color: #059669 !important;
+}
+
+.light-mode .bg-brand-mint\/20 {
+  background-color: #D1FAE5 !important;
+  color: #065F46 !important;
 }
 
 .light-mode .text-emerald-400,
