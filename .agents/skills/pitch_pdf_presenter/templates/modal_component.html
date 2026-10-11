@@ -1,0 +1,91 @@
+<!-- TrustCV Pitch Download Button (Header Navbar Pill) -->
+<button id="downloadPitchBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/10 border border-emerald-500/30 text-brand-mint hover:bg-emerald-500/20 hover:border-emerald-400/60 transition-all shadow-sm group" title="下載完整提案全集或各章節 PDF">
+  <svg class="w-3.5 h-3.5 text-brand-mint group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+  </svg>
+  <span class="tracking-tight">下載完整提案</span>
+</button>
+
+<!-- TrustCV Native Download Pitch Modal Dialog -->
+<div id="pitchDownloadModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-4 transition-all duration-300">
+  <div class="relative w-full max-w-2xl bg-brand-card border border-brand-border rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-brand-border flex items-center justify-between bg-brand-surface/40">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-brand-mint">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-white tracking-tight flex items-center gap-2">
+            完整戰略提案書與分項論證下載
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-brand-mint font-semibold">2026 Pitch</span>
+          </h3>
+          <p class="text-xs text-slate-400">勝拓 ✕ 印度 Teaforia (TrustCV) 跨國高階技能人才真理中樞倡議書</p>
+        </div>
+      </div>
+      <button id="closePitchModalBtn" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors" title="關閉 (Esc)">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button>
+    </div>
+
+    <!-- Modal Body (Scrollable) -->
+    <div class="p-6 overflow-y-auto space-y-5 flex-1">
+      
+      <!-- Primary Master Download Hero Card -->
+      <div class="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 via-brand-surface to-brand-surface border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-brand-mint/20 text-brand-mint">
+            ⭐ 審查長官與戰略投資人首選
+          </div>
+          <h4 class="text-sm font-extrabold text-white">【完整提案全集】一鍵下載全套 26 頁正式報告</h4>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            整合架構綱要、痛點審計、雙向對抗真理中樞架構圖、商業飛輪模型、四方持股表與逐頁簡報台詞。
+          </p>
+        </div>
+        <a href="./assets/pdf/TrustCV_Taiwan_India_Compute_Pitch_Full.pdf" download="TrustCV_Taiwan_India_Compute_Pitch_2026_Full.pdf" 
+           class="whitespace-nowrap px-4 py-2 rounded-xl bg-brand-mint text-brand-obsidian font-bold text-xs hover:bg-brand-mintGlow hover:shadow-[0_0_12px_#3DF5A7] transition-all flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          下載完整全集 (PDF)
+        </a>
+      </div>
+
+      <!-- Section List (Breakdown Chapters) -->
+      <div>
+        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+          <span>分項專題論證檔案 (單篇速查)</span>
+          <span class="text-[10px] font-mono text-slate-500">出版級向量 PDF 格式</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <!-- 00 ~ 07 Chapter links -->
+          <a href="./assets/pdf/00_EXECUTIVE_SUMMARY.pdf" download="00_EXECUTIVE_SUMMARY.pdf" class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-emerald-500/40 hover:bg-slate-800/50 transition-all flex items-center justify-between group">
+            <div class="truncate pr-2">
+              <div class="text-xs font-bold text-white group-hover:text-brand-mint transition-colors">00 總體戰略倡議與執行摘要</div>
+              <div class="text-[11px] text-slate-400 truncate">一頁紙定乾坤：核心痛點與歷史級戰略回報</div>
+            </div>
+            <svg class="w-4 h-4 text-slate-500 group-hover:text-brand-mint shrink-0 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          </a>
+          <!-- More items -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-3 border-t border-brand-border bg-brand-surface/40 flex items-center justify-between text-xs text-slate-400">
+      <span class="flex items-center gap-1.5 font-mono">
+        <span class="w-2 h-2 rounded-full bg-brand-mint animate-pulse"></span>
+        TrustCV SSOT Verified
+      </span>
+      <button onclick="document.getElementById('pitchDownloadModal').classList.add('hidden')" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors">
+        關閉視窗
+      </button>
+    </div>
+
+  </div>
+</div>
