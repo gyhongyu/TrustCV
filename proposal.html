@@ -91,19 +91,16 @@
       <!-- Middle: Completely Blank (No redundant tabs) -->
       <div></div>
 
-      <!-- Right Utility Controls -->
-      <div class="flex items-center gap-2">
-        <!-- Download Pitch PDF Button -->
-        <button id="downloadPitchBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/10 border border-emerald-500/30 text-brand-mint hover:bg-emerald-500/20 hover:border-emerald-400/60 transition-all shadow-sm group" title="下載完整提案全集或各章節 PDF">
-          <svg class="w-3.5 h-3.5 text-brand-mint group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <!-- Download Pitch PDF Button (Pure Icon Standard - Zero Text Overflow) -->
+        <button id="downloadPitchBtn" class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-brand-mint hover:bg-slate-800 transition-all shrink-0" title="下載完整提案 / Download Pitch PDF">
+          <svg class="w-4 h-4 text-brand-mint" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <span class="tracking-tight">下載完整提案</span>
         </button>
 
         <!-- Slide Index Pill -->
         <div class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-900 border border-slate-800 text-brand-mint" id="slideCounter">
-          01 / 10
+          01 / 12
         </div>
 
         <!-- Language Toggle Pill -->
@@ -130,7 +127,7 @@
 
   <!-- Top Progress Bar Line -->
   <div class="w-full bg-brand-border h-[2px]">
-    <div id="progressBar" class="h-full bg-brand-mint shadow-[0_0_8px_#3DF5A7] transition-all duration-300" style="width: 10%;"></div>
+    <div id="progressBar" class="h-full bg-brand-mint shadow-[0_0_8px_#3DF5A7] transition-all duration-300" style="width: 8.33%;"></div>
   </div>
 
   <!-- Main Viewport for Presentation Slides -->
@@ -261,7 +258,7 @@
           <div class="glass-card p-5 rounded-xl space-y-2">
             <span class="text-xs font-mono font-bold text-brand-mint">01 / 製造與封測</span>
             <h4 class="text-base font-bold text-white">半導體晶圓製造 / 封測工程師</h4>
-            <p class="text-xs text-slate-300 leading-relaxed">製程整合 (PIE)、設備維護工程師、封裝測試工程師，解決產線高階工程師長期短缺。</p>
+            <p class="text-xs text-slate-300 leading-relaxed">製程整合 PIE、設備維護工程師、封裝測試工程師，解決產線高階工程師長期短缺。</p>
           </div>
 
           <!-- Sector 2 -->
@@ -289,7 +286,7 @@
           <div class="glass-card p-5 rounded-xl space-y-2">
             <span class="text-xs font-mono font-bold text-brand-mint">05 / 國際商務</span>
             <h4 class="text-base font-bold text-white">跨國高階管理 / 銷售精英</h4>
-            <p class="text-xs text-slate-300 leading-relaxed">外資在台與台企出海必備之雙語專案經理 (PM)、國際市場商務拓展與海外業務大腦。</p>
+            <p class="text-xs text-slate-300 leading-relaxed">外資在台與台企出海必備之雙語專案經理、國際市場商務拓展與海外業務大腦。</p>
           </div>
 
           <!-- Sector 6 -->
@@ -375,8 +372,252 @@
       </div>
     </section>
 
-    <!-- SLIDE 5: WHY COMPUTE -->
+    <!-- SLIDE 5: CANDIDATE TRUTH VERIFICATION (ZH) -->
     <section class="slide-pane hidden" data-slide="5">
+      <div class="space-y-6">
+        <div>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-emerald-500/30 bg-emerald-500/10 text-brand-mint font-mono uppercase">
+            人才真理 CANDIDATE TRUST
+          </span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">人才端：四態防偽信任階梯認證體系（盾牌）</h2>
+          <p class="text-sm md:text-base text-slate-400">直接呼應 TrustCV 標誌的三層勾標，徹底消除思考成本：從純手填申報到滿級視訊正本核驗</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- 3 勾：官方認證 (盾牌) -->
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-amber-400 hover:border-amber-400/80 transition-all shadow-lg space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-amber-500/50 bg-emerald-950/60 shadow-lg">
+                  <img src="./assets/svg/badges/candidate_c3_dark.svg" alt="Certified 3 Checks" class="w-11 h-11">
+                </div>
+                <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border-2 border-amber-400 bg-gradient-to-br from-amber-50 to-emerald-50 shadow-md">
+                  <img src="./assets/svg/badges/candidate_c3_light.svg" alt="Certified 3 Checks" class="w-11 h-11">
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white leading-tight">官方認證（滿級 3 勾）</h4>
+                  <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">誠信 +40 · 全場最高推薦</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                顧問高清視訊連線親檢畢業證書鋼印與護照正本防偽，杜絕修圖造假與替考，免試直聘首選。
+              </p>
+            </div>
+            <div class="text-[11px] font-mono text-amber-400/90 pt-2 border-t border-slate-800">
+              ✓ 視訊鋼印驗證 · 權重 2.0 倍
+            </div>
+          </div>
+
+          <!-- 2 勾：官方查核 (盾牌) -->
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-emerald-500 hover:border-emerald-400 transition-all shadow-lg space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-700/60 bg-emerald-950/40">
+                  <img src="./assets/svg/badges/candidate_c2_dark.svg" alt="Verified 2 Checks" class="w-11 h-11">
+                </div>
+                <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-300 bg-emerald-100/60 shadow-sm">
+                  <img src="./assets/svg/badges/candidate_c2_light.svg" alt="Verified 2 Checks" class="w-11 h-11">
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white leading-tight">官方查核（2 勾）</h4>
+                  <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-brand-mint border border-emerald-500/30">誠信 +30 · 第三方背書</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                政府所得稅單 (Form 16)、公司註冊處在案記錄或前雇主官方照會確認無誤，過濾 90% 履歷水分。
+              </p>
+            </div>
+            <div class="text-[11px] font-mono text-brand-mint/90 pt-2 border-t border-slate-800">
+              ✓ 政府稅單/照會 · 權重 1.5 倍
+            </div>
+          </div>
+
+          <!-- 1 勾：已附檔案 (盾牌) -->
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-teal-600 hover:border-teal-400 transition-all shadow-lg space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-900/40 bg-emerald-950/20">
+                  <img src="./assets/svg/badges/candidate_c1_dark.svg" alt="Documented 1 Check" class="w-11 h-11">
+                </div>
+                <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-200 bg-emerald-50/70 shadow-sm">
+                  <img src="./assets/svg/badges/candidate_c1_light.svg" alt="Documented 1 Check" class="w-11 h-11">
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white leading-tight">已附檔案（1 勾）</h4>
+                  <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-teal-300 border border-teal-500/30">誠信 +15 · 佐證在案</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                候選人已完成拍照或上傳證書 PDF 原檔至雲端硬碟保險庫，經解析提取關鍵字，有證可查。
+              </p>
+            </div>
+            <div class="text-[11px] font-mono text-teal-400/90 pt-2 border-t border-slate-800">
+              ✓ 上傳原檔備查 · 權重 1.2 倍
+            </div>
+          </div>
+
+          <!-- 0 勾：未核驗 (盾牌) -->
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-slate-700 hover:border-slate-500 transition-all shadow-lg space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-slate-800 bg-slate-900/60">
+                  <img src="./assets/svg/badges/candidate_c0_dark.svg" alt="Unverified 0 Checks" class="w-11 h-11">
+                </div>
+                <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+                  <img src="./assets/svg/badges/candidate_c0_light.svg" alt="Unverified 0 Checks" class="w-11 h-11">
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white leading-tight">未核驗（0 勾）</h4>
+                  <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">基礎分 1.0 倍</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                候選人手動打字申報，尚未關聯任何證書照片或原件。以冷灰虛線微暗盾提示，需額外加試審查。
+              </p>
+            </div>
+            <div class="text-[11px] font-mono text-slate-500 pt-2 border-t border-slate-800">
+              ⚠ 純文字填報 · 需技術加審
+            </div>
+          </div>
+        </div>
+
+        <!-- 算力賦能總結卡 -->
+        <div class="glass-card p-4 rounded-xl flex items-center justify-between gap-4 text-xs md:text-sm text-slate-300">
+          <div class="flex items-center gap-2">
+            <span class="text-brand-mint text-base font-black">💎</span>
+            <span><strong>算力演算法閉環：</strong> AI 脫水引擎根據徽章階梯動態計算「人才真實度加權分」，形成零造假、高誠信的極限人才護城河。</span>
+          </div>
+          <a href="./badges_preview.html" target="_blank" class="shrink-0 px-3 py-1 rounded-lg text-xs font-semibold bg-emerald-500/10 border border-emerald-500/30 text-brand-mint hover:bg-emerald-500/20 transition-all">
+            查看完整標章標準 ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: EMPLOYER TRUTH VERIFICATION (ZH) -->
+    <section class="slide-pane hidden" data-slide="6">
+      <div class="space-y-6">
+        <div>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-500/30 bg-amber-500/10 text-amber-400 font-mono uppercase">
+            雇主真理 EMPLOYER TRUST
+          </span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">雇主端：三勾企業誠信標章與履約飛輪（冠冕）</h2>
+          <p class="text-sm md:text-base text-slate-400">顛覆傳統求職網「付錢即刊登」亂象：以冠冕階級淘汰幽靈職缺，為頂級企業建立高溢價品牌護城河</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- 3 勾：百大上市 / 頂級雇主 (冠冕) -->
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-amber-400 hover:border-amber-400/80 transition-all shadow-lg space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-amber-500/50 bg-emerald-950/60 shadow-lg">
+                  <img src="./assets/svg/badges/employer_c3_dark.svg" alt="Premier Enterprise 3 Checks" class="w-11 h-11">
+                </div>
+                <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border-2 border-amber-400 bg-gradient-to-br from-amber-50 to-emerald-50 shadow-md">
+                  <img src="./assets/svg/badges/employer_c3_light.svg" alt="Premier Enterprise 3 Checks" class="w-11 h-11">
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white leading-tight">百大上市 / 頂級雇主（滿級 3 勾）</h4>
+                  <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">企業誠信 +40 · 頂級大廠</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                百大上市企業或 VIP 簽約雇主。保證真實編制、贊助全額簽證規費、海外落地安置與完整合約履約保證。
+              </p>
+            </div>
+            <div class="text-[11px] font-mono text-amber-400/90 pt-2 border-t border-slate-800">
+              💎 頂級企業年約 · 20~25% 獵聘閉環
+            </div>
+          </div>
+
+          <!-- 2 勾：真實職缺 · 底薪保證 (冠冕) -->
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-emerald-500 hover:border-emerald-400 transition-all shadow-lg space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-700/60 bg-emerald-950/40">
+                  <img src="./assets/svg/badges/employer_c2_dark.svg" alt="Verified Job 2 Checks" class="w-11 h-11">
+                </div>
+                <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-300 bg-emerald-100/60 shadow-sm">
+                  <img src="./assets/svg/badges/employer_c2_light.svg" alt="Verified Job 2 Checks" class="w-11 h-11">
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white leading-tight">真實職缺 · 底薪保證（2 勾）</h4>
+                  <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-brand-mint border border-emerald-500/30">企業誠信 +30 · 零幽靈職缺</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                簽署正式招聘協議，核實該職缺具有實際預算編制，明訂合約底薪下限（非薪資面議），保證合法簽證。
+              </p>
+            </div>
+            <div class="text-[11px] font-mono text-brand-mint/90 pt-2 border-t border-slate-800">
+              ✓ 實質編制/底薪保證 · 轉化率 +380%
+            </div>
+          </div>
+
+          <!-- 1 勾：實體公司核實 (冠冕) -->
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-teal-600 hover:border-teal-400 transition-all shadow-lg space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-900/40 bg-emerald-950/20">
+                  <img src="./assets/svg/badges/employer_c1_dark.svg" alt="Entity Verified 1 Check" class="w-11 h-11">
+                </div>
+                <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-200 bg-emerald-50/70 shadow-sm">
+                  <img src="./assets/svg/badges/employer_c1_light.svg" alt="Entity Verified 1 Check" class="w-11 h-11">
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white leading-tight">實體公司核實（1 勾）</h4>
+                  <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-teal-300 border border-teal-500/30">企業誠信 +15 · 合法登記</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                經濟部商業司登記在案合法實體公司，統編核實，具備勞動部外國專業白領聘僱資格，杜絕皮包公司。
+              </p>
+            </div>
+            <div class="text-[11px] font-mono text-teal-400/90 pt-2 border-t border-slate-800">
+              ✓ 工商登記核驗 · 杜絕海外電詐
+            </div>
+          </div>
+
+          <!-- 0 勾：未核驗職缺 (冠冕) -->
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-slate-700 hover:border-slate-500 transition-all shadow-lg space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-slate-800 bg-slate-900/60">
+                  <img src="./assets/svg/badges/employer_c0_dark.svg" alt="Unverified 0 Checks" class="w-11 h-11">
+                </div>
+                <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+                  <img src="./assets/svg/badges/employer_c0_light.svg" alt="Unverified 0 Checks" class="w-11 h-11">
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white leading-tight">未核驗職缺（0 勾）</h4>
+                  <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">基礎分 1.0 倍</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                外部爬蟲聚合或社群轉發職缺，平台尚未直接接觸雇主核實。以灰虛線冠冕明確標籤警示。
+              </p>
+            </div>
+            <div class="text-[11px] font-mono text-slate-500 pt-2 border-t border-slate-800">
+              ⚠ 外部未審職缺 · 倒逼付費升級
+            </div>
+          </div>
+        </div>
+
+        <!-- 商業飛輪總結卡 -->
+        <div class="glass-card p-4 rounded-xl flex items-center justify-between gap-4 text-xs md:text-sm text-slate-300">
+          <div class="flex items-center gap-2">
+            <span class="text-amber-400 text-base font-black">👑</span>
+            <span><strong>商業飛輪閉環：</strong> 人才因 3 勾認證蜂擁投遞 ➔ 頂級企業爭相付費取得 3 勾冠冕 ➔ 平台收取高額年費與 20~25% 獵聘抽成，形成自帶獲利永動機。</span>
+          </div>
+          <a href="./employer_badges_preview.html" target="_blank" class="shrink-0 px-3 py-1 rounded-lg text-xs font-semibold bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 transition-all">
+            查看雇主標章標準 ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: WHY COMPUTE -->
+    <section class="slide-pane hidden" data-slide="7">
       <div class="space-y-6">
         <div>
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-red-500/30 bg-red-500/10 text-red-400 font-mono uppercase">
@@ -421,8 +662,8 @@
       </div>
     </section>
 
-    <!-- SLIDE 6: BUSINESS & UNIT ECONOMICS (WITH INTERACTIVE CALCULATOR) -->
-    <section class="slide-pane hidden" data-slide="6">
+    <!-- SLIDE 8: BUSINESS & UNIT ECONOMICS (WITH INTERACTIVE CALCULATOR) -->
+    <section class="slide-pane hidden" data-slide="8">
       <div class="space-y-6">
         <div>
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-emerald-500/30 bg-emerald-500/10 text-brand-mint font-mono uppercase">
@@ -499,8 +740,8 @@
       </div>
     </section>
 
-    <!-- SLIDE 7: CAPITAL MOAT & DUAL TRACK -->
-    <section class="slide-pane hidden" data-slide="7">
+    <!-- SLIDE 9: CAPITAL MOAT & DUAL TRACK -->
+    <section class="slide-pane hidden" data-slide="9">
       <div class="space-y-6">
         <div>
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-500/30 bg-amber-500/10 text-amber-400 font-mono uppercase">
@@ -527,7 +768,7 @@
           </div>
 
           <div class="glass-card p-6 rounded-2xl space-y-4">
-            <h4 class="text-lg font-bold text-white">建議合資控股架構 (JV Ownership)</h4>
+            <h4 class="text-lg font-bold text-white">建議合資控股架構</h4>
             
             <div class="grid grid-cols-3 gap-3 text-center">
               <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
@@ -554,8 +795,8 @@
       </div>
     </section>
 
-    <!-- SLIDE 8: GLOBAL ROADMAP -->
-    <section class="slide-pane hidden" data-slide="8">
+    <!-- SLIDE 10: GLOBAL ROADMAP -->
+    <section class="slide-pane hidden" data-slide="10">
       <div class="space-y-6">
         <div>
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-sky-500/30 bg-sky-500/10 text-sky-400 font-mono uppercase">
@@ -601,7 +842,7 @@
             <p class="text-xs text-slate-400">美、日、德大廠跨國遠距標配</p>
             <ul class="text-xs text-slate-300 space-y-2">
               <li>➔ 確立「全球工程工作量證明」標準</li>
-              <li>➔ 啟動台灣創新板 (TIB) 或納斯達克 IPO</li>
+              <li>➔ 啟動台灣創新板或納斯達克 IPO</li>
               <li>➔ 預估上市估值達 NT$ 40 ~ 80 億元</li>
               <li>➔ 戰略投資方享有數十倍超額回報</li>
             </ul>
@@ -611,8 +852,8 @@
       </div>
     </section>
 
-    <!-- SLIDE 9: THE INVESTMENT ASK -->
-    <section class="slide-pane hidden" data-slide="9">
+    <!-- SLIDE 11: THE INVESTMENT ASK -->
+    <section class="slide-pane hidden" data-slide="11">
       <div class="space-y-6">
         <div>
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-red-500/30 bg-red-500/10 text-red-400 font-mono uppercase">
@@ -667,7 +908,7 @@
 
           <!-- Milestones -->
           <div class="glass-card p-6 rounded-2xl space-y-3">
-            <h3 class="text-lg font-bold text-white">四大硬核結案查核點 (KPIs)</h3>
+            <h3 class="text-lg font-bold text-white">四大硬核結案查核點</h3>
             
             <div class="space-y-2 text-xs text-slate-300">
               <div class="flex items-start gap-2.5">
@@ -692,8 +933,8 @@
       </div>
     </section>
 
-    <!-- SLIDE 10: CLOSING & CALL TO ACTION -->
-    <section class="slide-pane hidden" data-slide="10">
+    <!-- SLIDE 12: CLOSING & CALL TO ACTION -->
+    <section class="slide-pane hidden" data-slide="12">
       <div class="text-center max-w-4xl mx-auto space-y-6">
         <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-medium border border-emerald-500/30 bg-emerald-500/10 text-brand-mint">
           <span class="w-2 h-2 rounded-full bg-brand-mint animate-pulse"></span>
@@ -725,7 +966,7 @@
           </div>
           <div class="glass-card p-4 rounded-xl space-y-2">
             <span class="text-xs font-mono font-bold text-brand-emerald">ACTION 03</span>
-            <h4 class="text-sm font-bold text-white">簽署合作備忘錄 (MOU)</h4>
+            <h4 class="text-sm font-bold text-white">簽署合作備忘錄</h4>
             <p class="text-xs text-slate-400">鎖定股權架構與算力預算，正式啟動合資公司籌備處。</p>
           </div>
         </div>
@@ -965,8 +1206,252 @@
         </div>
       </section>
 
-      <!-- SLIDE 5: WHY COMPUTE (EN) -->
+      <!-- SLIDE 5: CANDIDATE TRUTH VERIFICATION (EN) -->
       <section class="slide-pane hidden" data-slide="5">
+        <div class="space-y-6">
+          <div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-emerald-500/30 bg-emerald-500/10 text-brand-mint font-mono uppercase">
+              CANDIDATE TRUTH VERIFICATION
+            </span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">Candidate Side: 4-Tier Anti-Fraud Verification Hierarchy (Shields)</h2>
+            <p class="text-sm md:text-base text-slate-400">Directly matching the 3 checks of the TrustCV brandmark: from raw self-declaration to tamper-proof video-verified originals.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- 3 Checks: Certified (Shield) -->
+            <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-amber-400 hover:border-amber-400/80 transition-all shadow-lg space-y-4">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-amber-500/50 bg-emerald-950/60 shadow-lg">
+                    <img src="./assets/svg/badges/candidate_c3_dark.svg" alt="Certified 3 Checks" class="w-11 h-11">
+                  </div>
+                  <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border-2 border-amber-400 bg-gradient-to-br from-amber-50 to-emerald-50 shadow-md">
+                    <img src="./assets/svg/badges/candidate_c3_light.svg" alt="Certified 3 Checks" class="w-11 h-11">
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white leading-tight">Certified (3 Checks)</h4>
+                    <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">Integrity +40 · Top Pick</span>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Conducted via live video session with consultants, cross-checking physical seals, original diplomas, and passport biometric integrity.
+                </p>
+              </div>
+              <div class="text-[11px] font-mono text-amber-400/90 pt-2 border-t border-slate-800">
+                ✓ Video Examined · 2.0x Weight
+              </div>
+            </div>
+
+            <!-- 2 Checks: Verified (Shield) -->
+            <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-emerald-500 hover:border-emerald-400 transition-all shadow-lg space-y-4">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-700/60 bg-emerald-950/40">
+                    <img src="./assets/svg/badges/candidate_c2_dark.svg" alt="Verified 2 Checks" class="w-11 h-11">
+                  </div>
+                  <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-300 bg-emerald-100/60 shadow-sm">
+                    <img src="./assets/svg/badges/candidate_c2_light.svg" alt="Verified 2 Checks" class="w-11 h-11">
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white leading-tight">Verified (2 Checks)</h4>
+                    <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-brand-mint border border-emerald-500/30">Integrity +30 · Authority Backed</span>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Cross-referenced with official tax returns (Form 16), registered business databases, or verified via previous employer HR channels.
+                </p>
+              </div>
+              <div class="text-[11px] font-mono text-brand-mint/90 pt-2 border-t border-slate-800">
+                ✓ Tax & Entity Checked · 1.5x Weight
+              </div>
+            </div>
+
+            <!-- 1 Check: Documented (Shield) -->
+            <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-teal-600 hover:border-teal-400 transition-all shadow-lg space-y-4">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-900/40 bg-emerald-950/20">
+                    <img src="./assets/svg/badges/candidate_c1_dark.svg" alt="Documented 1 Check" class="w-11 h-11">
+                  </div>
+                  <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-200 bg-emerald-50/70 shadow-sm">
+                    <img src="./assets/svg/badges/candidate_c1_light.svg" alt="Documented 1 Check" class="w-11 h-11">
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white leading-tight">Documented (1 Check)</h4>
+                    <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-teal-300 border border-teal-500/30">Integrity +15 · Vault Attached</span>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Candidate uploaded original certificate scans or PDFs to personal cloud vault, parsed and structured for recruiter inspection.
+                </p>
+              </div>
+              <div class="text-[11px] font-mono text-teal-400/90 pt-2 border-t border-slate-800">
+                ✓ Document Attached · 1.2x Weight
+              </div>
+            </div>
+
+            <!-- 0 Checks: Unverified (Shield) -->
+            <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-slate-700 hover:border-slate-500 transition-all shadow-lg space-y-4">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-slate-800 bg-slate-900/60">
+                    <img src="./assets/svg/badges/candidate_c0_dark.svg" alt="Unverified 0 Checks" class="w-11 h-11">
+                  </div>
+                  <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+                    <img src="./assets/svg/badges/candidate_c0_light.svg" alt="Unverified 0 Checks" class="w-11 h-11">
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white leading-tight">Unverified (0 Checks)</h4>
+                    <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">Baseline 1.0x</span>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Manually typed by candidate without linked certificate or file evidence. Rendered with dashed outline, requiring extra interview checks.
+                </p>
+              </div>
+              <div class="text-[11px] font-mono text-slate-500 pt-2 border-t border-slate-800">
+                ⚠ Self-Reported · Probing Required
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary Card -->
+          <div class="glass-card p-4 rounded-xl flex items-center justify-between gap-4 text-xs md:text-sm text-slate-300">
+            <div class="flex items-center gap-2">
+              <span class="text-brand-mint text-base font-black">💎</span>
+              <span><strong>Algorithmic Compute Moat:</strong> AI truth engine calculates dynamic Trust Scores based on badge tiers, building a proprietary zero-fraud cross-border talent pool.</span>
+            </div>
+            <a href="./badges_preview.html" target="_blank" class="shrink-0 px-3 py-1 rounded-lg text-xs font-semibold bg-emerald-500/10 border border-emerald-500/30 text-brand-mint hover:bg-emerald-500/20 transition-all">
+              View Badges Spec ↗
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: EMPLOYER TRUTH VERIFICATION (EN) -->
+      <section class="slide-pane hidden" data-slide="6">
+        <div class="space-y-6">
+          <div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-500/30 bg-amber-500/10 text-amber-400 font-mono uppercase">
+              EMPLOYER TRUTH VERIFICATION
+            </span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">Employer Side: Crown Badges & Enterprise Monetization Flywheel</h2>
+            <p class="text-sm md:text-base text-slate-400">Disrupting "pay-to-post" job boards: Eliminating ghost jobs with crown hierarchy while building a high-margin premium moat for verified employers.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- 3 Checks: Premier Enterprise (Crown) -->
+            <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-amber-400 hover:border-amber-400/80 transition-all shadow-lg space-y-4">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-amber-500/50 bg-emerald-950/60 shadow-lg">
+                    <img src="./assets/svg/badges/employer_c3_dark.svg" alt="Premier Enterprise 3 Checks" class="w-11 h-11">
+                  </div>
+                  <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border-2 border-amber-400 bg-gradient-to-br from-amber-50 to-emerald-50 shadow-md">
+                    <img src="./assets/svg/badges/employer_c3_light.svg" alt="Premier Enterprise 3 Checks" class="w-11 h-11">
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white leading-tight">Premier Enterprise (3 Checks)</h4>
+                    <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">Integrity +40 · Top Tier</span>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Top-tier publicly listed enterprise or VIP contracted partner. Legally committed direct hire, guaranteed relocation packages, and visa priority.
+                </p>
+              </div>
+              <div class="text-[11px] font-mono text-amber-400/90 pt-2 border-t border-slate-800">
+                💎 Enterprise VIP Contract · 20~25% Placement
+              </div>
+            </div>
+
+            <!-- 2 Checks: Verified Job (Crown) -->
+            <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-emerald-500 hover:border-emerald-400 transition-all shadow-lg space-y-4">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-700/60 bg-emerald-950/40">
+                    <img src="./assets/svg/badges/employer_c2_dark.svg" alt="Verified Job 2 Checks" class="w-11 h-11">
+                  </div>
+                  <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-300 bg-emerald-100/60 shadow-sm">
+                    <img src="./assets/svg/badges/employer_c2_light.svg" alt="Verified Job 2 Checks" class="w-11 h-11">
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white leading-tight">Verified Job (2 Checks)</h4>
+                    <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-brand-mint border border-emerald-500/30">Integrity +30 · Zero Ghost Jobs</span>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Officially signed representation mandate. Verified actual headcount allocation and binding contract base salary floor (NT$ 75,000+).
+                </p>
+              </div>
+              <div class="text-[11px] font-mono text-brand-mint/90 pt-2 border-t border-slate-800">
+                ✓ Guaranteed Base Salary · 3.8x Conversion
+              </div>
+            </div>
+
+            <!-- 1 Check: Entity Verified (Crown) -->
+            <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-teal-600 hover:border-teal-400 transition-all shadow-lg space-y-4">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-900/40 bg-emerald-950/20">
+                    <img src="./assets/svg/badges/employer_c1_dark.svg" alt="Entity Verified 1 Check" class="w-11 h-11">
+                  </div>
+                  <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-emerald-200 bg-emerald-50/70 shadow-sm">
+                    <img src="./assets/svg/badges/employer_c1_light.svg" alt="Entity Verified 1 Check" class="w-11 h-11">
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white leading-tight">Entity Verified (1 Check)</h4>
+                    <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-teal-300 border border-teal-500/30">Integrity +15 · Registered</span>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Legally registered commercial entity with verified tax ID, qualified to sponsor white-collar foreign professionals with zero labor blacklist.
+                </p>
+              </div>
+              <div class="text-[11px] font-mono text-teal-400/90 pt-2 border-t border-slate-800">
+                ✓ Entity Verified · Anti-Scam Shield
+              </div>
+            </div>
+
+            <!-- 0 Checks: Unverified Listing (Crown) -->
+            <div class="glass-card p-5 rounded-2xl flex flex-col justify-between border-t-2 border-t-slate-700 hover:border-slate-500 transition-all shadow-lg space-y-4">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="dark-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-slate-800 bg-slate-900/60">
+                    <img src="./assets/svg/badges/employer_c0_dark.svg" alt="Unverified 0 Checks" class="w-11 h-11">
+                  </div>
+                  <div class="light-badge w-14 h-14 shrink-0 items-center justify-center p-1 rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+                    <img src="./assets/svg/badges/employer_c0_light.svg" alt="Unverified 0 Checks" class="w-11 h-11">
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white leading-tight">Unverified (0 Checks)</h4>
+                    <span class="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">Baseline 1.0x</span>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Aggregated from community boards or third-party web crawlers. Platform has not directly audited the employer.
+                </p>
+              </div>
+              <div class="text-[11px] font-mono text-slate-500 pt-2 border-t border-slate-800">
+                ⚠ Unaudited · Conversion Driver
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary Card -->
+          <div class="glass-card p-4 rounded-xl flex items-center justify-between gap-4 text-xs md:text-sm text-slate-300">
+            <div class="flex items-center gap-2">
+              <span class="text-amber-400 text-base font-black">👑</span>
+              <span><strong>Monetization Flywheel:</strong> Candidates trust verified crown badges ➔ Employers pay for tier-3 certification ➔ Platform captures high-margin ARR and 20~25% placement fee.</span>
+            </div>
+            <a href="./employer_badges_preview.html" target="_blank" class="shrink-0 px-3 py-1 rounded-lg text-xs font-semibold bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 transition-all">
+              View Employer Badges Spec ↗
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: WHY COMPUTE (EN) -->
+      <section class="slide-pane hidden" data-slide="7">
         <div class="space-y-6">
           <div>
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-red-500/30 bg-red-500/10 text-red-400 font-mono uppercase">
@@ -1011,8 +1496,8 @@
         </div>
       </section>
 
-      <!-- SLIDE 6: BUSINESS & ROI (EN) -->
-      <section class="slide-pane hidden" data-slide="6">
+      <!-- SLIDE 8: BUSINESS & ROI (EN) -->
+      <section class="slide-pane hidden" data-slide="8">
         <div class="space-y-6">
           <div>
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-emerald-500/30 bg-emerald-500/10 text-brand-mint font-mono uppercase">
@@ -1087,8 +1572,8 @@
         </div>
       </section>
 
-      <!-- SLIDE 7: CAPITAL MOAT (EN) -->
-      <section class="slide-pane hidden" data-slide="7">
+      <!-- SLIDE 9: CAPITAL MOAT (EN) -->
+      <section class="slide-pane hidden" data-slide="9">
         <div class="space-y-6">
           <div>
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-500/30 bg-amber-500/10 text-amber-400 font-mono uppercase">
@@ -1142,8 +1627,8 @@
         </div>
       </section>
 
-      <!-- SLIDE 8: GLOBAL EXPANSION (EN) -->
-      <section class="slide-pane hidden" data-slide="8">
+      <!-- SLIDE 10: GLOBAL EXPANSION (EN) -->
+      <section class="slide-pane hidden" data-slide="10">
         <div class="space-y-6">
           <div>
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-sky-500/30 bg-sky-500/10 text-sky-400 font-mono uppercase">
@@ -1196,8 +1681,8 @@
         </div>
       </section>
 
-      <!-- SLIDE 9: THE INVESTMENT ASK (EN) -->
-      <section class="slide-pane hidden" data-slide="9">
+      <!-- SLIDE 11: THE INVESTMENT ASK (EN) -->
+      <section class="slide-pane hidden" data-slide="11">
         <div class="space-y-6">
           <div>
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-red-500/30 bg-red-500/10 text-red-400 font-mono uppercase">
@@ -1275,8 +1760,8 @@
         </div>
       </section>
 
-      <!-- SLIDE 10: CALL TO ACTION (EN) -->
-      <section class="slide-pane hidden" data-slide="10">
+      <!-- SLIDE 12: CALL TO ACTION (EN) -->
+      <section class="slide-pane hidden" data-slide="12">
         <div class="text-center max-w-4xl mx-auto space-y-6">
           <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-medium border border-emerald-500/30 bg-emerald-500/10 text-brand-mint">
             <span class="w-2 h-2 rounded-full bg-brand-mint animate-pulse"></span>
@@ -1338,13 +1823,13 @@
         <!-- Generated dynamically -->
       </div>
 
-      <!-- Right Buttons -->
+      <!-- Right Buttons (Pure Icon Navigation - Zero Verbose Text) -->
       <div class="flex items-center gap-2">
-        <button id="prevBtn" class="px-4 py-2 rounded-full text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 transition-all">
-          ◀ 上一頁
+        <button id="prevBtn" class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 transition-all shadow-sm" title="上一頁 / Previous Slide">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
         </button>
-        <button id="nextBtn" class="px-5 py-2 rounded-full text-xs font-bold bg-brand-emerald hover:bg-brand-emeraldDeep text-white shadow-sm transition-all">
-          下一頁 ▶
+        <button id="nextBtn" class="w-10 h-10 rounded-full flex items-center justify-center bg-brand-emerald hover:bg-brand-emeraldDeep text-slate-950 transition-all shadow-sm" title="下一頁 / Next Slide">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
         </button>
       </div>
 
@@ -1354,7 +1839,7 @@
   <!-- Native Presentation Logic (Directly Bound to TrustCV Native Theme Architecture) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const totalSlides = 10;
+      const totalSlides = 12;
       let currentSlide = 1;
       let currentLang = 'zh';
 
@@ -1412,17 +1897,11 @@
           }
         });
 
-        // Buttons
+        // Buttons state
         prevBtn.disabled = currentSlide === 1;
         prevBtn.style.opacity = currentSlide === 1 ? '0.4' : '1';
-        
-        if (currentLang === 'en') {
-          prevBtn.textContent = '◀ Prev';
-          nextBtn.textContent = currentSlide === totalSlides ? 'Finish Deck 🏁' : 'Next ▶';
-        } else {
-          prevBtn.textContent = '◀ 上一頁';
-          nextBtn.textContent = currentSlide === totalSlides ? '完成簡報 🏁' : '下一頁 ▶';
-        }
+        nextBtn.disabled = currentSlide === totalSlides;
+        nextBtn.style.opacity = currentSlide === totalSlides ? '0.4' : '1';
       }
 
       function setLanguage(lang) {
@@ -1515,14 +1994,39 @@
         }
       });
 
-      // Fullscreen
-      function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen().catch(() => {});
-        } else {
-          document.exitFullscreen().catch(() => {});
-        }
+      // Fullscreen with Mobile/PWA Landscape Auto-Lock & Portrait Restore
+      async function toggleFullScreen() {
+        try {
+          if (!document.fullscreenElement) {
+            await document.documentElement.requestFullscreen();
+            if (screen.orientation && screen.orientation.lock) {
+              await screen.orientation.lock('landscape').catch(() => {});
+            }
+          } else {
+            if (document.exitFullscreen) {
+              await document.exitFullscreen();
+            }
+            if (screen.orientation && screen.orientation.lock) {
+              await screen.orientation.lock('portrait').catch(() => {});
+              if (screen.orientation.unlock) screen.orientation.unlock();
+            }
+          }
+        } catch (err) {}
       }
+
+      document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+          // Returning from fullscreen: restore orientation to portrait / default unlock
+          if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('portrait').catch(() => {});
+          }
+          if (screen.orientation && screen.orientation.unlock) {
+            setTimeout(() => {
+              try { screen.orientation.unlock(); } catch (e) {}
+            }, 300);
+          }
+        }
+      });
       if (toggleFullscreenBtn) toggleFullscreenBtn.onclick = toggleFullScreen;
 
       // Native Theme Toggle (Direct DOM Class Toggle matching TrustCV store.js)
@@ -1693,7 +2197,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
-            下載完整全集 (PDF)
+            下載完整提案全集
           </a>
         </div>
 
@@ -1760,7 +2264,7 @@
             <a href="./assets/pdf/05_GLOBAL_EXPANSION_ROADMAP.pdf" download="05_GLOBAL_EXPANSION_ROADMAP.pdf"
                class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-emerald-500/40 hover:bg-slate-800/50 transition-all flex items-center justify-between group">
               <div class="truncate pr-2">
-                <div class="text-xs font-bold text-white group-hover:text-brand-mint transition-colors">05 全球擴展路線圖 (Roadmap)</div>
+                <div class="text-xs font-bold text-white group-hover:text-brand-mint transition-colors">05 全球擴展路線圖</div>
                 <div class="text-[11px] text-slate-400 truncate">從台印高科技走廊到全球人才信用底座</div>
               </div>
               <svg class="w-4 h-4 text-slate-500 group-hover:text-brand-mint shrink-0 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
