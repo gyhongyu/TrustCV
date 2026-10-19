@@ -208,7 +208,3 @@
 1. 嚴禁在未完成階段 1（Schema 校準）之前跳去寫階段 3 的 GAS 代碼。
 2. 嚴禁在未授權下執行 `git push`。
 3. 嚴禁在終端拼接長字串寫檔案（必須用檔案工具）。
-4. 任何時候有檔案新增或結構重大變更，執行：
-   ```bash
-   py .agents/skills/project_structure_keeper/scripts/keeper.py sync
-   ```
