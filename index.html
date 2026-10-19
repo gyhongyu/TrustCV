@@ -149,7 +149,13 @@
   <!-- Google Identity Services (GIS) - required for OAuth 2.0 login + Drive API -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <!-- Entry Script (ES Modules) -->
-  <script type="module" src="./js/app.js"></script>
+  <!-- Entry Script (ES Modules) - 本地開發環境動態追加時間戳防快取，線上正式環境維持穩定固定路徑 -->
+  <script type="module">
+    const isDev = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = isDev ? `./js/app.js?t=${Date.now()}` : './js/app.js';
+    document.body.appendChild(script);
+  </script>
 </body>
 </html>

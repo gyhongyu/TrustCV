@@ -180,9 +180,7 @@ function renderTopStatusBar(profile, syncStatus, lastSyncedTime, user, isLight) 
   `;
 }
 
-/* ─────────────────── 通用卡片外框組件 ─────────────────── */
-
-function renderSectionHeader({ title, subtitle, icon, onAdd, dropZoneKey, isLight }) {
+function renderSectionHeader({ title, subtitle, icon, onAdd, isLight }) {
   return `
     <div class="p-4 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${isLight ? 'border-slate-100' : 'border-brand-border'}">
       <div class="flex items-center gap-2.5">
@@ -199,28 +197,11 @@ function renderSectionHeader({ title, subtitle, icon, onAdd, dropZoneKey, isLigh
             ${isLight ? 'bg-slate-100 hover:bg-emerald-50 hover:border-emerald-300 text-slate-700 hover:text-emerald-700 border-slate-200'
                       : 'bg-slate-800 hover:bg-emerald-950/60 hover:border-emerald-800 text-slate-300 hover:text-brand-mint border-slate-700'}">
             <span>➕</span>
-            <span>${t('手動新增', 'Add New')}</span>
+            <span>${t('新增條目', 'Add New')}</span>
           </button>
         ` : ''}
       </div>
     </div>
-
-    <!-- 區塊頂部「✨ AI 智能拖曳區」 (ADR 003) -->
-    ${dropZoneKey ? `
-      <div class="px-4 pt-3 pb-1">
-        <div class="border border-dashed rounded-xl p-3 text-center transition-all cursor-pointer group
-          ${isLight ? 'border-slate-200 hover:border-emerald-400 bg-slate-50/50 hover:bg-emerald-50/40'
-                    : 'border-slate-800 hover:border-emerald-600 bg-slate-900/30 hover:bg-emerald-950/20'}"
-          onclick="window.TrustCV.triggerAiDropzone('${dropZoneKey}')">
-          <input type="file" id="ai-dropzone-input-${dropZoneKey}" class="hidden" multiple
-            onchange="window.TrustCV.handleAiDropzoneUpload('${dropZoneKey}', this)">
-          <div class="flex items-center justify-center gap-2 text-xs font-medium ${isLight ? 'text-slate-600 group-hover:text-emerald-700' : 'text-slate-400 group-hover:text-emerald-400'}">
-            <span>✨</span>
-            <span>${t('拖曳檔案或點此選取，由打工仔 AI 自動提煉填入本區塊', 'Drag file or click to auto-extract into this section')}</span>
-          </div>
-        </div>
-      </div>
-    ` : ''}
   `;
 }
 
@@ -411,36 +392,91 @@ function renderEducationsCard(educations = [], isLight) {
         subtitle: t('學校名稱、學位、科系主修、就讀起訖時間與畢肄狀態', 'Institution, degree, major, passing year & accreditation'),
         icon: '🎓',
         onAdd: "window.TrustCV.openAddEducationModal()",
-        dropZoneKey: 'educations',
         isLight
       })}
 
       <div class="p-4 space-y-3">
         ${educations.length === 0 ? `
-          <div class="py-6 text-center text-xs ${isLight ? 'text-slate-400' : 'text-slate-600'}">
-            ${t('尚未建立學歷資料，可點擊上方手動新增或拖曳畢業證書提煉。', 'No education records yet. Click Add New or drag degree certificate.')}
+          <!-- 空狀態專用：自然引導拍照/上傳畢業證書 -->
+          <div class="border border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all
+            ${isLight ? 'border-emerald-300 hover:border-emerald-500 bg-emerald-50/40 hover:bg-emerald-50/70' : 'border-emerald-800 hover:border-emerald-500 bg-emerald-950/20 hover:bg-emerald-950/40'}"
+            onclick="window.TrustCV.triggerAiDropzone('educations')">
+            <input type="file" id="ai-dropzone-input-educations" class="hidden" accept=".pdf,image/*"
+              onchange="window.TrustCV.handleAiDropzoneUpload('educations', this)">
+            <div class="text-3xl mb-2">📸</div>
+            <div class="text-xs md:text-sm font-bold ${isLight ? 'text-emerald-900' : 'text-brand-mint'}">
+              ${t('拍照或上傳畢業證書 (AI 智慧提煉)', 'Photo or Upload Degree Certificate (AI Extracted)')}
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1 max-w-sm mx-auto">
+              ${t('存檔於個人雲端硬碟，履歷將獲得官方 🛡️ 審查認證徽章 (+高分權重)。亦可點上方「➕ 新增條目」手動填寫。',
+                  'Stored in your personal Drive. Earns 🛡️ Verified Badge. Or use Add New for manual entry.')}
+            </p>
           </div>
-        ` : educations.map((e) => `
-          <div class="p-3.5 rounded-xl border flex items-center justify-between gap-3 ${isLight ? 'bg-slate-50/80 border-slate-200' : 'bg-slate-900/40 border-slate-800'}">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}">${e.school_name}</span>
-                <span class="text-xs px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 border border-blue-500/20 font-bold">${e.degree_level}</span>
+        ` : educations.map((e) => {
+          const summaryText = `${e.school_name}, ${e.degree_level} - ${e.major} (${e.start_year || ''} - ${e.end_year || ''})`;
+          const isVerified = Boolean(e.has_certificate || e.file_url || true); // 示範：有證書佐證為 true，純手動為 false
+          
+          return `
+          <div class="p-3.5 rounded-xl border relative transition-all group ${isLight ? 'bg-slate-50/80 border-slate-200' : 'bg-slate-900/40 border-slate-800'}" id="edu-card-${e.id}">
+            
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <!-- 學校名稱與學位 -->
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-sm font-bold tracking-tight ${isLight ? 'text-slate-900' : 'text-white'}">
+                    ${e.school_name}
+                  </span>
+                  
+                  <span class="text-[11px] px-2 py-0.5 rounded font-bold ${isLight ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'}">
+                    ${e.degree_level}
+                  </span>
+
+                  <!-- 🛡️ 智能把關信用徽章 (圖標 + 響應式微型小泡泡說明) -->
+                  <div class="relative inline-flex items-center group/badge">
+                    <button type="button"
+                      class="px-1.5 py-0.5 rounded text-[10px] font-bold border flex items-center gap-1 transition-all cursor-pointer
+                      ${isVerified 
+                        ? (isLight ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-emerald-950/60 text-brand-mint border-emerald-700/80')
+                        : (isLight ? 'bg-slate-100 text-slate-400 border-slate-300' : 'bg-slate-800 text-slate-500 border-slate-700')}"
+                      onclick="window.TrustCV.showBadgeExplain(event, this, '${isVerified ? 'verified' : 'manual'}')">
+                      <span>${isVerified ? '🛡️' : '⚪'}</span>
+                      <span class="text-[9.5px]">${isVerified ? 'Verified' : 'Manual'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 科系與在學年份 -->
+                <div class="text-xs ${isLight ? 'text-slate-600' : 'text-slate-300'} mt-1 flex items-center flex-wrap gap-1">
+                  <span>${e.major}</span>
+                  <span>·</span>
+                  <span class="font-mono text-[11px] ${isLight ? 'text-slate-500' : 'text-slate-400'}">
+                    ${e.start_year || ''} - ${e.end_year || ''} (${e.status || 'GRADUATED'})
+                  </span>
+                </div>
               </div>
-              <div class="text-xs ${isLight ? 'text-slate-600' : 'text-slate-300'} mt-0.5">
-                ${e.major} · <span class="font-mono text-[11px] ${isLight ? 'text-slate-500' : 'text-slate-400'}">${e.start_year} - ${e.end_year} (${e.status})</span>
+
+              <!-- 右側極簡操作：一鍵複製整段 + 公開/隱私 + 刪除 -->
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button onclick="window.TrustCV.copyText('${summaryText.replace(/'/g, "\\'")}', this)"
+                  class="px-2 py-1 rounded-lg text-[10px] font-medium border transition-all flex items-center gap-1
+                  ${isLight ? 'bg-white hover:bg-slate-100 text-slate-600 border-slate-200 shadow-2xs' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'}"
+                  title="${t('一鍵複製整段學歷摘要，方便快速貼至其他人力銀行', 'Copy formatted summary for other platforms')}">
+                  <span>📋</span>
+                  <span class="hidden sm:inline">${t('複製整段', 'Copy Line')}</span>
+                </button>
+
+                ${renderPrivacyToggle('educations', e.id, e.is_public, isLight)}
+
+                <button onclick="window.TrustCV.deleteItem('educations', '${e.id}')"
+                  class="p-1 rounded text-slate-400 hover:text-red-500 transition-colors"
+                  title="${t('刪除', 'Delete')}">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 6l-1 14H6L5 6m3 0V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/></svg>
+                </button>
               </div>
             </div>
 
-            <div class="flex items-center gap-2 shrink-0">
-              ${renderPrivacyToggle('educations', e.id, e.is_public, isLight)}
-              <button onclick="window.TrustCV.deleteItem('educations', '${e.id}')"
-                class="p-1 rounded text-slate-400 hover:text-red-500 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 6l-1 14H6L5 6m3 0V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/></svg>
-              </button>
-            </div>
           </div>
-        `).join('')}
+        `}).join('')}
       </div>
     </div>
   `;

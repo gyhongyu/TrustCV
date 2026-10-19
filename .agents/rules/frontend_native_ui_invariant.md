@@ -5,8 +5,12 @@ trigger: model_decision
 globs: "**/*.{html,js,css}"
 ---
 
+# 🎨 前端原生設計體系與 Header 鋼鐵規範 (Frontend Native UI Invariant)
+
 <RULE[frontend_native_ui_invariant]>
-1. 嚴禁自立門戶發明自造 CSS 樣式、自創類名或脫離母站視覺之獨立外掛設計系統。
-2. 凡在本專案編寫任何 HTML 或前端頁面，必須 100% 復用本站 `index.html` 之 Tailwind 配置、`brand` 顏色 Token 與組件體系。
-3. 頁面必須原生支援深淺色雙模（Light/Dark mode）自適應，視覺與交互 100% 對齊 cv.teaforia.in 官方界面。
+1. ⛔【嚴禁行為 (Anti-Pattern)】：
+   - 嚴禁自創 CSS 樣式、自造 Header/Logo 結構、擅改副標，嚴禁使用 Emoji (☀️/🌙) 替代日夜向量圖標。
+2. ✅【標準做法 (Standard Practice)】：
+   - 100% 復用本站 index.html 之 Tailwind 配置、brand 色彩 Token 與標準 Header 結構。
+   - 主題切換強制使用官方純向量 SVG（白天太陽/夜晚月牙），以 .light-mode 與官方界面完美對齊。
 </RULE[frontend_native_ui_invariant]>

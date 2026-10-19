@@ -24,7 +24,23 @@ class App {
 
   init() {
     // 註冊 Service Worker 並建立智慧靜默自動更新閉環
-    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+    const isLocalDev = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+    if (isLocalDev && 'serviceWorker' in navigator) {
+      // 本地開發模式：自動解除註冊並清空快取，確保 VS Code 預覽存檔 0 毫秒熱重載
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        for (let reg of regs) {
+          reg.unregister();
+          console.log('[Dev] Localhost detected: ServiceWorker unregistered for instant hot reload.');
+        }
+      });
+      if ('caches' in window) {
+        caches.keys().then(keys => {
+          keys.forEach(k => caches.delete(k));
+        });
+      }
+    } else if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      // 生產環境 (cv.teaforia.in 或 GitHub Pages)：100% 完整保留 PWA 離線快取與靜默自動升級
       navigator.serviceWorker.register('./sw.js').then((reg) => {
         console.log('[PWA] Service Worker registered', reg.scope);
 
@@ -343,6 +359,142 @@ class App {
           store.showToast(i18n.getLanguage() === 'en' ? 'Profile photo updated!' : '大頭照已更新！');
         };
         reader.readAsDataURL(file);
+      },
+
+      copyText: (text, btnElement) => {
+        const isEn = i18n.getLanguage() === 'en';
+        if (!navigator.clipboard) {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        } else {
+          navigator.clipboard.writeText(text);
+        }
+        if (btnElement) {
+          const origText = btnElement.innerHTML;
+          btnElement.innerHTML = `<span>✓</span><span class="hidden sm:inline">${isEn ? 'Copied' : '已複製'}</span>`;
+          btnElement.classList.add('text-emerald-600', 'font-bold');
+          setTimeout(() => {
+            btnElement.innerHTML = origText;
+            btnElement.classList.remove('text-emerald-600', 'font-bold');
+          }, 1200);
+        }
+        store.showToast(isEn ? '📋 Copied to clipboard!' : '📋 已複製到剪貼簿！');
+      },
+
+      showBadgeExplain: (e, badgeEl, status) => {
+        e.stopPropagation();
+        const isEn = i18n.getLanguage() === 'en';
+        const isVerified = status === 'verified';
+
+        const existing = document.getElementById('cv-badge-explain-bubble');
+        if (existing) {
+          existing.remove();
+          return;
+        }
+
+        const rect = badgeEl.getBoundingClientRect();
+        const bubble = document.createElement('div');
+        bubble.id = 'cv-badge-explain-bubble';
+        bubble.style.cssText = `
+          position: fixed;
+          top: ${rect.bottom + 8}px;
+          left: ${Math.max(16, Math.min(window.innerWidth - 240, rect.left - 40))}px;
+          width: 230px;
+          padding: 8px 12px;
+          border-radius: 12px;
+          background: #0F172A;
+          color: #E2E8F0;
+          font-size: 11px;
+          line-height: 1.4;
+          box-shadow: 0 12px 30px -4px rgba(0,0,0,0.5);
+          border: 1px solid ${isVerified ? '#10B981' : '#475569'};
+          z-index: 99999;
+          animation: fadeIn 0.15s ease-out;
+        `;
+
+        bubble.innerHTML = isVerified ? `
+          <div style="font-weight: bold; color: #34D399; display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+            <span>🛡️ 畢業證書官方核驗</span>
+          </div>
+          <div style="color: #94A3B8; font-size: 10px;">
+            ${isEn ? 'Backed by original degree file in candidate Drive. Credence Trust Score +25.' : '已關聯個人 Google Drive 畢業證書原檔，獲 TrustCV 官方高權重背書 (誠信評分 +25)。'}
+          </div>
+        ` : `
+          <div style="font-weight: bold; color: #94A3B8; display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+            <span>⚪ 純手動自填申報</span>
+          </div>
+          <div style="color: #64748B; font-size: 10px;">
+            ${isEn ? 'Self-reported without verified attachment. Lower weight.' : '未上傳畢業證書佐證，僅為自我申報，審查評分較低。點擊可補拍證書升級。'}
+          </div>
+        `;
+
+        document.body.appendChild(bubble);
+
+        const dismiss = (ev) => {
+          if (!bubble.contains(ev.target)) {
+            bubble.remove();
+            document.removeEventListener('click', dismiss);
+            window.removeEventListener('scroll', dismiss, true);
+          }
+        };
+        setTimeout(() => {
+          document.addEventListener('click', dismiss);
+          window.addEventListener('scroll', dismiss, { capture: true, once: true });
+        }, 30);
+      },
+
+      startInlineCellEdit: (targetEl, section, id, field, initialValue) => {
+        const isEn = i18n.getLanguage() === 'en';
+        const origDisplay = targetEl.style.display;
+        targetEl.style.display = 'none';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = initialValue;
+        input.className = 'text-xs p-1.5 px-2 rounded-lg border border-emerald-500 bg-white text-slate-900 dark:bg-slate-900 dark:text-white shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500 inline-block w-full max-w-xs transition-all';
+        
+        targetEl.parentNode.insertBefore(input, targetEl.nextSibling);
+        input.focus();
+        input.select();
+
+        let saved = false;
+        const commit = () => {
+          if (saved) return;
+          saved = true;
+          const newVal = input.value.trim();
+          input.remove();
+          targetEl.style.display = origDisplay;
+
+          if (newVal && newVal !== initialValue) {
+            store.updateMasterProfile(prev => {
+              const list = prev[section] || [];
+              const updated = list.map(item => {
+                if (item.id === id) {
+                  return { ...item, [field]: newVal };
+                }
+                return item;
+              });
+              return { ...prev, [section]: updated };
+            });
+            store.showToast(isEn ? '✓ Saved inline!' : '✓ 已原地儲存！');
+          }
+        };
+
+        input.onblur = commit;
+        input.onkeydown = (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            commit();
+          } else if (e.key === 'Escape') {
+            saved = true;
+            input.remove();
+            targetEl.style.display = origDisplay;
+          }
+        };
       },
 
       triggerAiDropzone: (dropZoneKey) => {
