@@ -59,7 +59,7 @@
       
       <!-- Left Logo (Links back to index.html) -->
       <a href="./index.html" class="flex items-center gap-3 cursor-pointer text-decoration-none">
-        <div class="w-8 h-8 md:w-9 md:h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-md p-1 border border-slate-800 bg-[#080C0E]">
+        <div id="brandLogoBox" class="w-8 h-8 md:w-9 md:h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-md p-1 border border-slate-800 bg-[#080C0E]">
           <svg viewBox="280 50 260 415" class="w-full h-full" fill="none">
             <defs>
               <linearGradient id="hdr-top" x1="0%" y1="100%" x2="80%" y2="0%">
@@ -81,10 +81,10 @@
           </svg>
         </div>
         <div class="leading-tight">
-          <div class="text-sm md:text-base font-extrabold tracking-tight flex items-center gap-1.5 text-white">
+          <div id="brandTitle" class="text-sm md:text-base font-extrabold tracking-tight flex items-center gap-1.5 text-white">
             <span>Trust<span class="text-emerald-500 font-black">CV</span></span>
           </div>
-          <div class="text-[8px] md:text-[9px] font-semibold tracking-wider uppercase text-slate-400">BY TEAFORIA</div>
+          <div id="brandSub" class="text-[8px] md:text-[9px] font-semibold tracking-wider uppercase text-slate-400">BY TEAFORIA</div>
         </div>
       </a>
 
@@ -889,12 +889,31 @@
       function renderTheme(isLight) {
         document.documentElement.classList.toggle('light-mode', isLight);
         document.body.classList.toggle('light-mode', isLight);
+
+        const logoBox = document.getElementById('brandLogoBox');
+        const brandTitle = document.getElementById('brandTitle');
+        const brandSub = document.getElementById('brandSub');
+        const slideCounter = document.getElementById('slideCounter');
+        const fullBtn = document.getElementById('toggleFullscreenBtn');
+
         if (isLight) {
-          themeIconContainer.innerHTML = '<svg class="w-4 h-4 fill-none stroke-current text-amber-500" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+          themeIconContainer.innerHTML = '<svg class="w-4 h-4 fill-none stroke-current text-amber-600" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
           themeToggleBtn.title = '切換為深色模式';
+          themeToggleBtn.className = "p-2 rounded-xl transition-all shrink-0 bg-slate-100 border border-slate-200 text-amber-600 hover:bg-slate-200 shadow-sm";
+          if (fullBtn) fullBtn.className = "p-2 rounded-xl transition-all shrink-0 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 shadow-sm";
+          if (slideCounter) slideCounter.className = "px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-100 border border-slate-200 text-emerald-700 shadow-sm";
+          if (logoBox) logoBox.className = "w-8 h-8 md:w-9 md:h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-md p-1 border border-slate-200 bg-white";
+          if (brandTitle) brandTitle.className = "text-sm md:text-base font-extrabold tracking-tight flex items-center gap-1.5 text-slate-900";
+          if (brandSub) brandSub.className = "text-[8px] md:text-[9px] font-semibold tracking-wider uppercase text-slate-500";
         } else {
           themeIconContainer.innerHTML = '<svg class="w-4 h-4 fill-current text-slate-300" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
           themeToggleBtn.title = '切換為明亮模式';
+          themeToggleBtn.className = "p-2 rounded-xl transition-all shrink-0 bg-slate-900 border border-slate-800 text-slate-300 hover:text-white";
+          if (fullBtn) fullBtn.className = "p-2 rounded-xl transition-all shrink-0 bg-slate-900 border border-slate-800 text-slate-300 hover:text-white";
+          if (slideCounter) slideCounter.className = "px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-900 border border-slate-800 text-brand-mint";
+          if (logoBox) logoBox.className = "w-8 h-8 md:w-9 md:h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-md p-1 border border-slate-800 bg-[#080C0E]";
+          if (brandTitle) brandTitle.className = "text-sm md:text-base font-extrabold tracking-tight flex items-center gap-1.5 text-white";
+          if (brandSub) brandSub.className = "text-[8px] md:text-[9px] font-semibold tracking-wider uppercase text-slate-400";
         }
       }
 
