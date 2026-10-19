@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title id="doc-title">TrustCV 雇主與企業真實性核驗標章體系</title>
+  
+  <!-- SEO & Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./assets/svg/PC 瀏覽器標籤頁專用圖標代碼.svg">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+
+  <!-- Tailwind CSS CDN (與本站 index.html 完全一致之色彩 Token) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              obsidian: '#080C0E',
+              dark: '#0B1117',
+              card: '#121A24',
+              surface: '#182433',
+              border: '#1E293B',
+              borderLight: '#334155',
+              mint: '#3DF5A7',
+              mintGlow: '#40F5A3',
+              emerald: '#10B981',
+              emeraldDeep: '#059669',
+              forest: '#143B32',
+              forestDeep: '#2A725E',
+              accent: '#38BDF8'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="bg-brand-obsidian text-slate-100 font-sans min-h-screen selection:bg-brand-emerald selection:text-white transition-colors duration-200">
+
+  <!-- 頂部 Navbar (100% 復用首頁 header.js 原生結構、品牌字體與 SVG 圖標) -->
+  <header class="w-full px-4 md:px-8 py-3 flex items-center justify-between border-b border-brand-border bg-brand-obsidian/95 sticky top-0 z-40 backdrop-blur-md transition-colors duration-200">
+    <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
+      
+      <!-- 左側品牌區 (首頁 brandIconSvg + TrustCV 標識) -->
+      <a href="./index.html" class="flex items-center gap-3 cursor-pointer group text-decoration-none">
+        <div id="brand-logo-box" class="w-8 h-8 md:w-9 md:h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-md p-1 border border-slate-800 bg-[#080C0E]">
+          <svg viewBox="280 50 260 415" class="w-full h-full" fill="none">
+            <defs>
+              <linearGradient id="hdr-top" x1="0%" y1="100%" x2="80%" y2="0%">
+                <stop offset="0%" stop-color="#143b32"/>
+                <stop offset="100%" stop-color="#2a725e"/>
+              </linearGradient>
+              <linearGradient id="hdr-mid" x1="0%" y1="100%" x2="80%" y2="0%">
+                <stop offset="0%" stop-color="#1a6652"/>
+                <stop offset="100%" stop-color="#34b285"/>
+              </linearGradient>
+              <linearGradient id="hdr-bot" x1="0%" y1="100%" x2="80%" y2="0%">
+                <stop offset="0%" stop-color="#22b573"/>
+                <stop offset="100%" stop-color="#40f5a3"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#hdr-top)" fill-rule="evenodd" d="M 375,246 L 283,154 L 315,122 L 375,182 L 501,56 L 533,88 Z M 502,94.6 L 494.4,87 L 483.6,87 L 476,94.6 L 476,105.4 L 483.6,113 L 494.4,113 L 502,105.4 Z"/>
+            <path fill="url(#hdr-mid)" fill-rule="evenodd" d="M 375,352 L 283,260 L 315,228 L 375,288 L 501,162 L 533,194 Z M 502,200.6 L 494.4,193 L 483.6,193 L 476,200.6 L 476,211.4 L 483.6,219 L 494.4,219 L 502,211.4 Z"/>
+            <path fill="url(#hdr-bot)" fill-rule="evenodd" d="M 375,458 L 283,366 L 315,334 L 375,394 L 501,268 L 533,300 Z M 502,306.6 L 494.4,299 L 483.6,299 L 476,306.6 L 476,317.4 L 483.6,325 L 494.4,325 L 502,317.4 Z"/>
+          </svg>
+        </div>
+        <div class="leading-tight">
+          <div id="brand-title" class="text-sm md:text-base font-extrabold tracking-tight flex items-center gap-1.5 text-white">
+            <span>Trust<span class="text-emerald-500 font-black">CV</span></span>
+          </div>
+          <div id="brand-sub" class="text-[8px] md:text-[9px] font-semibold tracking-wider uppercase text-slate-400">BY TEAFORIA</div>
+        </div>
+      </a>
+
+      <!-- 右側工具欄：候選人/雇主切換連結 + 語言切換膠囊 + 純向量 SVG 主題切換 -->
+      <div class="flex items-center gap-2 shrink-0">
+        <!-- 快速切換回候選人標章 -->
+        <a href="./badges_preview.html" class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium border border-brand-border bg-slate-900/60 text-slate-300 hover:text-white transition-all">
+          <span>🛡️ 候選人盾牌</span>
+        </a>
+
+        <!-- 單鍵語言切換膠囊 -->
+        <button id="lang-toggle-btn" onclick="toggleLanguage()" class="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-tight transition-all shrink-0 whitespace-nowrap bg-slate-900 border border-slate-800 text-slate-200 hover:text-white hover:bg-slate-800">
+          <span class="text-[10px] opacity-70">🌐</span>
+          <span id="lang-btn-text">EN</span>
+        </button>
+
+        <!-- 純向量 SVG 主題切換 -->
+        <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-1.5 md:p-2 rounded-xl transition-all shrink-0 bg-slate-900 border border-slate-800 text-slate-300 hover:text-white" title="切換明亮/深色模式">
+          <span id="theme-icon-container">
+            <svg class="w-4 h-4 fill-current text-slate-300" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主內容區：自頂向下降序（滿級 3 勾 ➔ 2 勾 ➔ 1 勾 ➔ 0 勾），冠冕體系 -->
+  <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+
+    <!-- 頂部宣傳 Banner -->
+    <div class="p-6 rounded-3xl border border-brand-border bg-brand-card relative overflow-hidden shadow-xl">
+      <div class="relative z-10 max-w-2xl space-y-2">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-brand-mint border border-emerald-500/30">
+          <span>👑</span>
+          <span id="i18n-banner-tag">企業資方與職缺真實性審查標準</span>
+        </div>
+        <h1 id="i18n-banner-title" class="text-xl md:text-2xl font-black text-white">
+          三勾雇主誠信標章體系（冠冕認證）
+        </h1>
+        <p id="i18n-banner-desc" class="text-xs md:text-sm text-slate-400 leading-relaxed">
+          以象徵資方實力的「冠冕」為形，與候選人「盾牌」雙向對稱：滿級 3 勾代表百大上市公司與頂級簽約雇主、2 勾代表真實職缺與底薪保證、1 勾代表合法實體公司核實、0 勾代表未認證外部職缺。
+        </p>
+      </div>
+    </div>
+
+    <!-- 徽章階級清單 (從頂級大廠降序排列至外部來源) -->
+    <div class="space-y-4">
+
+      <!-- 1. 滿級 3 勾：百大上市 / 頂級雇主 (最高榮譽置頂) -->
+      <div class="p-5 rounded-2xl border border-brand-border bg-brand-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:border-amber-400/60 shadow-lg">
+        <div class="flex items-center gap-4">
+          <!-- 3 勾冠冕容器 (黑白雙模動態自適應) -->
+          <div id="emp-box-c3" class="w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border cursor-pointer transition-all" onclick="handleBadgeClick('emp_badge_c3')">
+            <svg id="svg-emp-c3" width="44" height="44" viewBox="0 0 48 48" fill="none">
+              <!-- 動態注入冠冕 SVG 幾何 -->
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="i18n-c3-title" class="text-sm font-bold text-white">百大上市 / 頂級雇主（滿級 3 勾 ✔✔✔）</h3>
+              <span id="i18n-c3-badge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-gradient-to-r from-amber-500/20 to-emerald-500/20 text-amber-300 border border-amber-500/40 font-bold">企業誠信 +40 · 頂級大廠</span>
+            </div>
+            <p id="i18n-c3-desc" class="text-xs text-slate-400 mt-1 leading-relaxed">
+              百大上市企業或頂級簽約雇主。保證真實正式編制、合法全額贊助白領簽證規費，並承諾專人落地安置與完整履約保證。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 2 勾：真實職缺 · 底薪保證 -->
+      <div class="p-5 rounded-2xl border border-brand-border bg-brand-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:border-emerald-500/60 shadow-md">
+        <div class="flex items-center gap-4">
+          <!-- 2 勾冠冕容器 -->
+          <div id="emp-box-c2" class="w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border cursor-pointer transition-all" onclick="handleBadgeClick('emp_badge_c2')">
+            <svg id="svg-emp-c2" width="44" height="44" viewBox="0 0 48 48" fill="none">
+              <!-- 動態注入冠冕 SVG 幾何 -->
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="i18n-c2-title" class="text-sm font-bold text-white">真實職缺 · 底薪保證（2 勾 ✔✔）</h3>
+              <span id="i18n-c2-badge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-900/50 text-emerald-300 border border-emerald-600 font-bold">企業誠信 +30</span>
+            </div>
+            <p id="i18n-c2-desc" class="text-xs text-slate-400 mt-1 leading-relaxed">
+              簽署正式招聘委託協議，核實該職缺具有實際編制，並明訂合約底薪下限（拒絕文字遊戲與薪資灌水），保證合法辦理白領簽證。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 1 勾：實體公司核實 -->
+      <div class="p-5 rounded-2xl border border-brand-border bg-brand-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:border-emerald-800/80">
+        <div class="flex items-center gap-4">
+          <!-- 1 勾冠冕容器 -->
+          <div id="emp-box-c1" class="w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border cursor-pointer transition-all" onclick="handleBadgeClick('emp_badge_c1')">
+            <svg id="svg-emp-c1" width="44" height="44" viewBox="0 0 48 48" fill="none">
+              <!-- 動態注入冠冕 SVG 幾何 -->
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="i18n-c1-title" class="text-sm font-bold text-white">實體公司核實（1 勾 ✔）</h3>
+              <span id="i18n-c1-badge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/40 text-teal-300 border border-emerald-800/60 font-semibold">企業誠信 +15</span>
+            </div>
+            <p id="i18n-c1-desc" class="text-xs text-slate-400 mt-1 leading-relaxed">
+              經濟部商業司登記在案合法實體公司，統編核實，具備勞動部外國專業白領聘僱資格，無重大勞資違法黑名單。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 0 勾：未核驗職缺 (外部來源) -->
+      <div class="p-5 rounded-2xl border border-brand-border bg-brand-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:border-slate-700">
+        <div class="flex items-center gap-4">
+          <!-- 0 勾冠冕容器 -->
+          <div id="emp-box-c0" class="w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border cursor-pointer transition-all" onclick="handleBadgeClick('emp_badge_c0')">
+            <svg id="svg-emp-c0" width="44" height="44" viewBox="0 0 48 48" fill="none">
+              <!-- 動態注入冠冕 SVG 幾何 -->
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="i18n-c0-title" class="text-sm font-bold text-white">未核驗職缺（0 勾）</h3>
+              <span id="i18n-c0-weight" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">基礎分 1.0 倍</span>
+            </div>
+            <p id="i18n-c0-desc" class="text-xs text-slate-400 mt-1 leading-relaxed">
+              外部爬蟲聚合或社群轉發職缺，平台尚未直接接觸雇主核實，建議候選人審慎評估。
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 底部代碼調用說明 -->
+    <div class="p-6 rounded-2xl border border-brand-border bg-slate-900/60 space-y-3">
+      <h3 id="i18n-dev-guide-title" class="text-xs font-bold font-mono tracking-wider text-brand-mint uppercase">
+        // 開發者與代理人規範
+      </h3>
+      <p id="i18n-dev-guide-desc" class="text-xs text-slate-400 leading-relaxed">
+        全系統內凡涉及職缺與雇主核驗圖標，強制引用本頁面之冠冕向量代碼與 0~3 勾定義，嚴禁自行發明非標準樣式。
+      </p>
+    </div>
+
+  </main>
+
+  <!-- ES Module: 導入官方 i18n 字典服務與冠冕幾何生成器 -->
+  <script type="module">
+    import { i18n } from './js/i18n.js';
+
+    // 向量 SVG 日月圖標 (100% 復用首頁 header.js)
+    const SUN_SVG = `<svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`;
+    const MOON_SVG = `<svg class="w-4 h-4 fill-current text-slate-300" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+
+    // 生成深淺雙模對應的「冠冕 (Crown)」SVG 向量代碼
+    // 依據使用者提供的標準冠冕幾何：平底水平托座 + 兩側上揚 + 中央高聳主峰 + 兩側次峰 + 底座飾條
+    function renderCrownsSVG(isLight) {
+      // 0 勾 (未核驗雇主/外部職缺)
+      const c0Container = document.getElementById('emp-box-c0');
+      const c0Svg = document.getElementById('svg-emp-c0');
+      if (isLight) {
+        c0Container.className = "w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border border-slate-200 bg-slate-50 cursor-pointer shadow-sm";
+        c0Svg.innerHTML = `
+          <!-- 冠冕主體 (冷灰虛線) -->
+          <path d="M 8,32 L 7,16 L 16,24 L 24,9 L 32,24 L 41,16 L 40,32 Z" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="3 2" stroke-linejoin="round"/>
+          <!-- 底座橫樑 -->
+          <rect x="7" y="34.5" width="34" height="3" rx="1" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <!-- 0 勾虛線指示 -->
+          <path d="M18 25 L22 29 L30 20" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+        `;
+      } else {
+        c0Container.className = "w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border border-slate-800 bg-slate-900/60 cursor-pointer";
+        c0Svg.innerHTML = `
+          <!-- 冠冕主體 (暗黑底 + 灰虛線) -->
+          <path d="M 8,32 L 7,16 L 16,24 L 24,9 L 32,24 L 41,16 L 40,32 Z" fill="#0F172A" stroke="#475569" stroke-width="1.8" stroke-dasharray="3 2" stroke-linejoin="round"/>
+          <!-- 底座橫樑 -->
+          <rect x="7" y="34.5" width="34" height="3" rx="1" fill="#0F172A" stroke="#475569" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <path d="M18 25 L22 29 L30 20" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        `;
+      }
+
+      // 1 勾 (實體公司核實：單勾 ✔)
+      const c1Container = document.getElementById('emp-box-c1');
+      const c1Svg = document.getElementById('svg-emp-c1');
+      if (isLight) {
+        c1Container.className = "w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border border-emerald-200 bg-emerald-50/70 cursor-pointer shadow-sm";
+        c1Svg.innerHTML = `
+          <path d="M 8,32 L 7,16 L 16,24 L 24,9 L 32,24 L 41,16 L 40,32 Z" fill="#ECFDF5" stroke="#10B981" stroke-width="1.8" stroke-linejoin="round"/>
+          <rect x="7" y="34.5" width="34" height="3" rx="1" fill="#ECFDF5" stroke="#10B981" stroke-width="1.4"/>
+          <!-- 1 個翡翠勾 -->
+          <path d="M18 26 L22 30 L30 20" stroke="#059669" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        `;
+      } else {
+        c1Container.className = "w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border border-emerald-900/40 bg-emerald-950/20 cursor-pointer";
+        c1Svg.innerHTML = `
+          <path d="M 8,32 L 7,16 L 16,24 L 24,9 L 32,24 L 41,16 L 40,32 Z" fill="#0A1C18" stroke="#236050" stroke-width="1.8" stroke-linejoin="round"/>
+          <rect x="7" y="34.5" width="34" height="3" rx="1" fill="#0A1C18" stroke="#236050" stroke-width="1.4"/>
+          <!-- 1 個薄荷亮勾 -->
+          <path d="M18 26 L22 30 L30 20" stroke="#5EEAD4" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+        `;
+      }
+
+      // 2 勾 (真實職缺 · 底薪保證：雙勾 ✔✔)
+      const c2Container = document.getElementById('emp-box-c2');
+      const c2Svg = document.getElementById('svg-emp-c2');
+      if (isLight) {
+        c2Container.className = "w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border border-emerald-300 bg-emerald-100/60 cursor-pointer shadow-sm";
+        c2Svg.innerHTML = `
+          <path d="M 8,32 L 7,16 L 16,24 L 24,9 L 32,24 L 41,16 L 40,32 Z" fill="#D1FAE5" stroke="#059669" stroke-width="2" stroke-linejoin="round"/>
+          <rect x="7" y="34.5" width="34" height="3" rx="1" fill="#D1FAE5" stroke="#059669" stroke-width="1.6"/>
+          <!-- 雙勾堆疊 -->
+          <path d="M18 22 L22 26 L30 17" stroke="#047857" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 28 L22 32 L30 23" stroke="#059669" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        `;
+      } else {
+        c2Container.className = "w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border border-emerald-700/60 bg-emerald-950/40 cursor-pointer";
+        c2Svg.innerHTML = `
+          <defs>
+            <linearGradient id="emp-c2-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#2DD4BF"/>
+              <stop offset="100%" stop-color="#0F766E"/>
+            </linearGradient>
+          </defs>
+          <path d="M 8,32 L 7,16 L 16,24 L 24,9 L 32,24 L 41,16 L 40,32 Z" fill="#0D2E25" stroke="url(#emp-c2-rim)" stroke-width="2" stroke-linejoin="round"/>
+          <rect x="7" y="34.5" width="34" height="3" rx="1" fill="#0D2E25" stroke="url(#emp-c2-rim)" stroke-width="1.6"/>
+          <!-- 雙勾堆疊 (深色高對比) -->
+          <path d="M18 22 L22 26 L30 17" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+          <path d="M18 28 L22 32 L30 23" stroke="#3DF5A7" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        `;
+      }
+
+      // 3 勾 (百大上市 / 頂級雇主：滿級三層折角勾 ✔✔✔ 呼應 TrustCV Logo)
+      const c3Container = document.getElementById('emp-box-c3');
+      const c3Svg = document.getElementById('svg-emp-c3');
+      if (isLight) {
+        c3Container.className = "w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border-2 border-amber-400 bg-gradient-to-br from-amber-50 to-emerald-50 cursor-pointer shadow-md";
+        c3Svg.innerHTML = `
+          <defs>
+            <linearGradient id="emp-c3-gold-light" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#F59E0B"/>
+              <stop offset="100%" stop-color="#D97706"/>
+            </linearGradient>
+          </defs>
+          <!-- 冠冕主體 (琥珀流金白瓷) -->
+          <path d="M 8,32 L 7,16 L 16,24 L 24,9 L 32,24 L 41,16 L 40,32 Z" fill="#FEF3C7" stroke="url(#emp-c3-gold-light)" stroke-width="2.2" stroke-linejoin="round"/>
+          <rect x="7" y="34.5" width="34" height="3.2" rx="1" fill="#FEF3C7" stroke="url(#emp-c3-gold-light)" stroke-width="1.8"/>
+          <!-- 冠頂尊榮寶石圓點 -->
+          <circle cx="24" cy="9" r="1.3" fill="#D97706"/>
+          <!-- 三層勾標堆疊：頂層深墨綠、中層翡翠綠、底層亮薄荷綠 (精確呼應 Logo) -->
+          <path d="M18 19 L22 23 L30 14" stroke="#166534" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 25 L22 29 L30 20" stroke="#059669" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 31 L22 35 L30 26" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        `;
+      } else {
+        c3Container.className = "w-14 h-14 shrink-0 flex items-center justify-center p-1 rounded-2xl border border-amber-500/50 bg-emerald-950/60 cursor-pointer shadow-lg";
+        c3Svg.innerHTML = `
+          <defs>
+            <linearGradient id="emp-c3-gold-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FDE68A"/>
+              <stop offset="40%" stop-color="#F59E0B"/>
+              <stop offset="80%" stop-color="#FBBF24"/>
+              <stop offset="100%" stop-color="#B45309"/>
+            </linearGradient>
+          </defs>
+          <!-- 冠冕主體 (深墨電光 + 流金雙光鑲邊) -->
+          <path d="M 8,32 L 7,16 L 16,24 L 24,9 L 32,24 L 41,16 L 40,32 Z" fill="#022119" stroke="url(#emp-c3-gold-dark)" stroke-width="2.2" stroke-linejoin="round"/>
+          <rect x="7" y="34.5" width="34" height="3.2" rx="1" fill="#022119" stroke="url(#emp-c3-gold-dark)" stroke-width="1.8"/>
+          <circle cx="24" cy="9" r="1.3" fill="#FDE68A"/>
+          <!-- 三層勾標堆疊 (呼應 TrustCV Logo) -->
+          <path d="M18 19 L22 23 L30 14" stroke="#2A725E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 25 L22 29 L30 20" stroke="#34B285" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 31 L22 35 L30 26" stroke="#3DF5A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        `;
+      }
+    }
+
+    // 更新頂部 Header 樣式
+    function updateThemeUI(isLight) {
+      const container = document.getElementById('theme-icon-container');
+      const themeBtn = document.getElementById('theme-toggle-btn');
+      const langBtn = document.getElementById('lang-toggle-btn');
+      const logoBox = document.getElementById('brand-logo-box');
+      const brandTitle = document.getElementById('brand-title');
+      const brandSub = document.getElementById('brand-sub');
+
+      if (isLight) {
+        container.innerHTML = SUN_SVG;
+        themeBtn.className = "p-1.5 md:p-2 rounded-xl transition-all shrink-0 bg-slate-100 border border-slate-200 text-amber-600 hover:bg-slate-200 shadow-sm";
+        langBtn.className = "flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-tight transition-all shrink-0 whitespace-nowrap bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 shadow-sm";
+        logoBox.className = "w-8 h-8 md:w-9 md:h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-md p-1 border border-slate-200 bg-white";
+        brandTitle.className = "text-sm md:text-base font-extrabold tracking-tight flex items-center gap-1.5 text-slate-900";
+        brandSub.className = "text-[8px] md:text-[9px] font-semibold tracking-wider uppercase text-slate-500";
+      } else {
+        container.innerHTML = MOON_SVG;
+        themeBtn.className = "p-1.5 md:p-2 rounded-xl transition-all shrink-0 bg-slate-900 border border-slate-800 text-slate-300 hover:text-white";
+        langBtn.className = "flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-tight transition-all shrink-0 whitespace-nowrap bg-slate-900 border border-slate-800 text-slate-200 hover:text-white hover:bg-slate-800";
+        logoBox.className = "w-8 h-8 md:w-9 md:h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-md p-1 border border-slate-800 bg-[#080C0E]";
+        brandTitle.className = "text-sm md:text-base font-extrabold tracking-tight flex items-center gap-1.5 text-white";
+        brandSub.className = "text-[8px] md:text-[9px] font-semibold tracking-wider uppercase text-slate-400";
+      }
+
+      // 重新繪製黑白雙模冠冕
+      renderCrownsSVG(isLight);
+    }
+
+    // 依據目前語系純淨更新全頁面內容（字典驅動，零中英夾雜）
+    function updateContentUI(lang) {
+      document.documentElement.lang = lang;
+      document.getElementById('lang-btn-text').textContent = (lang === 'en') ? '中文' : 'EN';
+      document.getElementById('doc-title').textContent = i18n.t('emp_badges_page_title');
+
+      // Banner
+      document.getElementById('i18n-banner-tag').textContent = i18n.t('emp_badges_banner_tag');
+      document.getElementById('i18n-banner-title').textContent = i18n.t('emp_badges_banner_title');
+      document.getElementById('i18n-banner-desc').textContent = i18n.t('emp_badges_banner_desc');
+
+      // 3 勾
+      document.getElementById('i18n-c3-title').textContent = i18n.t('emp_badge_c3_title');
+      document.getElementById('i18n-c3-badge').textContent = i18n.t('emp_badge_c3_badge');
+      document.getElementById('i18n-c3-desc').textContent = i18n.t('emp_badge_c3_desc');
+
+      // 2 勾
+      document.getElementById('i18n-c2-title').textContent = i18n.t('emp_badge_c2_title');
+      document.getElementById('i18n-c2-badge').textContent = i18n.t('emp_badge_c2_badge');
+      document.getElementById('i18n-c2-desc').textContent = i18n.t('emp_badge_c2_desc');
+
+      // 1 勾
+      document.getElementById('i18n-c1-title').textContent = i18n.t('emp_badge_c1_title');
+      document.getElementById('i18n-c1-badge').textContent = i18n.t('emp_badge_c1_badge');
+      document.getElementById('i18n-c1-desc').textContent = i18n.t('emp_badge_c1_desc');
+
+      // 0 勾
+      document.getElementById('i18n-c0-title').textContent = i18n.t('emp_badge_c0_title');
+      document.getElementById('i18n-c0-weight').textContent = i18n.t('emp_badge_c0_weight');
+      document.getElementById('i18n-c0-desc').textContent = i18n.t('emp_badge_c0_desc');
+
+      // Dev Guide
+      document.getElementById('i18n-dev-guide-title').textContent = '// ' + i18n.t('emp_badges_dev_guide_title');
+      document.getElementById('i18n-dev-guide-desc').textContent = i18n.t('emp_badges_dev_guide_desc');
+    }
+
+    // 主題切換 (雙模驅動)
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.classList.toggle('light-mode');
+      localStorage.setItem('trustcv_theme', isLight ? 'light' : 'dark');
+      updateThemeUI(isLight);
+    };
+
+    // 語系切換 (字典驅動)
+    window.toggleLanguage = function() {
+      const current = i18n.getLanguage();
+      const nextLang = (current === 'en') ? 'zh-TW' : 'en';
+      i18n.setLanguage(nextLang);
+    };
+
+    // 點擊彈窗互動
+    window.handleBadgeClick = function(badgeKey) {
+      alert(i18n.t(`${badgeKey}_alert`));
+    };
+
+    // 監聽 i18n 全域語系變更
+    i18n.subscribe((lang) => {
+      updateContentUI(lang);
+    });
+
+    // 頁面初始化
+    (function init() {
+      const savedTheme = localStorage.getItem('trustcv_theme');
+      const isLight = (savedTheme === 'light');
+      if (isLight) {
+        document.documentElement.classList.add('light-mode');
+      } else {
+        document.documentElement.classList.remove('light-mode');
+      }
+      updateThemeUI(isLight);
+      updateContentUI(i18n.getLanguage());
+    })();
+  </script>
+</body>
+</html>

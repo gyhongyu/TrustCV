@@ -106,7 +106,30 @@ export const I18N_DICTIONARY = {
     badge_c0_desc: "Manually declared by candidate without linked certificate or file evidence. Rendered with dashed outline to indicate evidence is pending.",
     badge_c0_alert: "Unverified (0 Checks): Self-declared entry without supporting documents.",
     badges_dev_guide_title: "Developer & Agent Guide",
-    badges_dev_guide_desc: "All verification icons across TrustCV must strictly consume the SVG geometry and 0-to-3 check definitions here. Ad-hoc styles are prohibited."
+    badges_dev_guide_desc: "All verification icons across TrustCV must strictly consume the SVG geometry and 0-to-3 check definitions here. Ad-hoc styles are prohibited.",
+    // Employer Verification Badges SSOT (Pure English - Crown System)
+    emp_badges_page_title: "TrustCV Employer Verification Badges Specification",
+    emp_badges_banner_tag: "Enterprise Authenticity & Job Verification Standard",
+    emp_badges_banner_title: "Triple-Check Employer Badges (Crown System)",
+    emp_badges_banner_desc: "Embodying corporate executive authority with the Crown emblem. Perfectly symmetrical with candidate shields: 3 checks for top-tier listed corporations and VIP contracted employers, 2 checks for backed budget and direct hiring, 1 check for verified legal entity, and 0 checks for unverified listings.",
+    emp_badge_c3_title: "Premier Enterprise (3 Checks ✔✔✔)",
+    emp_badge_c3_badge: "Integrity +40 · Top Tier Employer",
+    emp_badge_c3_desc: "Top-tier publicly listed enterprise or verified VIP contracted partner. Legally committed direct hire, guaranteed relocation packages, and dedicated visa priority.",
+    emp_badge_c3_alert: "Premier Enterprise (3 Checks): Verified publicly listed corporation or VIP contracted employer.",
+    emp_badge_c2_title: "Budget & Job Backed (2 Checks ✔✔)",
+    emp_badge_c2_badge: "Integrity +30",
+    emp_badge_c2_desc: "Officially signed representation mandate. Verified actual headcount allocation and binding contract base salary floor (e.g. NT$ 75,000+).",
+    emp_badge_c2_alert: "Budget & Job Backed (2 Checks): Verified actual headcount and guaranteed contractual base salary.",
+    emp_badge_c1_title: "Entity Verified (1 Check ✔)",
+    emp_badge_c1_badge: "Integrity +15",
+    emp_badge_c1_desc: "Legally registered commercial entity with verified tax ID, verified qualified to sponsor white-collar foreign professionals with zero labor blacklist records.",
+    emp_badge_c1_alert: "Entity Verified (1 Check): Legally registered company qualified for foreign professional employment.",
+    emp_badge_c0_title: "Unverified Listing (0 Checks)",
+    emp_badge_c0_weight: "Baseline 1.0x",
+    emp_badge_c0_desc: "Aggregated from community boards or third-party web crawlers. Platform has not directly audited the employer.",
+    emp_badge_c0_alert: "Unverified Listing (0 Checks): Sourced job posting pending platform verification.",
+    emp_badges_dev_guide_title: "Developer & Agent Guide",
+    emp_badges_dev_guide_desc: "All employer and job badges across TrustCV must strictly consume the Crown SVG geometry and 0-to-3 check definitions here. Ad-hoc styles are prohibited."
   },
   "zh-TW": {
     app_title: "TrustCV | 海外就業 | 免費履歷管理",
@@ -209,7 +232,30 @@ export const I18N_DICTIONARY = {
     badge_c0_desc: "候選人手動打字輸入，尚未關聯任何證書照片或檔案原件。呈現冷灰虛線微暗盾，提示雇主此項目未經檔案比對。",
     badge_c0_alert: "未核驗（0 勾）：未上傳佐證文件，僅候選人單方申報。",
     badges_dev_guide_title: "開發者與代理人規範",
-    badges_dev_guide_desc: "全系統內凡涉及核驗圖標，強制引用本頁面之向量代碼與 0~3 勾定義，嚴禁自行發明非標準樣式。"
+    badges_dev_guide_desc: "全系統內凡涉及核驗圖標，強制引用本頁面之向量代碼與 0~3 勾定義，嚴禁自行發明非標準樣式。",
+    // 雇主端核驗標章 SSOT (純繁體中文 - 冠冕體系，嚴禁夾雜英文)
+    emp_badges_page_title: "TrustCV 雇主與企業真實性核驗標章體系",
+    emp_badges_banner_tag: "企業資方與職缺真實性審查標準",
+    emp_badges_banner_title: "三勾雇主誠信標章體系（冠冕認證）",
+    emp_badges_banner_desc: "以象徵資方實力的「冠冕」為形，與候選人「盾牌」雙向對稱：滿級 3 勾代表百大上市公司與頂級簽約雇主、2 勾代表真實職缺與底薪保證、1 勾代表合法實體公司核實、0 勾代表未認證外部職缺。",
+    emp_badge_c3_title: "百大上市 / 頂級雇主（滿級 3 勾 ✔✔✔）",
+    emp_badge_c3_badge: "企業誠信 +40 · 頂級大廠",
+    emp_badge_c3_desc: "百大上市企業或頂級簽約雇主。保證真實正式編制、合法全額贊助白領簽證規費，並承諾專人落地安置與完整履約保證。",
+    emp_badge_c3_alert: "頂級雇主（3 勾）：百大上市企業或官方簽約雇主，保證真實編制與海外安置履約。",
+    emp_badge_c2_title: "真實職缺 · 底薪保證（2 勾 ✔✔）",
+    emp_badge_c2_badge: "企業誠信 +30",
+    emp_badge_c2_desc: "簽署正式招聘委託協議，核實該職缺具有實際編制，並明訂合約底薪下限（拒絕文字遊戲與薪資灌水），保證合法辦理白領簽證。",
+    emp_badge_c2_alert: "職缺保證（2 勾）：核實職缺編制與真實合約底薪，承諾辦理合法簽證。",
+    emp_badge_c1_title: "實體公司核實（1 勾 ✔）",
+    emp_badge_c1_badge: "企業誠信 +15",
+    emp_badge_c1_desc: "經濟部商業司登記在案合法實體公司，統編核實，具備勞動部外國專業白領聘僱資格，無重大勞資違法黑名單。",
+    emp_badge_c1_alert: "實體核實（1 勾）：經濟部登記合法公司，具備聘用外籍白領工程師資格。",
+    emp_badge_c0_title: "未核驗職缺（0 勾）",
+    emp_badge_c0_weight: "基礎分 1.0 倍",
+    emp_badge_c0_desc: "外部爬蟲聚合或社群轉發職缺，平台尚未直接接觸雇主核實，建議候選人審慎評估。",
+    emp_badge_c0_alert: "未核驗職缺（0 勾）：第三方來源職缺，尚未通過平台直接核驗。",
+    emp_badges_dev_guide_title: "開發者與代理人規範",
+    emp_badges_dev_guide_desc: "全系統內凡涉及職缺與雇主核驗圖標，強制引用本頁面之冠冕向量代碼與 0~3 勾定義，嚴禁自行發明非標準樣式。"
   }
 };
 
