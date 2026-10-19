@@ -85,6 +85,20 @@
   animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* 徽章與向量圖標黑白雙模自適應 (Light/Dark Badge Adaptive) */
+.light-badge {
+  display: none !important;
+}
+.dark-badge {
+  display: flex !important;
+}
+.light-mode .dark-badge {
+  display: none !important;
+}
+.light-mode .light-badge {
+  display: flex !important;
+}
+
 /* 明亮模式覆蓋樣式 (Light Theme Overrides - Strict Separation) */
 .light-mode {
   background-color: #F8FAFC !important;
