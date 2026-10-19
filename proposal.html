@@ -106,6 +106,12 @@
           01 / 10
         </div>
 
+        <!-- Language Toggle Pill -->
+        <button id="langToggleBtn" class="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-tight transition-all shrink-0 whitespace-nowrap bg-slate-900 border border-slate-800 text-slate-200 hover:text-white hover:bg-slate-800" title="切換語言 / Switch Language">
+          <span class="text-[10px] opacity-70">🌐</span>
+          <span id="langBtnText">EN</span>
+        </button>
+
         <!-- Theme Toggle (Native TrustCV light-mode switch) -->
         <button id="themeToggleBtn" class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all" title="切換明亮/深色模式">
           <span id="themeIconContainer">
@@ -130,8 +136,12 @@
   <!-- Main Viewport for Presentation Slides -->
   <main class="flex-1 max-w-7xl mx-auto w-full px-4 md:px-8 py-8 flex flex-col justify-center">
     
-    <!-- SLIDE 1: COVER -->
-    <section class="slide-pane block" data-slide="1">
+    <!-- ======================================================== -->
+    <!-- CHINESE SLIDES CONTAINER (繁體中文簡報) -->
+    <!-- ======================================================== -->
+    <div id="content-zh" class="w-full">
+      <!-- SLIDE 1: COVER -->
+      <section class="slide-pane block" data-slide="1">
       <div class="text-center max-w-4xl mx-auto space-y-6">
         <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-medium border border-emerald-500/30 bg-emerald-500/10 text-brand-mint">
           <span class="w-2 h-2 rounded-full bg-brand-mint animate-pulse"></span>
@@ -727,6 +737,590 @@
         </div>
       </div>
     </section>
+    </div><!-- End #content-zh -->
+
+    <!-- ======================================================== -->
+    <!-- ENGLISH SLIDES CONTAINER (Pure English Presentation Deck) -->
+    <!-- ======================================================== -->
+    <div id="content-en" class="w-full hidden">
+      <!-- SLIDE 1: COVER (EN) -->
+      <section class="slide-pane block" data-slide="1">
+        <div class="text-center max-w-4xl mx-auto space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-medium border border-emerald-500/30 bg-emerald-500/10 text-brand-mint">
+            <span class="w-2 h-2 rounded-full bg-brand-mint animate-pulse"></span>
+            Taiwan-India High-Skill Talent Strategic Initiative 2026
+          </div>
+          
+          <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white leading-tight">
+            Building Trust with Compute, Uniting Talent via Truth Node
+          </h1>
+          
+          <p class="text-base md:text-xl font-medium text-slate-300">
+            Taiwan-India High-Skill Talent Truth Hub: Sheng Tuo ✕ India Teaforia (TrustCV) Compute Expansion & Strategic Capital Synergy
+          </p>
+
+          <!-- Quote Card -->
+          <div class="glass-card text-left p-6 md:p-8 rounded-2xl border-l-4 border-l-brand-emerald">
+            <p class="text-sm md:text-base text-slate-200 leading-relaxed italic">
+              "Taiwan's global expansion and multinational firms face unprecedented high-skill talent shortages; India possesses the world's largest engineering workforce but lacks objective cross-border verification. Today, powered by large AI models, we establish the first digital truth hub separating fact from fiction!"
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium border border-slate-700 bg-slate-900/80 text-slate-200">
+              <span class="w-2 h-2 rounded-full bg-brand-mint"></span> Industry Anchor: Sheng Tuo Technology Co., Ltd.
+            </span>
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium border border-slate-700 bg-slate-900/80 text-slate-200">
+              <span class="w-2 h-2 rounded-full bg-brand-accent"></span> Core Tech: India Teaforia ✕ TrustCV
+            </span>
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium border border-slate-700 bg-slate-900/80 text-slate-200">
+              <span class="w-2 h-2 rounded-full bg-brand-emerald"></span> Strategic Capital: Policy Funds / Corporate VC
+            </span>
+          </div>
+
+          <div class="text-xs text-slate-400 pt-4">
+            Navigation: Press <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-200 font-mono">→</kbd> on keyboard or click Next below
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: THE CRISIS (EN) -->
+      <section class="slide-pane hidden" data-slide="2">
+        <div class="space-y-6">
+          <div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-red-500/30 bg-red-500/10 text-red-400 font-mono uppercase">
+              THE CRISIS
+            </span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">The Dual Collapse of Trust in Global High-Skill Hiring</h2>
+            <p class="text-sm md:text-base text-slate-400">The Lemons Market in the Generative AI Era: Bad candidates drive out good, while enterprises incur heavy trial costs</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- Card 1 -->
+            <div class="glass-card p-6 rounded-2xl relative">
+              <div class="flex items-center justify-between mb-3">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium border border-red-500/30 bg-red-500/10 text-red-400">Candidate Side</span>
+                <span class="w-2 h-2 rounded-full bg-red-500"></span>
+              </div>
+              <h3 class="text-lg font-bold text-white">AI Fake Resume Tsunami</h3>
+              <div class="text-2xl font-black font-mono text-red-400 my-2">40%+ Inflated Content</div>
+              <ul class="text-xs md:text-sm text-slate-300 space-y-2">
+                <li>• ChatGPT generates instant full-stack architect resumes</li>
+                <li>• Fabricated project experience loaded with keyword matching</li>
+                <li>• Real-time teleprompters during video interviews</li>
+              </ul>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="glass-card p-6 rounded-2xl relative">
+              <div class="flex items-center justify-between mb-3">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium border border-amber-500/30 bg-amber-500/10 text-amber-400">Job Side</span>
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              </div>
+              <h3 class="text-lg font-bold text-white">Ghost Job Black Hole</h3>
+              <div class="text-2xl font-black font-mono text-amber-400 my-2">30%+ Ghost Postings</div>
+              <ul class="text-xs md:text-sm text-slate-300 space-y-2">
+                <li>• Unscrupulous agencies harvesting overseas talent data</li>
+                <li>• Traditional headhunters taking excessive cuts from salaries</li>
+                <li>• Truly certified elite engineers afraid to apply</li>
+              </ul>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="glass-card p-6 rounded-2xl relative">
+              <div class="flex items-center justify-between mb-3">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium border border-emerald-500/30 bg-emerald-500/10 text-brand-mint">Enterprise Cost</span>
+                <span class="w-2 h-2 rounded-full bg-brand-mint"></span>
+              </div>
+              <h3 class="text-lg font-bold text-white">Cost of a Bad Hire</h3>
+              <div class="text-2xl font-black font-mono text-brand-mint my-2">NT$ 1.5M+ / Hire</div>
+              <ul class="text-xs md:text-sm text-slate-300 space-y-2">
+                <li>• Visa relocation + 3-month probation direct salary loss</li>
+                <li>• Production anomalies, debugging delays & missed deadlines</li>
+                <li>• Core confidential leaks & cross-border labor disputes</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-xl text-center text-sm text-slate-300">
+            <strong>Conclusion:</strong> Traditional classifieds and agencies lack counterfeit defense; cross-border hiring urgently needs an objective digital detector.
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: STRATEGIC FOCUS (EN) -->
+      <section class="slide-pane hidden" data-slide="3">
+        <div class="space-y-6">
+          <div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-emerald-500/30 bg-emerald-500/10 text-brand-mint font-mono uppercase">
+              STRATEGIC FOCUS
+            </span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">Zero Manual Labor Intermediation! Focusing on 6 High-Barrier Hard Skills</h2>
+            <p class="text-sm md:text-base text-slate-400">Strictly focused on licensed professionals, verified engineers, and core technological pillars</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="glass-card p-5 rounded-xl space-y-2">
+              <span class="text-xs font-mono font-bold text-brand-mint">01 / Manufacturing & OSAT</span>
+              <h4 class="text-base font-bold text-white">Semiconductor Fab & OSAT Engineers</h4>
+              <p class="text-xs text-slate-300 leading-relaxed">Process Integration (PIE), Equipment Maintenance, and Packaging/Testing engineers resolving factory bottlenecks.</p>
+            </div>
+            <div class="glass-card p-5 rounded-xl space-y-2">
+              <span class="text-xs font-mono font-bold text-brand-mint">02 / Hardware & Electrical</span>
+              <h4 class="text-base font-bold text-white">Precision Electronics & EMS Engineers</h4>
+              <p class="text-xs text-slate-300 leading-relaxed">Line automation, mechanical design, PCB/SMT testing engineers experienced in cross-border shop-floor debugging.</p>
+            </div>
+            <div class="glass-card p-5 rounded-xl space-y-2">
+              <span class="text-xs font-mono font-bold text-brand-mint">03 / Software & AI</span>
+              <h4 class="text-base font-bold text-white">Software Developers & AI Engineers</h4>
+              <p class="text-xs text-slate-300 leading-relaxed">High-concurrency cloud architecture, LLM fine-tuning, embedded Linux firmware with globally competitive coding chops.</p>
+            </div>
+            <div class="glass-card p-5 rounded-xl space-y-2">
+              <span class="text-xs font-mono font-bold text-brand-mint">04 / Fab Construction</span>
+              <h4 class="text-base font-bold text-white">Civil, MEP & Cleanroom Engineers</h4>
+              <p class="text-xs text-slate-300 leading-relaxed">Overseas plant construction, structural engineering, and cleanroom MEP integration supporting global expansion.</p>
+            </div>
+            <div class="glass-card p-5 rounded-xl space-y-2">
+              <span class="text-xs font-mono font-bold text-brand-mint">05 / Global Business</span>
+              <h4 class="text-base font-bold text-white">Executive Management & Sales Leaders</h4>
+              <p class="text-xs text-slate-300 leading-relaxed">Bilingual Project Managers (PMs), international BD heads, and market expansion strategists for multinational firms.</p>
+            </div>
+            <div class="glass-card p-5 rounded-xl space-y-2">
+              <span class="text-xs font-mono font-bold text-brand-mint">06 / Certified Healthcare</span>
+              <h4 class="text-base font-bold text-white">Licensed Professionals (Nurses / Specialists)</h4>
+              <p class="text-xs text-slate-300 leading-relaxed">Internationally certified nurses, eldercare specialists, and professional medical laboratory technicians.</p>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-xl text-center text-sm text-slate-200 border-l-4 border-l-brand-emerald">
+            <strong>Core Hardline:</strong> All candidates must pass strict license validation and practical assessments—<strong>zero tolerance for unqualified labor filling quotas</strong>!
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: THE BREAKTHROUGH PRODUCT (EN) -->
+      <section class="slide-pane hidden" data-slide="4">
+        <div class="space-y-6">
+          <div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-sky-500/30 bg-sky-500/10 text-sky-400 font-mono uppercase">
+              THE BREAKTHROUGH
+            </span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">TrustCV Dual-Direction Truth Hub (cv.teaforia.in)</h2>
+            <p class="text-sm md:text-base text-slate-400">Adversarial Verification ✕ Free Dynamic CV Hosting: Two foundational pillars reconstructing global talent credit</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass-card p-6 rounded-2xl space-y-4">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-brand-emerald text-slate-950">PILLAR 01</span>
+              <h3 class="text-xl font-bold text-white">Adversarial Socratic Audit</h3>
+              <p class="text-xs font-semibold text-brand-mint">"Skill Dehydrator" ✕ "Job Authenticity Probe"</p>
+              
+              <div class="space-y-3 text-xs md:text-sm text-slate-300">
+                <div class="flex items-start gap-2.5">
+                  <span class="text-brand-mint font-bold">✓</span>
+                  <div><strong>Multi-Turn Deep Probing:</strong> 10-15 rounds of adversarial questioning setting contradiction traps to expose memorized AI answers (>95% water stripped).</div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <span class="text-brand-mint font-bold">✓</span>
+                  <div><strong>Substantive Job Verification:</strong> Rigorous auditing of company financials, payroll integrity, and real openings eliminating ghost jobs and fraud.</div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <span class="text-brand-mint font-bold">✓</span>
+                  <div><strong>Real-Time Code Sandboxes:</strong> Injecting codebases and circuit designs with hidden bugs to evaluate live troubleshooting logic without proxy testers.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl space-y-4">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-brand-accent text-slate-950">PILLAR 02</span>
+              <h3 class="text-xl font-bold text-white">Free Dynamic CV Hosting</h3>
+              <p class="text-xs font-semibold text-brand-accent">"The GitHub for Global Engineers & Licensed Talent"</p>
+              
+              <div class="space-y-3 text-xs md:text-sm text-slate-300">
+                <div class="flex items-start gap-2.5">
+                  <span class="text-brand-accent font-bold">✓</span>
+                  <div><strong>Zero-Barrier Lifetime Free Hosting:</strong> Free hosting for lifetime skill trees and certificates, dismantling paywalls to build a massive talent pipeline!</div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <span class="text-brand-accent font-bold">✓</span>
+                  <div><strong>Cryptographic Trust Badges:</strong> Objective tamper-proof badges awarded upon passing audits, shared voluntarily across personal sites for organic reach.</div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <span class="text-brand-accent font-bold">✓</span>
+                  <div><strong>On-Demand Verified Pool:</strong> Enterprises access authenticated engineers directly, slashing recruitment cycles from 60 days to 48 hours.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs md:text-sm text-slate-300">
+            <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">1. Free Hosting for Overseas Talent</span>
+            <span>➔</span>
+            <span class="px-3 py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-500/50 text-brand-mint font-bold">2. Dual Adversarial Dehydration</span>
+            <span>➔</span>
+            <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">3. Cryptographic Trust Badge Issued</span>
+            <span>➔</span>
+            <span class="px-3 py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-500/50 text-brand-mint font-bold">4. 48-Hour Precision Enterprise Match</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: WHY COMPUTE (EN) -->
+      <section class="slide-pane hidden" data-slide="5">
+        <div class="space-y-6">
+          <div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-red-500/30 bg-red-500/10 text-red-400 font-mono uppercase">
+              WHY COMPUTE?
+            </span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">Why Dedicated High-Parameter Compute is Non-Negotiable</h2>
+            <p class="text-sm md:text-base text-slate-400">The AI Arms Race: Cheating candidates are backed by top-tier LLMs; our auditors cannot be outsmarted!</p>
+          </div>
+
+          <div class="glass-card p-6 rounded-2xl grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div class="p-5 rounded-xl bg-red-950/20 border border-red-500/30 space-y-3">
+              <span class="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-red-500/20 text-red-400">Cheating Candidate Arsenal</span>
+              <h4 class="text-lg font-bold text-white">GPT-4o / Claude 3.5 Sonnet</h4>
+              <p class="text-xs text-slate-300">• 200B ~ 1000B+ mega-parameter models</p>
+              <p class="text-xs text-slate-300">• Dedicated live video teleprompters & proxy plugins</p>
+              <p class="text-xs text-slate-300">• Millisecond automated architecture narrative generation</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-emerald-950/20 border border-emerald-500/30 space-y-3">
+              <span class="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-emerald-500/20 text-brand-mint">TrustCV Dedicated Compute Hub</span>
+              <h4 class="text-lg font-bold text-white">70B+ / MoE Adversarial Cluster</h4>
+              <p class="text-xs text-slate-300">• 128K ultra-long context multi-turn graph memory</p>
+              <p class="text-xs text-slate-300">• Catches subtle round-2 contradictions at round 12</p>
+              <p class="text-xs text-slate-300">• Domain-specific fine-tuning across 6 key hard-skill sectors</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="glass-card p-4 rounded-xl space-y-1">
+              <h5 class="text-sm font-bold text-white">1. Overcoming Attention Degradation</h5>
+              <p class="text-xs text-slate-400">Standard 7B models hallucinate after 3 rounds; our 70B+ cluster maintains 15 rounds of deep cross-examination without memory loss.</p>
+            </div>
+            <div class="glass-card p-4 rounded-xl space-y-1">
+              <h5 class="text-sm font-bold text-white">2. Vertical Domain Fine-Tuning</h5>
+              <p class="text-xs text-slate-400">Fine-tuned on semiconductor fab specs, electronic debugging logs, MEP codes, and international nursing regulations.</p>
+            </div>
+            <div class="glass-card p-4 rounded-xl space-y-1">
+              <h5 class="text-sm font-bold text-white">3. Local Sovereign Data Security</h5>
+              <p class="text-xs text-slate-400">Servers deployed in Taiwan, ensuring proprietary enterprise test banks and IP never cross borders, passing rigorous audits.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: BUSINESS & ROI (EN) -->
+      <section class="slide-pane hidden" data-slide="6">
+        <div class="space-y-6">
+          <div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-emerald-500/30 bg-emerald-500/10 text-brand-mint font-mono uppercase">
+              BUSINESS & ROI
+            </span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">Disrupting Headhunting: High-Margin Global Platform Economics</h2>
+            <p class="text-sm md:text-base text-slate-400">Free volume at C-end, high-value monetization at B-end; upgrading from human labor shops to high-margin compute SaaS</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass-card p-6 rounded-2xl space-y-4">
+              <h3 class="text-base font-bold text-white">Recruitment Cost Comparison (Based on NT$ 1.5M Annual Salary)</h3>
+              
+              <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                  <span class="text-xs text-slate-400">Traditional Headhunter (25%)</span>
+                  <div class="text-xl font-mono font-bold text-red-400">NT$ 375K</div>
+                  <div class="text-[11px] text-slate-400 leading-tight space-y-1">
+                    <p>• Consultant commissions consume 60%</p>
+                    <p>• High manual background check & travel costs</p>
+                    <p>• Net margin only ~26%</p>
+                  </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/30 space-y-2">
+                  <span class="text-xs text-brand-mint font-bold">TrustCV Platform (10%)</span>
+                  <div class="text-xl font-mono font-bold text-brand-mint">NT$ 150K</div>
+                  <div class="text-[11px] text-slate-300 leading-tight space-y-1">
+                    <p class="text-brand-mint font-semibold">• 60% Instant Cost Savings!</p>
+                    <p>• Near-zero marginal compute cost</p>
+                    <p>• Gross margin exceeding 80%+</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl space-y-4">
+              <h3 class="text-base font-bold text-white">Interactive Hiring Savings Calculator</h3>
+              
+              <div>
+                <div class="flex justify-between text-xs text-slate-300 mb-2">
+                  <span>Planned Overseas Certified Hires:</span>
+                  <span id="engineerValEn" class="font-mono font-bold text-brand-mint text-sm">20 Engineers</span>
+                </div>
+                <input type="range" id="engineerCountEn" min="5" max="100" value="20" step="5" class="w-full accent-emerald-500 cursor-pointer">
+              </div>
+
+              <div class="space-y-2 pt-2 border-t border-slate-800 text-xs md:text-sm">
+                <div class="flex justify-between text-slate-300">
+                  <span>Traditional Headhunting Expense:</span>
+                  <span id="tradCostEn" class="font-mono text-red-400 font-bold">NT$ 7.5M</span>
+                </div>
+                <div class="flex justify-between text-slate-300">
+                  <span>TrustCV Platform Expense:</span>
+                  <span id="trustCostEn" class="font-mono text-brand-mint font-bold">NT$ 3.0M</span>
+                </div>
+                <div class="flex justify-between text-slate-100 font-bold pt-2 border-t border-slate-800">
+                  <span>Total Direct Enterprise Savings:</span>
+                  <span id="savedCostEn" class="font-mono text-amber-400 font-black text-base">NT$ 4.5M</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-3 rounded-xl flex flex-wrap items-center justify-center gap-3 text-xs text-slate-300">
+            <span class="text-slate-400 font-bold">Multiple Revenue Streams:</span>
+            <span class="px-3 py-1 rounded-full bg-slate-900 border border-slate-800">① Verification Fees (VaaS 85% margin)</span>
+            <span class="px-3 py-1 rounded-full bg-slate-900 border border-slate-800">② Enterprise Custom Auditor SaaS (90% margin)</span>
+            <span class="px-3 py-1 rounded-full bg-slate-900 border border-slate-800">③ Placement Success Cut (75% margin)</span>
+            <span class="px-3 py-1 rounded-full bg-slate-900 border border-slate-800">④ Cross-Border Payroll Escrow (65% margin)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: CAPITAL MOAT (EN) -->
+      <section class="slide-pane hidden" data-slide="7">
+        <div class="space-y-6">
+          <div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-500/30 bg-amber-500/10 text-amber-400 font-mono uppercase">
+              THE CAPITAL MOAT
+            </span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">Strategic Capital as Moat: Dual-Track Governance & Public-Private Synergy</h2>
+            <p class="text-sm md:text-base text-slate-400">Anchoring credible policy guidance funds and corporate venture arms to establish an impartial cross-border trust firewall</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass-card p-6 rounded-2xl space-y-4">
+              <span class="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-amber-500/20 text-amber-400">Flexible Dual-Track Structure</span>
+              <h4 class="text-lg font-bold text-white">Maximizing Strategic Latitude & Risk Isolation</h4>
+              
+              <div class="p-3.5 rounded-xl bg-slate-900 border-l-4 border-l-brand-mint text-xs text-slate-300 space-y-1">
+                <strong class="text-white">Track A (Direct Policy Equity Stake):</strong>
+                <p>Policy guidance funds hold 15%~20% directly, granting sovereign credibility to build a national-level talent customs gateway, sharing future capital gains.</p>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-slate-900 border-l-4 border-l-brand-accent text-xs text-slate-300 space-y-1">
+                <strong class="text-white">Track B (Co-Investment via Industry VC):</strong>
+                <p>If low profile is preferred, co-invest via trusted industry leaders or venture vehicles, with government offering compute subsidies and field testbeds.</p>
+              </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl space-y-4">
+              <h4 class="text-lg font-bold text-white">Recommended Joint Venture Ownership</h4>
+              
+              <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                  <div class="text-2xl font-mono font-black text-brand-accent">45%</div>
+                  <div class="text-[11px] text-slate-400 mt-1">Founding Team<br>(Teaforia)</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                  <div class="text-2xl font-mono font-black text-brand-mint">35%</div>
+                  <div class="text-[11px] text-slate-400 mt-1">Sheng Tuo Tech<br>(Industry Lead)</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                  <div class="text-2xl font-mono font-black text-amber-400">20%</div>
+                  <div class="text-[11px] text-slate-400 mt-1">Strategic Capital<br>(Fund / VC)</div>
+                </div>
+              </div>
+
+              <div class="text-xs text-slate-300 space-y-2 pt-2">
+                <p>🏛️ <strong>Strategic Capital:</strong> Equity dividends, IPO upside & sovereign talent defense moat</p>
+                <p>🏢 <strong>Sheng Tuo Tech:</strong> Cross-border ecosystem leader & priority access to certified talent pool</p>
+                <p>☕ <strong>Teaforia:</strong> Compute infrastructure upgrade, institutional backing & asset monetization</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: GLOBAL EXPANSION (EN) -->
+      <section class="slide-pane hidden" data-slide="8">
+        <div class="space-y-6">
+          <div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-sky-500/30 bg-sky-500/10 text-sky-400 font-mono uppercase">
+              GLOBAL EXPANSION
+            </span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">Three Evolutionary Horizons: From Taiwan-India Corridor to Global Skill Settlement Layer</h2>
+            <p class="text-sm md:text-base text-slate-400">Starting with Taiwan-India certified talent, forging the only adversarial truth hub, evolving into the SWIFT for engineering skills</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="glass-card p-6 rounded-2xl border-emerald-500/50 space-y-3">
+              <span class="text-xs font-mono font-bold text-brand-mint">PHASE 01 (M1 ~ M12)</span>
+              <h3 class="text-lg font-bold text-white">Taiwan-India Benchmark Corridor</h3>
+              <p class="text-xs text-slate-400">Focus on 6 high-barrier engineering sectors</p>
+              <ul class="text-xs text-slate-300 space-y-2">
+                <li>➔ Onboard 100,000 certified engineers</li>
+                <li>➔ Serve 150 Taiwan firms & multinational enterprises</li>
+                <li>➔ Complete 1,000+ precision placements</li>
+                <li>➔ Benchmark 0 qualification false-positive rate</li>
+              </ul>
+              <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-emerald-500/20 text-brand-mint">Self-Sustaining Breakeven</span>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl space-y-3">
+              <span class="text-xs font-mono font-bold text-brand-accent">PHASE 02 (M13 ~ M24)</span>
+              <h3 class="text-lg font-bold text-white">APAC & Eastern Europe Expansion</h3>
+              <p class="text-xs text-slate-400">Replicating to Vietnam, Indonesia & Eastern Europe</p>
+              <ul class="text-xs text-slate-300 space-y-2">
+                <li>➔ Cover 500,000 verified professionals</li>
+                <li>➔ Support 600 paying multinational enterprises</li>
+                <li>➔ Annual revenue surpassing NT$ 100 Million</li>
+                <li>➔ Multi-language support & compliance automation</li>
+              </ul>
+              <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-sky-500/20 text-sky-400">Net Profit Margin > 35%</span>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl space-y-3">
+              <span class="text-xs font-mono font-bold text-amber-400">PHASE 03 (M25 ~ M36+)</span>
+              <h3 class="text-lg font-bold text-white">Global Talent Credit Settlement Layer</h3>
+              <p class="text-xs text-slate-400">Standard for US, Japanese & German enterprise remote hiring</p>
+              <ul class="text-xs text-slate-300 space-y-2">
+                <li>➔ Establish "Proof of Engineering Work" global standard</li>
+                <li>➔ Initiate Taiwan Innovation Board (TIB) or NASDAQ IPO</li>
+                <li>➔ Estimated listing valuation reaching NT$ 4B ~ 8B</li>
+                <li>➔ Strategic investors gain multi-fold returns</li>
+              </ul>
+              <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-amber-500/20 text-amber-400">Capital Market Listing</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: THE INVESTMENT ASK (EN) -->
+      <section class="slide-pane hidden" data-slide="9">
+        <div class="space-y-6">
+          <div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-red-500/30 bg-red-500/10 text-red-400 font-mono uppercase">
+              THE INVESTMENT ASK
+            </span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-2">Flagship Budget Allocation & Solid Auditable Milestones</h2>
+            <p class="text-sm md:text-base text-slate-400">Every dollar is committed to hard-core compute and verified fulfillment; establishing objective quantitative oversight</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass-card p-6 rounded-2xl space-y-4">
+              <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white">Total Budget: NT$ 45 Million</h3>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-emerald text-slate-950">Flagship Plan</span>
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>45% High-Performance GPU Compute Clusters</span>
+                    <span class="font-mono font-bold text-brand-mint">NT$ 20.25M</span>
+                  </div>
+                  <div class="w-full bg-slate-900 rounded-full h-2">
+                    <div class="bg-brand-mint h-2 rounded-full" style="width: 45%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>35% Adversarial Model & Sandbox R&D</span>
+                    <span class="font-mono font-bold text-brand-accent">NT$ 15.75M</span>
+                  </div>
+                  <div class="w-full bg-slate-900 rounded-full h-2">
+                    <div class="bg-brand-accent h-2 rounded-full" style="width: 35%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>20% Taiwan-India Field Operations & Compliance</span>
+                    <span class="font-mono font-bold text-brand-emerald">NT$ 9.00M</span>
+                  </div>
+                  <div class="w-full bg-slate-900 rounded-full h-2">
+                    <div class="bg-brand-emerald h-2 rounded-full" style="width: 20%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-xs text-amber-400 pt-2 italic">※ Sheng Tuo self-funds NT$ 10 Million, demonstrating committed industry skin-in-the-game!</p>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl space-y-3">
+              <h3 class="text-lg font-bold text-white">Four Tangible KPIs</h3>
+              
+              <div class="space-y-2 text-xs text-slate-300">
+                <div class="flex items-start gap-2.5">
+                  <span class="px-2 py-0.5 rounded font-mono font-bold bg-slate-900 border border-slate-800 text-white">M3</span>
+                  <div><strong>Compute Cluster Ready:</strong> 70B+ model locally deployed, TTFT latency &lt; 300ms.</div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <span class="px-2 py-0.5 rounded font-mono font-bold bg-slate-900 border border-slate-800 text-white">M6</span>
+                  <div><strong>Beta Launch:</strong> 50,000 engineers hosted, 30 enterprise pilot participants.</div>
+                </div>
+                <div class="flex items-start gap-2.5 p-2 rounded-lg bg-amber-950/20 border border-amber-500/30 text-amber-200">
+                  <span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-500/20 text-amber-400">M9</span>
+                  <div><strong>Third-Party Blind Audit:</strong> 100 sets of deep fake resumes challenged, <strong>flaw detection rate ≥ 95% (Independently Certified)</strong>.</div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <span class="px-2 py-0.5 rounded font-mono font-bold bg-slate-900 border border-slate-800 text-white">M12</span>
+                  <div><strong>Commercial Breakeven:</strong> 100K engineers, 150 enterprises, revenue surpassing NT$ 25M.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: CALL TO ACTION (EN) -->
+      <section class="slide-pane hidden" data-slide="10">
+        <div class="text-center max-w-4xl mx-auto space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-medium border border-emerald-500/30 bg-emerald-500/10 text-brand-mint">
+            <span class="w-2 h-2 rounded-full bg-brand-mint animate-pulse"></span>
+            CALL TO ACTION
+          </div>
+
+          <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white leading-tight">
+            Seizing the Historic Window: Winning High-Skill Talent Credit Dominance!
+          </h1>
+
+          <div class="glass-card text-left p-6 md:p-8 rounded-2xl border-l-4 border-l-brand-emerald">
+            <p class="text-sm md:text-base text-slate-200 leading-relaxed italic">
+              "This is not standard software procurement; it is a strategic positioning for global talent trust standards.<br>
+              Sheng Tuo is ready, and the top technical engineering team in India is ready!<br>
+              Let us join forces with strategic capital to build a cross-border AI skill truth hub that separates truth from fiction!"
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+            <div class="glass-card p-4 rounded-xl space-y-2">
+              <span class="text-xs font-mono font-bold text-brand-mint">ACTION 01</span>
+              <h4 class="text-sm font-bold text-white">Align Strategic Vehicle</h4>
+              <p class="text-xs text-slate-400">Select policy guidance fund, compute grants, or corporate venture channels.</p>
+            </div>
+            <div class="glass-card p-4 rounded-xl space-y-2">
+              <span class="text-xs font-mono font-bold text-brand-accent">ACTION 02</span>
+              <h4 class="text-sm font-bold text-white">Closed-Door Sandbox Demo</h4>
+              <p class="text-xs text-slate-400">Live demonstration of how 70B+ model penetrates AI fake resumes across 6 sectors.</p>
+            </div>
+            <div class="glass-card p-4 rounded-xl space-y-2">
+              <span class="text-xs font-mono font-bold text-brand-emerald">ACTION 03</span>
+              <h4 class="text-sm font-bold text-white">Execute MOU</h4>
+              <p class="text-xs text-slate-400">Lock joint venture equity and compute budgets to officially launch JV entity.</p>
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-400 pt-4">
+            Official Platform: <a href="./index.html" class="text-brand-mint hover:underline font-mono">cv.teaforia.in</a>
+            <span class="mx-2">•</span>
+            Sheng Tuo Technology Co., Ltd. ✕ India Teaforia ✕ TrustCV Joint Office
+          </div>
+        </div>
+      </section>
+    </div><!-- End #content-en -->
 
   </main>
 
@@ -760,9 +1354,9 @@
   <!-- Native Presentation Logic (Directly Bound to TrustCV Native Theme Architecture) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const slides = document.querySelectorAll('.slide-pane');
-      const totalSlides = slides.length;
+      const totalSlides = 10;
       let currentSlide = 1;
+      let currentLang = 'zh';
 
       const progressBar = document.getElementById('progressBar');
       const slideCounter = document.getElementById('slideCounter');
@@ -772,18 +1366,24 @@
       const toggleFullscreenBtn = document.getElementById('toggleFullscreenBtn');
       const themeToggleBtn = document.getElementById('themeToggleBtn');
       const themeIconContainer = document.getElementById('themeIconContainer');
+      const langToggleBtn = document.getElementById('langToggleBtn');
+      const langBtnText = document.getElementById('langBtnText');
 
       // 1. Initialize Indicator Dots
       slideIndicatorsContainer.innerHTML = '';
       for (let i = 1; i <= totalSlides; i++) {
         const dot = document.createElement('button');
         dot.className = `w-2 h-2 rounded-full transition-all ${i === 1 ? 'w-6 bg-brand-mint' : 'bg-slate-700 hover:bg-slate-500'}`;
-        dot.title = `第 ${i} 頁`;
+        dot.title = `Slide ${i}`;
         dot.onclick = () => goToSlide(i);
         slideIndicatorsContainer.appendChild(dot);
       }
 
       function updateSlideUI() {
+        const activeContainer = document.getElementById(currentLang === 'en' ? 'content-en' : 'content-zh');
+        if (!activeContainer) return;
+
+        const slides = activeContainer.querySelectorAll('.slide-pane');
         slides.forEach((pane) => {
           const index = parseInt(pane.dataset.slide, 10);
           if (index === currentSlide) {
@@ -815,7 +1415,47 @@
         // Buttons
         prevBtn.disabled = currentSlide === 1;
         prevBtn.style.opacity = currentSlide === 1 ? '0.4' : '1';
-        nextBtn.textContent = currentSlide === totalSlides ? '完成簡報 🏁' : '下一頁 ▶';
+        
+        if (currentLang === 'en') {
+          prevBtn.textContent = '◀ Prev';
+          nextBtn.textContent = currentSlide === totalSlides ? 'Finish Deck 🏁' : 'Next ▶';
+        } else {
+          prevBtn.textContent = '◀ 上一頁';
+          nextBtn.textContent = currentSlide === totalSlides ? '完成簡報 🏁' : '下一頁 ▶';
+        }
+      }
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        const zhContainer = document.getElementById('content-zh');
+        const enContainer = document.getElementById('content-en');
+
+        if (lang === 'en') {
+          zhContainer.classList.add('hidden');
+          enContainer.classList.remove('hidden');
+          langBtnText.textContent = '中文';
+          document.documentElement.lang = 'en';
+          document.title = "TrustCV | Taiwan-India High-Skill Talent Truth Hub (2026)";
+          history.replaceState(null, null, '#en');
+          localStorage.setItem('trustcv_lang', 'en');
+        } else {
+          enContainer.classList.add('hidden');
+          zhContainer.classList.remove('hidden');
+          langBtnText.textContent = 'EN';
+          document.documentElement.lang = 'zh-TW';
+          document.title = "TrustCV | 台印跨國高階技能人才真理中樞倡議 (2026)";
+          history.replaceState(null, null, '#zh');
+          localStorage.setItem('trustcv_lang', 'zh-TW');
+        }
+
+        updateSlideUI();
+      }
+
+      if (langToggleBtn) {
+        langToggleBtn.onclick = () => {
+          const nextLang = (currentLang === 'en') ? 'zh' : 'en';
+          setLanguage(nextLang);
+        };
       }
 
       function nextSlide() {
@@ -895,11 +1535,13 @@
         const brandSub = document.getElementById('brandSub');
         const slideCounter = document.getElementById('slideCounter');
         const fullBtn = document.getElementById('toggleFullscreenBtn');
+        const langBtn = document.getElementById('langToggleBtn');
 
         if (isLight) {
           themeIconContainer.innerHTML = '<svg class="w-4 h-4 fill-none stroke-current text-amber-600" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
           themeToggleBtn.title = '切換為深色模式';
           themeToggleBtn.className = "p-2 rounded-xl transition-all shrink-0 bg-slate-100 border border-slate-200 text-amber-600 hover:bg-slate-200 shadow-sm";
+          if (langBtn) langBtn.className = "flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-tight transition-all shrink-0 whitespace-nowrap bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 shadow-sm";
           if (fullBtn) fullBtn.className = "p-2 rounded-xl transition-all shrink-0 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 shadow-sm";
           if (slideCounter) slideCounter.className = "px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-100 border border-slate-200 text-emerald-700 shadow-sm";
           if (logoBox) logoBox.className = "w-8 h-8 md:w-9 md:h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-md p-1 border border-slate-200 bg-white";
@@ -909,6 +1551,7 @@
           themeIconContainer.innerHTML = '<svg class="w-4 h-4 fill-current text-slate-300" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
           themeToggleBtn.title = '切換為明亮模式';
           themeToggleBtn.className = "p-2 rounded-xl transition-all shrink-0 bg-slate-900 border border-slate-800 text-slate-300 hover:text-white";
+          if (langBtn) langBtn.className = "flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-tight transition-all shrink-0 whitespace-nowrap bg-slate-900 border border-slate-800 text-slate-200 hover:text-white hover:bg-slate-800";
           if (fullBtn) fullBtn.className = "p-2 rounded-xl transition-all shrink-0 bg-slate-900 border border-slate-800 text-slate-300 hover:text-white";
           if (slideCounter) slideCounter.className = "px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-900 border border-slate-800 text-brand-mint";
           if (logoBox) logoBox.className = "w-8 h-8 md:w-9 md:h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-md p-1 border border-slate-800 bg-[#080C0E]";
@@ -928,7 +1571,7 @@
         };
       }
 
-      // Interactive Calculator on Slide 6
+      // Interactive Calculator on Slide 6 (Chinese)
       const countInput = document.getElementById('engineerCount');
       const valSpan = document.getElementById('engineerVal');
       const tradSpan = document.getElementById('tradCost');
@@ -947,7 +1590,33 @@
         calc();
       }
 
-      updateSlideUI();
+      // Interactive Calculator on Slide 6 (English)
+      const countInputEn = document.getElementById('engineerCountEn');
+      const valSpanEn = document.getElementById('engineerValEn');
+      const tradSpanEn = document.getElementById('tradCostEn');
+      const trustSpanEn = document.getElementById('trustCostEn');
+      const savedSpanEn = document.getElementById('savedCostEn');
+
+      if (countInputEn) {
+        function calcEn() {
+          const c = parseInt(countInputEn.value, 10);
+          valSpanEn.textContent = `${c} Engineers`;
+          tradSpanEn.textContent = `NT$ ${(c * 0.375).toFixed(1)}M`;
+          trustSpanEn.textContent = `NT$ ${(c * 0.150).toFixed(1)}M`;
+          savedSpanEn.textContent = `NT$ ${(c * 0.225).toFixed(1)}M`;
+        }
+        countInputEn.oninput = calcEn;
+        calcEn();
+      }
+
+      // Initial Language Detection from Hash or Storage
+      const initHash = window.location.hash.toLowerCase();
+      const savedLang = localStorage.getItem('trustcv_lang');
+      if (initHash === '#en' || savedLang === 'en') {
+        setLanguage('en');
+      } else {
+        setLanguage('zh');
+      }
 
       // Download Pitch Modal Logic
       const downloadPitchBtn = document.getElementById('downloadPitchBtn');
