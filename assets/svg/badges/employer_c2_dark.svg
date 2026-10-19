@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="emp-c2-rim-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF"/>
+      <stop offset="100%" stop-color="#0F766E"/>
+    </linearGradient>
+  </defs>
+  <path d="M 8,32 L 7,16 L 16,24 L 24,9 L 32,24 L 41,16 L 40,32 Z" fill="#0D2E25" stroke="url(#emp-c2-rim-dark)" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="7" y="34.5" width="34" height="3" rx="1" fill="#0D2E25" stroke="url(#emp-c2-rim-dark)" stroke-width="1.6"/>
+  <!-- 雙勾堆疊 (深色高對比) -->
+  <path d="M18 22 L22 26 L30 17" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+  <path d="M18 28 L22 32 L30 23" stroke="#3DF5A7" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

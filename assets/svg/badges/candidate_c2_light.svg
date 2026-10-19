@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <path d="M24 5 L38 9 C38 23, 33 35, 24 43 C15 35, 10 23, 10 9 Z" fill="#D1FAE5" stroke="#059669" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M24 9 L34 12 C34 22, 30 31, 24 37 C18 31, 14 22, 14 12 Z" fill="none" stroke="#34D399" stroke-width="1.2"/>
+  <!-- 雙勾堆疊 (上層勾 + 下層勾) -->
+  <path d="M18 20 L22 24 L30 15" stroke="#047857" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M18 27 L22 31 L30 22" stroke="#059669" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

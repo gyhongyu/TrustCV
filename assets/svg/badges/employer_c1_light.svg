@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <path d="M 8,32 L 7,16 L 16,24 L 24,9 L 32,24 L 41,16 L 40,32 Z" fill="#ECFDF5" stroke="#10B981" stroke-width="1.8" stroke-linejoin="round"/>
+  <rect x="7" y="34.5" width="34" height="3" rx="1" fill="#ECFDF5" stroke="#10B981" stroke-width="1.4"/>
+  <!-- 1 個翡翠勾 -->
+  <path d="M18 26 L22 30 L30 20" stroke="#059669" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
