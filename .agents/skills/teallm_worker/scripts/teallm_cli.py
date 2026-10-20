@@ -246,17 +246,33 @@ class TeaforiaClient:
         model: Optional[str] = None,
         temperature: float = 0.2,
         max_tokens: int = 2048,
+        max_pages: Optional[int] = None,
+        force_ocr: bool = False,
         **kwargs
     ) -> str:
         """
-        多模態文件原生解析 (PDF / DOCX / XLSX / PPTX)
+        多模態文件原生解析 (PDF / DOCX / XLSX / PPTX / CSV / TXT / MD)
         直傳網關 0ms 探針預處理層，免專案端安裝任何外部套件。
+        支援多頁純截圖 PDF 逐頁 OCR 還原 (方案 A: 零漏頁、防顯存溢出)。
         """
         p = Path(file_path)
         if not p.exists():
             raise FileNotFoundError(f"找不到文件檔案: {file_path}")
 
         file_payload = self._encode_image(p)  # 產出 data:<mime>;base64,...
+        doc_options = {}
+        if max_pages is not None:
+            doc_options["max_pages"] = max_pages
+        if force_ocr:
+            doc_options["force_ocr"] = True
+
+        file_entry = {
+            "filename": p.name,
+            "file_data": file_payload,
+        }
+        if doc_options:
+            file_entry["doc_options"] = doc_options
+
         messages = [
             {
                 "role": "user",
@@ -264,14 +280,13 @@ class TeaforiaClient:
                     {"type": "text", "text": prompt},
                     {
                         "type": "file",
-                        "file": {
-                            "filename": p.name,
-                            "file_data": file_payload
-                        }
+                        "file": file_entry
                     }
                 ]
             }
         ]
+        if doc_options:
+            kwargs["doc_options"] = doc_options
         return self.chat(messages=messages, model=model or "qwen2.5-7b-instruct", temperature=temperature, max_tokens=max_tokens, **kwargs)
 
     def transcribe_audio(
@@ -818,6 +833,12 @@ def main():
         default=os.environ.get("TEAFORIA_API_KEY", DEFAULT_API_KEY),
         help="Bearer API Key",
     )
+    parser.add_argument(
+        "--timeout",
+        type=float,
+        default=float(os.environ.get("TEAFORIA_TIMEOUT", "120.0")),
+        help="HTTP 請求超時秒數 (預設: 120.0 秒)",
+    )
 
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -867,13 +888,15 @@ def main():
     log_p.add_argument("--max-tokens", type=int, default=1536, help="最大 Token 數")
     log_p.add_argument("--stream", action="store_true", help="啟用流式輸出")
 
-    # 5c. doc (多模態文件原生分析專用 - 支援 PDF, DOCX, XLSX, PPTX)
-    doc_p = subparsers.add_parser("doc", help="多模態文件原生解析 (PDF/Word/Excel/PPT 免本機安裝套件)")
-    doc_p.add_argument("file", help="待分析之文件檔案路徑 (.pdf, .docx, .xlsx, .pptx)")
+    # 5c. doc (多模態文件原生分析專用 - 支援 PDF, DOCX, XLSX, PPTX, CSV, TXT, MD)
+    doc_p = subparsers.add_parser("doc", help="多模態文件原生解析 (PDF/Word/Excel/PPT/CSV 免本機安裝套件)")
+    doc_p.add_argument("file", help="待分析之文件檔案路徑 (.pdf, .docx, .xlsx, .pptx, .csv, .txt, .md)")
     doc_p.add_argument("prompt", nargs="?", default="請詳細總結這份文件的核心重點、關鍵數據與主要結論：", help="分析指令")
     doc_p.add_argument("--model", default=None, help="模型名稱 (可指定，預設自動依文件特徵分流)")
     doc_p.add_argument("--temp", type=float, default=0.2, help="生成溫度 (預設 0.2)")
     doc_p.add_argument("--max-tokens", type=int, default=2048, help="最大 Token 數")
+    doc_p.add_argument("--max-pages", type=int, default=None, help="最大處理頁數 (預設: 依伺服器上限 50 頁)")
+    doc_p.add_argument("--force-ocr", action="store_true", help="強制啟用方案 A 逐頁視覺 OCR 還原 (適用純截圖文件)")
 
     # 6. vision
     vis_p = subparsers.add_parser("vision", help="多模態圖片視覺 OCR 與表格還原 (強制路由 Qwen2-VL)")
@@ -894,7 +917,7 @@ def main():
         print(json.dumps(data, ensure_ascii=False, indent=2))
         return
 
-    client = TeaforiaClient(base_url=args.base_url, api_key=args.api_key)
+    client = TeaforiaClient(base_url=args.base_url, api_key=args.api_key, timeout=args.timeout)
 
     if args.command == "models":
         models = client.list_models()
@@ -920,12 +943,17 @@ def main():
             print("==============================================================================")
             print("💡 調用提示: 傳入 --model <模型ID或別名> 即可動態切換推論兵種。")
             print("==============================================================================")
-    elif args.command == "ask":
+    BINARY_DOC_EXTS = {".pdf", ".pptx", ".docx", ".xlsx", ".zip", ".tar", ".gz", ".png", ".jpg", ".jpeg", ".webp"}
+
+    if args.command == "ask":
         client.model = args.model
         full_content = args.prompt
         if args.file:
             fp = Path(args.file)
             if fp.exists():
+                if fp.suffix.lower() in BINARY_DOC_EXTS:
+                    print(f"錯誤: '{fp.name}' 為多模態二進位文檔，嚴禁以純文字讀取。請改用: py teallm_cli.py doc \"{fp}\"", file=sys.stderr)
+                    sys.exit(1)
                 file_text = fp.read_text(encoding="utf-8", errors="replace")
                 full_content = f"{full_content}\n\n[檔案內容 ({fp.name})]:\n{file_text}".strip()
         elif not full_content and not sys.stdin.isatty():
@@ -958,6 +986,9 @@ def main():
         if not fp.exists():
             print(f"錯誤: 找不到檔案: {fp}", file=sys.stderr)
             sys.exit(1)
+        if fp.suffix.lower() in BINARY_DOC_EXTS:
+            print(f"錯誤: '{fp.name}' 為多模態二進位文件，嚴禁以純文字讀取 (避免亂碼與顯存浪費)。\n👉 請改用文件原生解析指令: py teallm_cli.py doc \"{fp}\"", file=sys.stderr)
+            sys.exit(1)
         client.model = args.model
 
         is_log = args.log
@@ -976,12 +1007,18 @@ def main():
             summarize_text_resilient(client, fp, args.prompt, stream=args.stream, temp=args.temp, max_tokens=args.max_tokens)
     elif args.command == "log-diagnose":
         fp = Path(args.file)
+        if fp.suffix.lower() in BINARY_DOC_EXTS:
+            print(f"錯誤: '{fp.name}' 為二進位檔案，非純文字系統日誌。請改用: py teallm_cli.py doc \"{fp}\"", file=sys.stderr)
+            sys.exit(1)
         client.model = args.model
         analyze_log_resilient(client, fp, args.prompt, stream=args.stream, temp=args.temp, max_tokens=args.max_tokens)
     elif args.command == "review":
         fp = Path(args.file)
         if not fp.exists():
             print(f"錯誤: 檔案不存在: {fp}", file=sys.stderr)
+            sys.exit(1)
+        if fp.suffix.lower() in BINARY_DOC_EXTS:
+            print(f"錯誤: '{fp.name}' 為二進位文檔，代碼審查模式僅支援源碼與文字檔。請改用: py teallm_cli.py doc \"{fp}\"", file=sys.stderr)
             sys.exit(1)
         client.model = args.model
         file_text = fp.read_text(encoding="utf-8", errors="replace")
@@ -1007,6 +1044,8 @@ def main():
             model=args.model,
             temperature=args.temp,
             max_tokens=args.max_tokens,
+            max_pages=args.max_pages,
+            force_ocr=args.force_ocr,
         )
         print(res)
     elif args.command == "vision":
