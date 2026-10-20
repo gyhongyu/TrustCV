@@ -1,6 +1,6 @@
 ---
 name: teallm_worker
-description: 通用本地/邊緣 7B 大模型算力打工仔技能。專門用於承接高 Token 消耗任務、純文字蒸餾、長日誌摘要、代碼架構審查、多模態圖片截圖 OCR、數據清洗與語音轉寫等非連續性外包工作。當面臨大篇幅長文本、需要提煉重點以節省主上下文視窗消耗、或需要調用本地視覺/語音專屬模型時主動喚醒調用。
+description: 通用本地/邊緣 7B 大模型算力打工仔技能。專門用於承接高 Token 消耗任務、純文字蒸餾、長日誌摘要、代碼架構審查、多模態圖片截圖 OCR、數據清洗與語音轉寫等非連續性外包工作。當面臨大篇幅長文本、需要提煉重點以節省主上下文視窗消耗、或需要調用本地視覺/語音專屬模型時自動觸發。嚴禁用於業務數據持久化存儲、嚴禁用於未經授權之外部遠端模型中繼。
 ---
 
 # 🤖 teallm_worker (專案原生本地/邊緣推論打工仔)
@@ -11,16 +11,27 @@ description: 通用本地/邊緣 7B 大模型算力打工仔技能。專門用�
 
 ## ⛔ 專案調度不可違背之工程紅線 (Hard Invariants)
 
-1. **嚴禁主模型直接看圖鐵律**：
+1. **多模態文件原生外包鐵律**：
+   - 當需要分析 PDF、Word、Excel 或簡報時，**嚴禁 AI 代理人自行安裝 fitz/PyMuPDF 轉圖或寫切圖腳本**！
+   - 強制直接調用 `teallm_cli.py doc <檔案路徑> ["<指令>"]`，一鍵交由 Teaforia 網關 0ms 探針全自動圖文特徵分流！
+2. **嚴禁主模型直接看圖鐵律**：
    - 當使用者上傳截圖、報表或圖片提問時，主模型**禁止親自使用自身視覺多模態直接作答**！
    - 強制調用 `teallm_cli.py vision` 外包給本地 Qwen2-VL 進行 OCR 與表格萃取！
-2. **命令防彈窗與固定簽名鐵律**：
+3. **命令防彈窗與固定簽名鐵律**：
    - 調用一律採用標準 CLI 簽名，嚴禁在終端拼接動態長參數。
 
 ---
 
 ## 🚀 專案常用指令 (Project CLI)
 
+- **多模態文件原生解析 (PDF / Word / Excel / PPT)**:
+  ```powershell
+  py .agents\skills\teallm_worker\scripts\teallm_cli.py doc <檔案路徑> ["<分析指令>"]
+  ```
+- **動態模型兵種探測**:
+  ```powershell
+  py .agents\skills\teallm_worker\scripts\teallm_cli.py models
+  ```
 - **圖片/截圖視覺 OCR**:
   ```powershell
   py .agents\skills\teallm_worker\scripts\teallm_cli.py vision "<提示詞>" --image <圖片路徑>
